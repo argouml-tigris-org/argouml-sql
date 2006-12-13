@@ -1,4 +1,4 @@
-// $Id: GeneratorSql.java 101 2006-11-25 04:01:34Z tfmorris $
+// $Id$
 // Copyright (c) 2006 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -42,12 +42,12 @@ public class GeneratorSql implements CodeGenerator, ModuleInterface {
     /**
      * The language that we are implementing.
      */
-    private static String LANGUAGE_NAME = "SQL";
+    private static final String LANGUAGE_NAME = "SQL";
 
     /**
      * The prepared struct for registering.
      */
-    private static Language MY_LANG =
+    private static final Language MY_LANG =
 	GeneratorHelper.makeLanguage(LANGUAGE_NAME,
                 ResourceLoaderWrapper.lookupIconResource(
                         LANGUAGE_NAME + "Notation"));
@@ -63,8 +63,8 @@ public class GeneratorSql implements CodeGenerator, ModuleInterface {
      *
      * @param elements the UML model elements to generate code for.
      * @param deps Recursively generate dependency files too.
-     * @return A collection of {@link SourceUnit} objects. The collection
-     *         may be empty if no file is generated.
+     * @return A collection of {@link org.argouml.uml.generator.SourceUnit}
+     *         objects. The collection may be empty if no file is generated.
      * @see org.argouml.uml.generator.CodeGenerator#generate(
      *         Collection, boolean)
      */
@@ -84,7 +84,10 @@ public class GeneratorSql implements CodeGenerator, ModuleInterface {
      * @see org.argouml.uml.generator.CodeGenerator#generateFiles(
      *         Collection, String, boolean)
      */
-    public Collection generateFiles(Collection elements, String path, boolean deps) {
+    public Collection generateFiles(
+	    Collection elements,
+	    String path,
+	    boolean deps) {
 	Collection units = generate(elements, deps);
 	throw new Error("Not yet implemented");
     }
@@ -98,7 +101,7 @@ public class GeneratorSql implements CodeGenerator, ModuleInterface {
      * @return The filenames (with relative path) as a collection of Strings.
      * The collection may be empty if no file will be generated.
      * @see org.argouml.uml.generator.CodeGenerator#generateFileList(
-     *         Collection, String, boolean)
+     *         Collection, boolean)
      */
     public Collection generateFileList(Collection elements, boolean deps) {
 	throw new Error("Not yet implemented");
@@ -189,7 +192,7 @@ public class GeneratorSql implements CodeGenerator, ModuleInterface {
         case AUTHOR:
             return "Kai ???";
         case VERSION:
-            return "$Id: GeneratorCSharp.java 101 2006-11-25 04:01:34Z tfmorris $";
+            return "$Id$";
         default:
             return null;
         }
