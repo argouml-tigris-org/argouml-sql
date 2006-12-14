@@ -135,7 +135,7 @@ public class SqlInit implements ModuleInterface {
      * @return the name (A String).
      */
     public String getName() {
-        return "GeneratorSql";
+        return "Sql";
     }
 
 

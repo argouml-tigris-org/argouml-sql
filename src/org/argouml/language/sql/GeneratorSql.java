@@ -32,7 +32,7 @@ import org.argouml.uml.generator.CodeGenerator;
 /**
  * SQL generator
  */
-public class GeneratorSql implements CodeGenerator {
+class GeneratorSql implements CodeGenerator {
     /**
      * The instances.
      */
