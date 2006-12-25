@@ -26,11 +26,12 @@ The mapping between UML and SQL is done according to the following:
    <tr>
     <td>(Unique) index</td>
     <td>Method of special stereotype (&lt;&lt;Unique&gt;&gt;, &lt;&lt;Index&gt;&gt;)
-	-> method parameters define the indexed columns
+	-&gt; method parameters define the indexed columns
     </td>
    </tr>
    <tr>
-    <td>Attribute properties</td><td>Attribute properties</td>
+    <td>Attribute properties</td><td>Attribute properties, special stereotypes 
+    (see below)</td>
    </tr>
    <tr>
     <td>Constraint</td><td>Method of special stereotype &lt;&lt;Constraint&gt;&gt;</td>
@@ -40,12 +41,28 @@ The mapping between UML and SQL is done according to the following:
    </tr>
    <tr>
     <td>View</td>
-    <td>Class with special dependencies of stereotype &lt;&lt;Derive&gt;&gt;</td>
+    <td>Class of special stereotype &lt;&lt;View&gt;&gt; with special 
+    dependencies of stereotype &lt;&lt;Derive&gt;&gt;</td>
    </tr>
    <tr>
   </table>
+  
+  <p>Special SQL-attribute properties might be mapped this way:</p>
+  <table>
+  <tr>
+	<th>SQL</th><th>UML</th>
+  </tr>
+  	<tr>
+  	  <td>NULL / NOT NULL</td><td>If an attribute should be NOT NULL, let the 
+  	  attribute be of stereotype &lt;&lt;NOT NULL&gt;&gt;. Else the attribute 
+  	  is nullable.</td>
+	</tr><tr>
+  	  <td>autoinc</td><td>stereotype &lt;&lt;AutoInc&gt;&gt;</td>
+  	</tr>
+  </table>
+  <p>The 'default value' and the 'enumeration' attribute properties are supported 
+  directly.</p>
   </div>
-
   <hr>
 This page was last modified by $Author$
 on $Date$.
