@@ -1,0 +1,46 @@
+<html>
+ <head>
+  <title>Mapping between UML and SQL</title>
+ </head>
+ <body>
+  <p>
+The mapping between UML and SQL is done according to the following:
+</p>
+  <table>
+   <tr><th>SQL</th><th>UML</th></tr>
+   <tr>
+    <td>Table</td><td>Class (stereotype <<Table>>)</td>
+   </tr>
+   <tr>
+    <td>Column</td><td>Attribute</td>
+   </tr>
+   <tr>
+    <td>Relationship</td><td>Association</td>
+   </tr>
+   <tr>
+    <td>Primary/Foreign key</td>
+    <td>Attribute of special stereotype (<<PK>>, <<FK>>)</td>
+   </tr>
+   <tr>
+    <td>(Unique) index</td>
+    <td>Method of special stereotype (<<Unique>>, <<Index>>)
+	-> method parameters define the indexed columns
+    </td>
+   </tr>
+   <tr>
+    <td>Attribute properties</td><td>Attribute properties</td>
+   </tr>
+   <tr>
+    <td>Constraint</td><td>Method of special stereotype <<Constraint>></td>
+   </tr>
+   <tr>
+    <td>Trigger</td><td>Method of special stereotype <<Trigger>></td>
+   </tr>
+   <tr>
+    <td>View</td>
+    <td>Class with special dependencies of stereotype <<Derive>></td>
+   </tr>
+   <tr>
+  </table>
+ </body>
+</html>
