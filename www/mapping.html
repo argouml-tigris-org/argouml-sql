@@ -3,13 +3,15 @@
   <title>Mapping between UML and SQL</title>
  </head>
  <body>
+  <div class="h2">
+  <h2>Mapping</h2>
   <p>
 The mapping between UML and SQL is done according to the following:
 </p>
   <table>
    <tr><th>SQL</th><th>UML</th></tr>
    <tr>
-    <td>Table</td><td>Class (stereotype <<Table>>)</td>
+    <td>Table</td><td>Class (stereotype &lt;&lt;Table&gt;&gt;)</td>
    </tr>
    <tr>
     <td>Column</td><td>Attribute</td>
@@ -19,11 +21,11 @@ The mapping between UML and SQL is done according to the following:
    </tr>
    <tr>
     <td>Primary/Foreign key</td>
-    <td>Attribute of special stereotype (<<PK>>, <<FK>>)</td>
+    <td>Attribute of special stereotype (&lt;&lt;PK&gt;&gt;, &lt;&lt;FK&gt;&gt;)</td>
    </tr>
    <tr>
     <td>(Unique) index</td>
-    <td>Method of special stereotype (<<Unique>>, <<Index>>)
+    <td>Method of special stereotype (&lt;&lt;Unique&gt;&gt;, &lt;&lt;Index&gt;&gt;)
 	-> method parameters define the indexed columns
     </td>
    </tr>
@@ -31,16 +33,17 @@ The mapping between UML and SQL is done according to the following:
     <td>Attribute properties</td><td>Attribute properties</td>
    </tr>
    <tr>
-    <td>Constraint</td><td>Method of special stereotype <<Constraint>></td>
+    <td>Constraint</td><td>Method of special stereotype &lt;&lt;Constraint&gt;&gt;</td>
    </tr>
    <tr>
-    <td>Trigger</td><td>Method of special stereotype <<Trigger>></td>
+    <td>Trigger</td><td>Method of special stereotype &lt;&lt;Trigger&gt;&gt;</td>
    </tr>
    <tr>
     <td>View</td>
-    <td>Class with special dependencies of stereotype <<Derive>></td>
+    <td>Class with special dependencies of stereotype &lt;&lt;Derive&gt;&gt;</td>
    </tr>
    <tr>
   </table>
+  </div>
  </body>
 </html>
