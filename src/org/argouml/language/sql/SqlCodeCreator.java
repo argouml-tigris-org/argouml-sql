@@ -24,57 +24,51 @@
 
 package org.argouml.language.sql;
 
-import java.util.Collection;
-import java.util.List;
-
+/**
+ * Interface providing methods for creating SQL statements.
+ * 
+ * @author Kai Drahmann
+ */
 public interface SqlCodeCreator {
     /**
-     * Method to generate a CREATE TABLE statement. The code for all columns
-     * is also generated. 
+     * Method to generate a CREATE TABLE statement. The code for all columns is
+     * also generated.
      * 
-     * @param tableName The name of the table.
-     * @param columnDefinitions List of ColumnDefinitions for the table.
+     * @param tableDefinition
+     *            The definition of the table.
      * @return A string containing the SQL-Code.
      */
-    String createTable(String tableName, List columnDefinitions);
+    String createTable(TableDefinition tableDefinition);
 
     /**
      * Creates sql for a foreign key. The sql for foreign keys is generated
      * after the sql for all tables is generated.
      * 
-     * @param tableName
-     *            The name of the table containing the foreign key.
-     * @param columnNames
-     *            A list of strings containing the names of the columns the
-     *            foreign key consists of.
-     * @param referencesTableName
-     *            The name of the table the foreign key references to.
-     * @param referencesColumnNames
-     *            A list of strings containing the names of the referenced
-     *            columns.
-     * @param foreignKeyName
-     *            The name of the foreign key.
+     * @param foreignKeyDefinition
+     *            The definition of the foreign key.
      * @return The created sql statement.
      */
-    String createForeignKey(String tableName, List columnNames,
-            String referencesTableName, List referencesColumnNames,
-            String foreignKeyName);
+    String createForeignKey(ForeignKeyDefinition foreignKeyDefinition);
 
     /**
      * Creates sql for an index definition. The sql for index definitions is
      * generated after the sql for all tables is generated.
      * 
-     * @param indexName
-     *            The name of the index.
-     * @param tableName
-     *            The table of the index.
-     * @param columnNames
-     *            A list of strings containing the names of the columns the
-     *            index consists of.
-     * @param descending
-     *            Whether the index is descending.
+     * @param indexDefinition
+     *            The definition of the index.
      * @return The created sql statement.
      */
-    String createIndex(String indexName, String tableName, List columnNames,
-            boolean descending);
+    String createIndex(IndexDefinition indexDefinition);
+
+    /**
+     * Some datatypes cannot be named equal for all existing database systems.
+     * An example is the treating of long text columns. This method returns the
+     * appropriate database-typename for this cases. If the type used in the
+     * model already is correct it should be returned.
+     * 
+     * @param logicalDatatype
+     *            The typename used in the model.
+     * @return The typename to use in the SQL statement.
+     */
+    String getPhysicalDatatype(String logicalDatatype);
 }

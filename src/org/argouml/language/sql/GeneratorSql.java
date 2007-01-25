@@ -26,10 +26,8 @@ package org.argouml.language.sql;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.argouml.model.Model;
 import org.argouml.uml.generator.CodeGenerator;
@@ -46,12 +44,6 @@ class GeneratorSql implements CodeGenerator {
      * The instances.
      */
     private static final GeneratorSql INSTANCE = new GeneratorSql();
-
-    private Collection foreignKeys;
-
-    private Collection primaryKeys;
-
-    private Collection indices;
 
     /**
      * Constructor.
@@ -92,9 +84,10 @@ class GeneratorSql implements CodeGenerator {
             Object element = it.next();
 
             if (Model.getFacade().isAClass(element)) {
-                List colDefs = getColumnDefinitions(element);
-                String s = creator.createTable(Model.getFacade().getName(element),
-                        colDefs);
+                TableDefinition td = new TableDefinition();
+                td.setName(Model.getFacade().getName(element));
+                td.setColumnDefinitions(getColumnDefinitions(element));
+                String s = creator.createTable(td);
                 sb.append(s);
             }
         }
@@ -118,14 +111,14 @@ class GeneratorSql implements CodeGenerator {
 
             Object type = Model.getFacade().getType(attribute);
             cd.setDatatype(Model.getFacade().getName(type));
-            
-            // Collection stereotypes =
-            // Model.getFacade().getStereotypes(attribute);
-            // cd.setNullable(???)
+
+            if (Model.getFacade().isStereotype(attribute, "NOT NULL")) {
+                cd.setNullable(false); 
+            }
 
             columnDefinitions.add(cd);
         }
-        
+
         return columnDefinitions;
     }
 

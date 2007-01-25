@@ -31,9 +31,15 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
     private static final String LINE_SEPARATOR = System
             .getProperty("line.separator");
 
-    public String createForeignKey(String tableName, List columnNames,
-            String referencesTableName, List referencesColumnNames,
-            String foreignKeyName) {
+    public String createForeignKey(ForeignKeyDefinition foreignKeyDefinition) {
+        String tableName = foreignKeyDefinition.getTableName();
+        List columnNames = foreignKeyDefinition.getColumnNames();
+        String referencesTableName = foreignKeyDefinition
+                .getReferencesTableName();
+        List referencesColumnNames = foreignKeyDefinition
+                .getReferencesColumnNames();
+        String foreignKeyName = foreignKeyDefinition.getForeignKeyName();
+
         StringBuffer sb = new StringBuffer();
         sb.append("ALTER TABLE ");
         sb.append(tableName);
@@ -66,16 +72,23 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
         return sb.toString();
     }
 
-    public String createIndex(String indexName, String tableName,
-            List columnNames, boolean descending) {
+    public String getPhysicalDatatype(String logicalDatatype) {
+        String result = logicalDatatype;
+        if (logicalDatatype.equals("TEXT")) {
+            result = "VARCHAR(4000)";
+        }
+        return result;
+    }
+
+    public String createIndex(IndexDefinition indexDefinition) {
         // TODO: Auto-generated method stub
         return null;
     }
 
-    public String createTable(String tableName, List columnDefinitions) {
+    public String createTable(TableDefinition tableDefinition) {
         StringBuffer sb = new StringBuffer();
         sb.append("CREATE TABLE ");
-        sb.append(tableName);
+        sb.append(tableDefinition.getName());
         sb.append(LINE_SEPARATOR);
         sb.append("();");
         return sb.toString();
