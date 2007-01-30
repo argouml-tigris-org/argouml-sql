@@ -32,13 +32,15 @@ package org.argouml.language.sql;
 public class ColumnDefinition {
     private String datatype;
 
+    private Object defaultValue;
+
     private String name;
 
     private boolean nullable;
 
     /**
      * Creates a new column definition.
-     *
+     * 
      */
     public ColumnDefinition() {
         super();
@@ -66,6 +68,10 @@ public class ColumnDefinition {
         return datatype;
     }
 
+    public Object getDefaultValue() {
+        return defaultValue;
+    }
+
     /**
      * 
      * @return The name of the column.
@@ -89,6 +95,10 @@ public class ColumnDefinition {
      */
     public void setDatatype(String datatype) {
         this.datatype = datatype;
+    }
+
+    public void setDefaultValue(Object defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
     /**
