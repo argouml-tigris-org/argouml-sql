@@ -26,6 +26,7 @@ package org.argouml.language.sql;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -37,8 +38,19 @@ import org.argouml.uml.generator.SourceUnit;
  * SQL generator
  */
 class GeneratorSql implements CodeGenerator {
-    private static final String LINE_SEPARATOR = System
-            .getProperty("line.separator");
+    static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+    static final String PRIMARY_KEY_STEREOTYPE = "PK";
+
+    static final String FOREIGN_KEY_STEREOTYPE = "FK";
+
+    static final String NOT_NULL_STEREOTYPE = "NOT NULL";
+
+    static final String NULL_STEREOTYPE = "NULL";
+
+    static final String SOURCE_COLUMN_TAGGED_VALUE = "source column";
+
+    static final String ASSOCIATION_NAME_TAGGED_VALUE = "association name";
 
     /**
      * The instances.
@@ -75,11 +87,19 @@ class GeneratorSql implements CodeGenerator {
      *      boolean)
      */
     public Collection generate(Collection elements, boolean deps) {
+
+        ModelValidator validator = new ModelValidator();
+        Collection problems = validator.validate(elements);
+        if (problems.size() > 0) {
+            // model not valid, do something
+        }
+
         // Just some testing for understanding the model and facade
         StringBuffer sb = new StringBuffer();
         SqlCodeCreator creator = new FirebirdSqlCodeCreator();
 
         Iterator it = elements.iterator();
+        Collection tableDefinitions = new HashSet();
         while (it.hasNext()) {
             Object element = it.next();
 
@@ -87,10 +107,13 @@ class GeneratorSql implements CodeGenerator {
                 TableDefinition td = new TableDefinition();
                 td.setName(Model.getFacade().getName(element));
                 td.setColumnDefinitions(getColumnDefinitions(element));
-                String s = creator.createTable(td);
-                sb.append(s);
+
+                tableDefinitions.add(td);
             }
         }
+
+        // String s = creator.createTable(td);
+        // sb.append(s);
 
         String sourceCode = sb.toString();
         SourceUnit su = new SourceUnit("E:\\Test.sql", sourceCode);
@@ -113,7 +136,7 @@ class GeneratorSql implements CodeGenerator {
             cd.setDatatype(Model.getFacade().getName(type));
 
             if (Model.getFacade().isStereotype(attribute, "NOT NULL")) {
-                cd.setNullable(false); 
+                cd.setNullable(false);
             }
 
             columnDefinitions.add(cd);
@@ -159,5 +182,4 @@ class GeneratorSql implements CodeGenerator {
     public Collection generateFileList(Collection elements, boolean deps) {
         throw new Error("Not yet implemented");
     }
-
 } /* end class GeneratorSql */

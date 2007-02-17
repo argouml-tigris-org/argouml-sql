@@ -69,6 +69,7 @@ public interface SqlCodeCreator {
      * @param logicalDatatype
      *            The typename used in the model.
      * @return The typename to use in the SQL statement.
-     */
+     * @deprecated
+     */    
     String getPhysicalDatatype(String logicalDatatype);
 }
