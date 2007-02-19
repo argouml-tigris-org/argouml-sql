@@ -33,7 +33,7 @@ final class Utils {
     private Utils() {
 
     }
-
+    
     public static Object getFkAttribute(Object entity, Object association) {
         String assocName = Model.getFacade().getName(association);
 
@@ -74,4 +74,18 @@ final class Utils {
         return association;
     }
 
+    public static Object getAttributeForName(Object entity, String attributeName) {
+        Object attribute = null;
+        
+        Collection attributes = Model.getFacade().getAttributes(entity);
+        for (Iterator it = attributes.iterator(); it.hasNext(); ) {
+            Object attr = it.next();
+            if (Model.getFacade().getName(attr).equals(attributeName)) {
+                attribute = attr;
+                break;
+            }
+        }             
+        
+        return attribute;
+    }
 }
