@@ -1,15 +1,15 @@
 <html>
  <head>
-  <title>Mapping between UML and SQL</title>
+  <title>Mapping between UML and Relational model</title>
  </head>
  <body>
   <div class="h2">
   <h2>Mapping</h2>
   <p>
-The mapping between UML and SQL is done according to the following:
+The mapping between UML and Relational is done according to the following:
 </p>
   <table>
-   <tr><th>SQL</th><th>UML</th></tr>
+   <tr><th>Relational</th><th>UML</th></tr>
    <tr>
     <td>Table</td><td>Class (stereotype &lt;&lt;Table&gt;&gt; is optional)</td>
    </tr>
@@ -24,12 +24,6 @@ The mapping between UML and SQL is done according to the following:
     <td>Attribute of special stereotype (&lt;&lt;PK&gt;&gt;, &lt;&lt;FK&gt;&gt;)</td>
    </tr>
    <tr>
-    <td>(Unique) index</td>
-    <td>Class of stereotype &lt;&lt;Index&gt;&gt; or &lt;&lt;Unique&gt;&gt; with 
-    dependency to corresponding table
-    </td>
-   </tr>
-   <tr>
     <td>Attribute properties</td><td>Attribute properties, special stereotypes 
     (see below)</td>
    </tr>
@@ -41,30 +35,30 @@ The mapping between UML and SQL is done according to the following:
   <p>For modelling foreign keys it is not enough to just let an attribute be of 
   the stereotype &lt;&lt;FK&gt;&gt;. It must also be specified what table and 
   what column this foreign key refers to. This might be done using tagged 
-  values whereas source column and table should be used.
+  values whereas source column and association name should be used. The 
+  association a foreign key belongs to needs to be specified because if there 
+  exist more than one relationship between two tables it cannot be determined 
+  which foreign key belongs to which relationship.
   </div>
   
   <div class="h2">
   <h2>Attribute mapping</h2>
-  <p>Special SQL-attribute properties will be mapped this way:</p>
+  <p>Special attribute properties will be mapped this way:</p>
   <table>
   <tr>
-	<th>SQL</th><th>UML</th>
+	<th>Relational</th><th>UML</th>
   </tr>
   	<tr>
   	  <td>NULL / NOT NULL</td><td>If an attribute should be NOT NULL, let the 
   	  attribute be of stereotype &lt;&lt;NOT NULL&gt;&gt;. The stereotype 
   	  &lt;&lt;NULL&gt;&gt; is not needed on every attribute that is nullable, so 
   	  the attribute is nullable if it is not &lt;&lt;NOT NULL&gt;&gt;.</td>
-	</tr><tr>
-  	  <td>autoinc</td><td>stereotype &lt;&lt;AutoInc&gt;&gt;</td>
-  	</tr>
+	</tr>
   </table>
-  <p>The 'default value' and the 'enumeration' attribute properties are supported 
-  directly.</p>
+  <p>The 'default value' property is supported directly.</p>
   </div>
   
-  See also: 
+  This mapping is based on: 
   <a href="http://www.agiledata.org/essays/umlDataModelingProfile.html">
   Scott W. Ambler, A UML Profile for Data Modeling</a>
   <hr>
