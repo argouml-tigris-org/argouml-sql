@@ -26,9 +26,11 @@ package org.argouml.language.sql;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.argouml.model.Model;
@@ -36,11 +38,19 @@ import org.argouml.model.Model;
 class ModelValidator {
     private Set associationNames = new HashSet();
 
+    private Map fkAttrForAssoc = new HashMap();
+
     private List problems;
 
     public ModelValidator() {
     }
 
+    /**
+     * Validate the specified elements.
+     * 
+     * @param elements
+     * @return
+     */
     public Collection validate(Collection elements) {
         problems = new ArrayList();
 
@@ -56,163 +66,6 @@ class ModelValidator {
         return problems;
     }
 
-    /**
-     * <p>
-     * Checks if the <code>foreignKey</code> is of a stereotype NULL/NOT NULL
-     * and if it conflicts with the multiplicity of the association end. A
-     * conflict results from one of these constellations:
-     * <ol>
-     * <li>attribute is of stereotype NOT NULL, the corresponding association
-     * end multiplicity is 0..1
-     * <li>attribute is of stereotype NULL, the corresponding association end
-     * multiplicity is 1
-     * </ol>
-     * <p>
-     * If attribute is none of these two stereotypes there is no conflict.
-     * <p>
-     * Checks rules B9.1 and B9.2.
-     * 
-     * @param attribute
-     *            The foreign key attribute to check
-     * @param entity
-     *            The entity the foreign key should refer to
-     * @param lowerBound
-     *            The lower multiplicity of the corresponding association end
-     * @return <code>true</code> if there is no conflict
-     * @deprecated
-     */
-    private boolean isFkAttributeConsistent(final Object attribute,
-            final Object entity, final int lowerBound) {
-        boolean consistent = true;
-
-        boolean isFk = Utils.isFk(attribute);
-        if (isFk) {
-            boolean isReferencingEntity = isFkAttributeReferencingEntity(
-                    attribute, entity);
-            if (isReferencingEntity) {
-                if (lowerBound == 0
-                        && Model.getFacade().isStereotype(attribute,
-                                GeneratorSql.NOT_NULL_STEREOTYPE)) {
-                    consistent = false;
-                } else if (lowerBound == 1
-                        && Model.getFacade().isStereotype(attribute,
-                                GeneratorSql.NULL_STEREOTYPE)) {
-                    consistent = false;
-                }
-            }
-        }
-
-        return consistent;
-    }
-
-    /**
-     * <p>
-     * Checks if the foreign key attribute <code>fkAttribute</code> references
-     * a column in <code>entity</code>. <code>fkAttribute</code> references
-     * <code>entity</code> if all of the following conditions evaluate to
-     * <code>true</code>:
-     * <ol>
-     * <li>fkAttribute does not contain a tagged value "table" or the
-     * fkAttribute has exactly one tagged value "table" for which the data value
-     * equals entity.name
-     * <li>entity contains an attribute which name equals fkAttribute.name or
-     * the fkAttribute has exactly one tagged value for which the data value
-     * "sourceColumn" equals the name of an attribute of entity
-     * </ol>
-     * 
-     * @param fkAttribute
-     *            The foreign key attribute
-     * @param entity
-     *            The entity
-     * @return <code>true</code> if <code>foreignKey</code> references a
-     *         column in <code>entity</code>
-     * @deprecated
-     */
-    private boolean isFkAttributeReferencingEntity(final Object fkAttribute,
-            final Object entity) {
-        String sourceColumn = Model.getFacade().getTaggedValueValue(
-                fkAttribute, GeneratorSql.SOURCE_COLUMN_TAGGED_VALUE);
-        String associationName = Model.getFacade().getTaggedValueValue(
-                fkAttribute, GeneratorSql.ASSOCIATION_NAME_TAGGED_VALUE);
-
-        boolean tableReferencing = false;
-
-        boolean columnReferencing = false;
-        Collection entityAttributes = Model.getFacade().getAttributes(entity);
-        Iterator it = entityAttributes.iterator();
-        while (it.hasNext()) {
-            Object attribute = it.next();
-            if (sourceColumn.equals(Model.getFacade().getName(attribute))) {
-                columnReferencing = true;
-                break;
-            }
-        }
-
-        return tableReferencing && columnReferencing;
-    }
-
-    private void validateAssociation(Object association) {
-
-    }
-
-    /**
-     * @deprecated use {@link #validateAssociation(Object)}
-     * @param entity
-     * @param entityAssocEnd
-     */
-    private void validateAssociation(Object entity, Object entityAssocEnd) {
-        Collection otherAssocEnds = Model.getFacade().getOtherAssociationEnds(
-                entityAssocEnd);
-        if (otherAssocEnds.size() == 1) {
-            Object otherAssocEnd = otherAssocEnds.iterator().next();
-
-            Object association = Model.getFacade().getAssociation(
-                    entityAssocEnd);
-            String assocName = Model.getFacade().getName(association);
-
-            int entityUpper = Model.getFacade().getUpper(entityAssocEnd);
-            int otherUpper = Model.getFacade().getUpper(otherAssocEnd);
-
-            if (entityUpper > 1 && otherUpper > 1) {
-                validateManyToMany(association);
-            }
-
-            if (assocName == null || assocName.equals("")) {
-                Object otherEntity = Model.getFacade().getClassifier(
-                        otherAssocEnd);
-
-                String name1 = Model.getFacade().getName(entity);
-                String name2 = Model.getFacade().getName(otherEntity);
-
-                problems.add("association between " + name1 + " and " + name2
-                        + " not named");
-            } else if (associationNames.contains(assocName)) {
-                problems.add("association name " + assocName
-                        + " not globally unique");
-            } else {
-                associationNames.add(assocName);
-            }
-        } else {
-            problems.add("Mehrseitige Beziehung noch nicht unterstützt!");
-        }
-    }
-
-    /**
-     * check rules B...
-     * 
-     * @deprecated use {@link #validateAssociation(Object)}
-     * @param entity
-     */
-    private void validateAssociations(Object entity) {
-        Collection associationEnds = Model.getFacade().getAssociationEnds(
-                entity);
-        Iterator it = associationEnds.iterator();
-        while (it.hasNext()) {
-            Object entityAssocEnd = it.next();
-            validateAssociation(entity, entityAssocEnd);
-        }
-    }
-
     private void validateEntity(Object entity) {
         validatePrimaryKey(entity);
 
@@ -224,102 +77,11 @@ class ModelValidator {
             }
         }
 
-        // validateAssociations(entity);
+        validateAssociations(entity);
     }
 
     /**
-     * Checks if a foreign key attribute is referencing an association. Further
-     * checks if this foreign key attribute is referencing an attribute in
-     * another entity.
-     * 
-     * @param entity
-     * @param attribute
-     */
-    private void validateFkAttribute(Object entity, Object attribute) {
-        String entName = Model.getFacade().getName(entity);
-        String attrName = Model.getFacade().getName(attribute);
-        String assocName = Model.getFacade().getTaggedValueValue(attribute,
-                GeneratorSql.ASSOCIATION_NAME_TAGGED_VALUE);
-        String srcColName = Model.getFacade().getTaggedValueValue(attribute,
-                GeneratorSql.SOURCE_COLUMN_TAGGED_VALUE);
-
-        Object association = Utils.getAssociationForName(entity, assocName);
-        if (association == null) {
-            problems.add("association named " + assocName + " for entity "
-                    + Model.getFacade().getName(entity) + " not found");
-        }
-
-        Object entityAssocEnd = Model.getFacade().getAssociationEnd(entity,
-                association);
-        Collection otherAssocEnds = Model.getFacade().getOtherAssociationEnds(
-                entityAssocEnd);
-
-        if (otherAssocEnds.size() == 1) {
-            Object otherAssocEnd = otherAssocEnds.iterator().next();
-            Object otherEntity = Model.getFacade().getClassifier(otherAssocEnd);
-
-            String s = srcColName;
-            if (s.equals("")) {
-                s = attrName;
-            }
-            Object srcAttr = Utils.getAttributeForName(entity, s);
-            if (srcAttr == null) {
-                problems.add("fk attribute " + attrName + " does not "
-                        + "reference " + " an attribute in "
-                        + Model.getFacade().getName(otherEntity));
-            }
-
-            int entityUpper = Model.getFacade().getUpper(entityAssocEnd);
-            int otherUpper = Model.getFacade().getUpper(otherAssocEnd);
-            if (otherUpper > 1) {
-                problems.add("foreign key attribute " + attrName
-                        + " cannot be used to reference multiple "
-                        + Model.getFacade().getName(otherEntity));
-            }
-
-            int otherLower = Model.getFacade().getLower(otherAssocEnd);
-            if (Model.getFacade().isStereotype(attribute, "NULL")
-                    && otherLower == 1) {
-                problems.add("conflict in " + entName + "." + attrName + ": "
-                        + "attribute is nullable and association lower bound "
-                        + "is one");
-            } else if (Model.getFacade().isStereotype(attribute, "NOT NULL")
-                    && otherLower == 0) {
-                problems.add("conflict in " + entName + "." + attrName + ": "
-                        + "attribute is not nullable and association lower "
-                        + "bound is zero");
-            }
-        }
-    }
-
-    /**
-     * Validate a many to many association between two classes.
-     * 
-     * @param association
-     */
-    private void validateManyToMany(Object association) {
-        if (Model.getFacade().isAAssociationClass(association)) {
-            Collection attributes = Model.getFacade()
-                    .getAttributes(association);
-            Iterator it = attributes.iterator();
-            while (it.hasNext()) {
-                Object attribute = it.next();
-                // TODO implement many-to-many-validation
-            }
-        }
-    }
-
-    private void validateOneToOne(Object entity, Object entityAssocEnd,
-            Object otherAssocEnd) {
-        int entityLower = Model.getFacade().getLower(entityAssocEnd);
-        int otherLower = Model.getFacade().getLower(otherAssocEnd);
-
-        if (entityLower == 1 && otherLower == 1) {
-        }
-    }
-
-    /**
-     * Checks if every entity has a primary key.
+     * Checks if every entity has a primary key. (rule 1)
      * 
      * @param entity
      *            The entity to check.
@@ -336,5 +98,179 @@ class ModelValidator {
         }
         problems.add("Kein Primärschlüssel für "
                 + Model.getFacade().getName(entity) + " definiert");
+    }
+
+    /**
+     * Checks if a foreign key attribute is referencing an association. Further
+     * checks if this foreign key attribute is referencing an attribute in
+     * another entity. Checks rules 2 to 6.
+     * 
+     * @param entity
+     * @param attribute
+     */
+    private void validateFkAttribute(Object entity, Object attribute) {
+        String entName = Model.getFacade().getName(entity);
+        String attrName = Model.getFacade().getName(attribute);
+        String assocName = Model.getFacade().getTaggedValueValue(attribute,
+                GeneratorSql.ASSOCIATION_NAME_TAGGED_VALUE);
+
+        Object association = Utils.getAssociationForName(entity, assocName);
+        if (association == null) {
+            problems.add("association named " + assocName + " for entity "
+                    + Model.getFacade().getName(entity) + " not found");
+        } else {
+            fkAttrForAssoc.put(association, attribute);
+
+            Object entityAssocEnd = Model.getFacade().getAssociationEnd(entity,
+                    association);
+            Collection otherAssocEnds = Model.getFacade()
+                    .getOtherAssociationEnds(entityAssocEnd);
+
+            if (otherAssocEnds.size() == 1) {
+                Object otherAssocEnd = otherAssocEnds.iterator().next();
+                Object otherEntity = Model.getFacade().getClassifier(
+                        otherAssocEnd);
+
+                Object srcAttr = getSourceAttribute(attribute, otherEntity);
+                if (srcAttr == null) {
+                    problems.add("fk attribute " + entName + "." + attrName
+                            + " does not reference " + " an attribute in "
+                            + Model.getFacade().getName(otherEntity));
+                }
+
+                int otherUpper = Model.getFacade().getUpper(otherAssocEnd);
+                if (otherUpper != 1) {
+                    problems.add("foreign key attribute " + entName + "."
+                            + attrName
+                            + " cannot be used to reference multiple "
+                            + Model.getFacade().getName(otherEntity));
+                }
+
+                int otherLower = Model.getFacade().getLower(otherAssocEnd);
+                validateFkConsistence(entity, attribute, otherLower);
+            }
+        }
+    }
+
+    /**
+     * Get the attribute a foreign key attribute is referencing to.
+     * 
+     * @param fkAttribute
+     *            The foreign key attribute.
+     * @param srcEntity
+     *            The entity the foreign key is referencing to.
+     * @return The referenced attribute.
+     */
+    private Object getSourceAttribute(Object fkAttribute, Object srcEntity) {
+        String srcColName = Model.getFacade().getTaggedValueValue(fkAttribute,
+                GeneratorSql.SOURCE_COLUMN_TAGGED_VALUE);
+        if (srcColName.equals("")) {
+            srcColName = Model.getFacade().getName(fkAttribute);
+        }
+        Object srcAttr = Utils.getAttributeForName(srcEntity, srcColName);
+        if (srcAttr == null) {
+            Collection pkAttrs = Utils.getPrimaryKeyAttributes(srcEntity);
+            if (pkAttrs.size() == 1) {
+                srcAttr = pkAttrs.iterator().next();
+            }
+        }
+        return srcAttr;
+    }
+
+    /**
+     * <p>
+     * Checks if the <code>foreignKey</code> is of a stereotype NULL/NOT NULL
+     * and if it conflicts with the multiplicity of the association end. A
+     * conflict results from one of these constellations:
+     * <ol>
+     * <li>attribute is of stereotype NOT NULL, the corresponding association
+     * end multiplicity is 0..1
+     * <li>attribute is of stereotype NULL, the corresponding association end
+     * multiplicity is 1
+     * </ol>
+     * <p>
+     * If attribute is none of these two stereotypes there is no conflict.
+     * <p>
+     * Checks rules 5 and 6.
+     * 
+     * @param fkAttribute
+     *            The foreign key attribute to check
+     * @param entity
+     *            The entity the foreign key should refer to
+     * @param lowerBound
+     *            The lower multiplicity of the corresponding association end
+     */
+    private void validateFkConsistence(final Object entity,
+            final Object fkAttribute, final int lowerBound) {
+        String entName = Model.getFacade().getName(entity);
+        String attrName = Model.getFacade().getName(fkAttribute);
+
+        if (Model.getFacade().isStereotype(fkAttribute, "NULL")
+                && lowerBound == 1) {
+            problems.add("conflict in " + entName + "." + attrName + ": "
+                    + "attribute is nullable and association lower bound "
+                    + "is one");
+        } else if (Model.getFacade().isStereotype(fkAttribute, "NOT NULL")
+                && lowerBound == 0) {
+            problems.add("conflict in " + entName + "." + attrName + ": "
+                    + "attribute is not nullable and association lower "
+                    + "bound is zero");
+        }
+    }
+
+    /**
+     * Validate every association for entity.
+     * 
+     * @param entity
+     */
+    private void validateAssociations(Object entity) {
+        Collection associationEnds = Model.getFacade().getAssociationEnds(
+                entity);
+        Iterator it = associationEnds.iterator();
+        while (it.hasNext()) {
+            Object entityAssocEnd = it.next();
+            Object association = Model.getFacade().getAssociation(
+                    entityAssocEnd);
+            validateAssociation(association);
+        }
+    }
+
+    /**
+     * Validate the specified association. The association needs to have a
+     * unique name, must be binary and at most 1:n. And there must exist a
+     * foreign key attribute for an association.
+     * 
+     * @param association
+     */
+    private void validateAssociation(Object association) {
+        String assocName = Model.getFacade().getName(association);
+        if (associationNames.contains(assocName)) {
+            problems.add("Association name " + assocName
+                    + " found more than once");
+        }
+
+        Collection assocEnds = Model.getFacade().getConnections(association);
+        if (assocEnds.size() != 2) {
+            problems.add("Association " + assocName + " is not binary");
+        } else {
+            Iterator it = assocEnds.iterator();
+
+            Object assocEnd1 = it.next();
+            Object assocEnd2 = it.next();
+
+            int end1Upper = Model.getFacade().getUpper(assocEnd1);
+            int end2Upper = Model.getFacade().getUpper(assocEnd2);
+
+            if (end1Upper != 1 && end2Upper != 1) {
+                problems.add("Association " + assocName + " is n:m (not "
+                        + "allowed in a relational data model)");
+            }
+        }
+
+        Object fkAttribute = fkAttrForAssoc.get(association);
+        if (fkAttribute == null) {
+            problems.add("Foreign key attribute missing for association "
+                    + assocName);
+        }
     }
 }

@@ -25,15 +25,43 @@
 package org.argouml.language.sql;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
 
 import org.argouml.model.Model;
 
 final class Utils {
-    private Utils() {
+    public static Object getAssociationForName(Object entity, String assocName) {
+        Object association = null;
 
+        Collection assocEnds = Model.getFacade().getAssociationEnds(entity);
+        for (Iterator it = assocEnds.iterator(); it.hasNext();) {
+            Object assocEnd = it.next();
+            Object assoc = Model.getFacade().getAssociation(assocEnd);
+            String name = Model.getFacade().getName(assoc);
+            if (name.equals(assocName)) {
+                association = assoc;
+            }
+        }
+
+        return association;
     }
-    
+
+    public static Object getAttributeForName(Object entity, String attributeName) {
+        Object attribute = null;
+
+        Collection attributes = Model.getFacade().getAttributes(entity);
+        for (Iterator it = attributes.iterator(); it.hasNext();) {
+            Object attr = it.next();
+            if (Model.getFacade().getName(attr).equals(attributeName)) {
+                attribute = attr;
+                break;
+            }
+        }
+
+        return attribute;
+    }
+
     public static Object getFkAttribute(Object entity, Object association) {
         String assocName = Model.getFacade().getName(association);
 
@@ -53,39 +81,38 @@ final class Utils {
         return fkAttribute;
     }
 
+    /**
+     * Build a collection of all primary key attributes of entity.
+     * 
+     * @param entity
+     * @return
+     */
+    public static Collection getPrimaryKeyAttributes(Object entity) {
+        Collection result = new HashSet();
+
+        Collection attributes = Model.getFacade().getAttributes(entity);
+
+        for (Iterator it = attributes.iterator(); it.hasNext();) {
+            Object attribute = it.next();
+            if (isPk(attribute)) {
+                result.add(attribute);
+            }
+        }
+
+        return result;
+    }
+
     public static boolean isFk(Object attribute) {
         return Model.getFacade().isStereotype(attribute,
                 GeneratorSql.FOREIGN_KEY_STEREOTYPE);
     }
 
-    public static Object getAssociationForName(Object entity, String assocName) {
-        Object association = null;
-
-        Collection assocEnds = Model.getFacade().getAssociationEnds(entity);
-        for (Iterator it = assocEnds.iterator(); it.hasNext();) {
-            Object assocEnd = it.next();
-            Object assoc = Model.getFacade().getAssociation(assocEnd);
-            String name = Model.getFacade().getName(assoc);
-            if (name.equals(assocName)) {
-                association = assoc;
-            }
-        }
-
-        return association;
+    public static boolean isPk(Object attribute) {
+        return Model.getFacade().isStereotype(attribute,
+                GeneratorSql.PRIMARY_KEY_STEREOTYPE);
     }
 
-    public static Object getAttributeForName(Object entity, String attributeName) {
-        Object attribute = null;
-        
-        Collection attributes = Model.getFacade().getAttributes(entity);
-        for (Iterator it = attributes.iterator(); it.hasNext(); ) {
-            Object attr = it.next();
-            if (Model.getFacade().getName(attr).equals(attributeName)) {
-                attribute = attr;
-                break;
-            }
-        }             
-        
-        return attribute;
+    private Utils() {
+
     }
 }

@@ -92,6 +92,17 @@ class GeneratorSql implements CodeGenerator {
         Collection problems = validator.validate(elements);
         if (problems.size() > 0) {
             // model not valid, do something
+            StringBuffer sb = new StringBuffer();
+            for (Iterator it = problems.iterator(); it.hasNext();) {
+                String s = (String) it.next();
+                sb.append(s).append(LINE_SEPARATOR);
+            }
+            
+            String sourceCode = sb.toString();
+            SourceUnit su = new SourceUnit("E:\\Test.sql", sourceCode);
+            Collection result = new ArrayList();
+            result.add(su);
+            return result;
         }
 
         // Just some testing for understanding the model and facade
