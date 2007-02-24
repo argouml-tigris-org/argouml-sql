@@ -32,11 +32,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import org.argouml.model.Model;
 
 class ModelValidator {
-    private Set associationNames = new HashSet();
+    private Map associationForName = new HashMap();
 
     private Map fkAttrForAssoc = new HashMap();
 
@@ -54,12 +55,23 @@ class ModelValidator {
     public Collection validate(Collection elements) {
         problems = new ArrayList();
 
-        Iterator it = elements.iterator();
-        while (it.hasNext()) {
+        for (Iterator it = elements.iterator(); it.hasNext();) {
             Object entity = it.next();
             if (Model.getFacade().isAClass(entity)
                     && !Model.getFacade().isAAssociationClass(entity)) {
                 validateEntity(entity);
+            }
+        }
+
+        Set entries = associationForName.entrySet();
+        for (Iterator it = entries.iterator(); it.hasNext();) {
+            Entry entry = (Entry) it.next();
+            String assocName = (String) entry.getKey();
+            Object association = entry.getValue();
+            Object fkAttribute = fkAttrForAssoc.get(association);
+            if (fkAttribute == null) {
+                problems.add("Foreign key attribute missing for association "
+                        + assocName);
             }
         }
 
@@ -235,6 +247,8 @@ class ModelValidator {
         }
     }
 
+    private Set validatedAssociations = new HashSet();
+
     /**
      * Validate the specified association. The association needs to have a
      * unique name, must be binary and at most 1:n. And there must exist a
@@ -243,10 +257,18 @@ class ModelValidator {
      * @param association
      */
     private void validateAssociation(Object association) {
+        if (validatedAssociations.contains(association)) {
+            return;
+        }
+        
+        validatedAssociations.add(association);
+
         String assocName = Model.getFacade().getName(association);
-        if (associationNames.contains(assocName)) {
+        if (associationForName.containsKey(assocName)) {
             problems.add("Association name " + assocName
                     + " found more than once");
+        } else {
+            associationForName.put(assocName, association);
         }
 
         Collection assocEnds = Model.getFacade().getConnections(association);
@@ -265,12 +287,6 @@ class ModelValidator {
                 problems.add("Association " + assocName + " is n:m (not "
                         + "allowed in a relational data model)");
             }
-        }
-
-        Object fkAttribute = fkAttrForAssoc.get(association);
-        if (fkAttribute == null) {
-            problems.add("Foreign key attribute missing for association "
-                    + assocName);
         }
     }
 }
