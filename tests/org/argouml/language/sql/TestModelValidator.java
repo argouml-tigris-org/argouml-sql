@@ -24,47 +24,17 @@
 
 package org.argouml.language.sql;
 
-import java.io.File;
-import java.net.URL;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 
-import junit.framework.TestCase;
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
-import org.argouml.kernel.Project;
-import org.argouml.kernel.ProjectManager;
 import org.argouml.model.Model;
-import org.argouml.ui.ProjectBrowser;
 
-public class TestModelValidator extends TestCase {
-    private Object namespace;
-
-    private Object intType;
-
-    /**
-     * Load a sample model with diagrams.
-     * 
-     * @throws Exception
-     * @see junit.framework.TestCase#setUp()
-     */
-    protected void setUp() throws Exception {
-        super.setUp();
-
-        Object mmodel = Model.getModelManagementFactory().createModel();
-        Model.getCoreHelper().setName(mmodel, "untitledModel");
-        Model.getModelManagementFactory().setRootModel(mmodel);
-        namespace = Model.getModelManagementFactory().createPackage();
-        intType = Model.getCoreFactory().buildDataType("int", namespace);
-        Model.getCoreHelper().setName(namespace, "untitledNamespace");
-    }
-
-    protected void tearDown() throws Exception {
-        super.tearDown();
-    }
-
+public class TestModelValidator extends TestCaseSql {
     public void testRule1() {
-        Object valid = buildRelation("Valid");
+        Object valid = helper.buildRelation("Valid", "valid_id");
 
         ModelValidator mv = new ModelValidator();
         Collection elements = new HashSet();
@@ -82,73 +52,14 @@ public class TestModelValidator extends TestCase {
         assertTrue(problems.size() == 1);
     }
 
-    private Object buildRelation(String name) {
-        return buildRelation(name, "id");
-    }
-
-    private Object buildRelation(String name, String pkAttrName) {
-        Object relation = Model.getCoreFactory().buildClass(name, namespace);
-        addPrimaryKeyAttribute(relation, pkAttrName);
-        return relation;
-    }
-
-    private Object addPrimaryKeyAttribute(Object relation) {
-        return addPrimaryKeyAttribute(relation, "");
-    }
-
-    private Object addPrimaryKeyAttribute(Object relation, String attrName) {
-        Object pkAttribute = Model.getCoreFactory().buildAttribute(relation,
-                namespace, intType);
-        Object stereotype = Model.getExtensionMechanismsFactory()
-                .buildStereotype(pkAttribute, "PK", namespace);
-        Model.getCoreHelper().addStereotype(pkAttribute, stereotype);
-        Model.getCoreHelper().setName(pkAttribute, attrName);
-        return pkAttribute;
-    }
-
-    private Object addForeignKeyAttribute(Object relation) {
-        return addForeignKeyAttribute(relation, "");
-    }
-
-    private Object addForeignKeyAttribute(Object relation, String attrName) {
-        Object fkAttribute = Model.getCoreFactory().buildAttribute(relation,
-                namespace, intType);
-        Object stereotype = Model.getExtensionMechanismsFactory()
-                .buildStereotype(fkAttribute, "FK", namespace);
-        Model.getCoreHelper().addStereotype(fkAttribute, stereotype);
-        Model.getCoreHelper().setName(fkAttribute, attrName);
-        return fkAttribute;
-    }
-
-    private void setFkAttributeAssocName(Object fkAttribute, String assocName) {
-        if (assocName != null && assocName.length() > 0) {
-            Object taggedValue = Model.getExtensionMechanismsFactory()
-                    .buildTaggedValue(
-                            GeneratorSql.ASSOCIATION_NAME_TAGGED_VALUE,
-                            assocName);
-            Model.getExtensionMechanismsHelper().addTaggedValue(fkAttribute,
-                    taggedValue);
-        }
-    }
-
-    private void setFkAttributeSrcCol(Object fkAttribute, String srcColName) {
-        if (srcColName != null && srcColName.length() > 0) {
-            Object taggedValue = Model.getExtensionMechanismsFactory()
-                    .buildTaggedValue(GeneratorSql.SOURCE_COLUMN_TAGGED_VALUE,
-                            srcColName);
-            Model.getExtensionMechanismsHelper().addTaggedValue(fkAttribute,
-                    taggedValue);
-        }
-    }
-
     public void testRule2Valid() {
-        Object valid1 = buildRelation("Valid1");
-        Object valid2 = buildRelation("Valid2");
+        Object valid1 = helper.buildRelation("Valid1", "valid1_id");
+        Object valid2 = helper.buildRelation("Valid2", "valid2_id");
 
         Model.getCoreFactory().buildAssociation(valid1, false, valid2, false,
                 "fk_valid");
-        Object fkAttribute = addForeignKeyAttribute(valid1);
-        setFkAttributeAssocName(fkAttribute, "fk_valid");
+        Object fkAttribute = helper.addForeignKeyAttribute(valid1, "valid2_id");
+        helper.setFkAttributeAssocName(fkAttribute, "fk_valid");
 
         ModelValidator mv = new ModelValidator();
         Collection elements = new HashSet();
@@ -160,12 +71,12 @@ public class TestModelValidator extends TestCase {
     }
 
     public void testRule2Invalid() {
-        Object invalid1 = buildRelation("Invalid1");
-        Object invalid2 = buildRelation("Invalid2");
+        Object invalid1 = helper.buildRelation("Invalid1", "invalid1_id");
+        Object invalid2 = helper.buildRelation("Invalid2", "invalid2_id");
 
         Model.getCoreFactory().buildAssociation(invalid1, false, invalid2,
                 false, "fk_invalid");
-        addForeignKeyAttribute(invalid1);
+        helper.addForeignKeyAttribute(invalid1, "invalid2_id");
 
         ModelValidator mv = new ModelValidator();
         Collection elements = new HashSet();
@@ -177,24 +88,25 @@ public class TestModelValidator extends TestCase {
     }
 
     public void testRule3Valid() {
-        Object valid1 = buildRelation("Valid1", "valid1_id");
-        Object valid2 = buildRelation("Valid2", "valid2_id1");
-        addPrimaryKeyAttribute(valid2, "valid2_id2");
-        Object valid = buildRelation("Valid", "valid_id");
+        Object valid1 = helper.buildRelation("Valid1", "valid1_id");
+        Object valid2 = helper.buildRelation("Valid2", "valid2_id1");
+        helper.addPrimaryKeyAttribute(valid2, "valid2_id2");
+        Object valid = helper.buildRelation("Valid", "valid_id");
 
         Model.getCoreFactory().buildAssociation(valid, false, valid1, false,
                 "fk_valid1");
-        Object fkAttribute = addForeignKeyAttribute(valid, "ref_to_valid1_id");
-        setFkAttributeAssocName(fkAttribute, "fk_valid1");
+        Object fkAttribute = helper.addForeignKeyAttribute(valid,
+                "ref_to_valid1_id");
+        helper.setFkAttributeAssocName(fkAttribute, "fk_valid1");
 
         Model.getCoreFactory().buildAssociation(valid, false, valid2, false,
                 "fk_valid2");
-        fkAttribute = addForeignKeyAttribute(valid, "valid2_id1");
-        setFkAttributeAssocName(fkAttribute, "fk_valid2");
+        fkAttribute = helper.addForeignKeyAttribute(valid, "valid2_id1");
+        helper.setFkAttributeAssocName(fkAttribute, "fk_valid2");
 
-        fkAttribute = addForeignKeyAttribute(valid, "some_id");
-        setFkAttributeAssocName(fkAttribute, "fk_valid2");
-        setFkAttributeSrcCol(fkAttribute, "valid2_id2");
+        fkAttribute = helper.addForeignKeyAttribute(valid, "some_id");
+        helper.setFkAttributeAssocName(fkAttribute, "fk_valid2");
+        helper.setFkAttributeSrcCol(fkAttribute, "valid2_id2");
 
         ModelValidator mv = new ModelValidator();
         Collection elements = new HashSet();
@@ -207,18 +119,19 @@ public class TestModelValidator extends TestCase {
     }
 
     public void testRule3Invalid() {
-        Object invalid1 = buildRelation("Invalid1", "invalid1_id1");
-        addPrimaryKeyAttribute(invalid1, "invalid2_id2");
-        Object invalid = buildRelation("Invalid", "invalid_id");
+        Object invalid1 = helper.buildRelation("Invalid1", "invalid1_id1");
+        helper.addPrimaryKeyAttribute(invalid1, "invalid2_id2");
+        Object invalid = helper.buildRelation("Invalid", "invalid_id");
 
         Model.getCoreFactory().buildAssociation(invalid, false, invalid1,
                 false, "fk_invalid1");
-        Object fkAttribute = addForeignKeyAttribute(invalid, "invalid1_id");
-        setFkAttributeAssocName(fkAttribute, "fk_invalid1");
+        Object fkAttribute = helper.addForeignKeyAttribute(invalid,
+                "invalid1_id");
+        helper.setFkAttributeAssocName(fkAttribute, "fk_invalid1");
 
-        fkAttribute = addForeignKeyAttribute(invalid, "some_id");
-        setFkAttributeAssocName(fkAttribute, "fk_invalid1");
-        setFkAttributeSrcCol(fkAttribute, "not_existing");
+        fkAttribute = helper.addForeignKeyAttribute(invalid, "some_id");
+        helper.setFkAttributeAssocName(fkAttribute, "fk_invalid1");
+        helper.setFkAttributeSrcCol(fkAttribute, "not_existing");
 
         ModelValidator mv = new ModelValidator();
         Collection elements = new HashSet();
@@ -230,25 +143,13 @@ public class TestModelValidator extends TestCase {
     }
 
     public void testRule4Valid() {
-        Object valid1 = buildRelation("Valid1", "valid1_id");
-        Object valid2 = buildRelation("Valid2", "valid2_id");
+        Object valid1 = helper.buildRelation("Valid1", "valid1_id");
+        Object valid2 = helper.buildRelation("Valid2", "valid2_id");
 
-        Object association = Model.getCoreFactory().buildAssociation(valid1,
-                false, valid2, false, "fk_valid");
-        Collection conns = Model.getFacade().getConnections(association);
-        assertEquals(2, conns.size());
+        helper.buildAssociation(valid1, 0, -1, valid2, 1, 1, "fk_valid");
 
-        Iterator it = conns.iterator();
-        Object valid1End = it.next();
-        Object valid2End = it.next();
-        Object mult1 = Model.getDataTypesFactory().createMultiplicity(0, -1);
-        Object mult2 = Model.getDataTypesFactory().createMultiplicity(1, 1);
-
-        Model.getCoreHelper().setMultiplicity(valid1End, mult1);
-        Model.getCoreHelper().setMultiplicity(valid2End, mult2);
-
-        Object fkAttribute = addForeignKeyAttribute(valid1, "valid2_id");
-        setFkAttributeAssocName(fkAttribute, "fk_valid");
+        Object fkAttribute = helper.addForeignKeyAttribute(valid1, "valid2_id");
+        helper.setFkAttributeAssocName(fkAttribute, "fk_valid");
 
         ModelValidator mv = new ModelValidator();
         Collection elements = new HashSet();
@@ -260,24 +161,12 @@ public class TestModelValidator extends TestCase {
     }
 
     public void testRule4Invalid() {
-        Object invalid1 = buildRelation("Invalid1", "invalid1_id");
-        Object invalid2 = buildRelation("Invalid2", "invalid2_id");
-        Object association = Model.getCoreFactory().buildAssociation(invalid1,
-                false, invalid2, false, "fk_invalid");
-        Object fkAttribute = addForeignKeyAttribute(invalid2, "invalid1_id");
-        setFkAttributeAssocName(fkAttribute, "fk_invalid");
-
-        Collection conns = Model.getFacade().getConnections(association);
-        assertEquals(2, conns.size());
-
-        Iterator it = conns.iterator();
-        Object valid1End = it.next();
-        Object valid2End = it.next();
-        Object mult1 = Model.getDataTypesFactory().createMultiplicity(0, -1);
-        Object mult2 = Model.getDataTypesFactory().createMultiplicity(1, 1);
-
-        Model.getCoreHelper().setMultiplicity(valid1End, mult1);
-        Model.getCoreHelper().setMultiplicity(valid2End, mult2);
+        Object invalid1 = helper.buildRelation("Invalid1", "invalid1_id");
+        Object invalid2 = helper.buildRelation("Invalid2", "invalid2_id");
+        helper.buildAssociation(invalid1, 0, -1, invalid2, 1, 1, "fk_invalid");
+        Object fkAttribute = helper.addForeignKeyAttribute(invalid2,
+                "invalid1_id");
+        helper.setFkAttributeAssocName(fkAttribute, "fk_invalid");
 
         ModelValidator mv = new ModelValidator();
         Collection elements = new HashSet();
@@ -289,43 +178,20 @@ public class TestModelValidator extends TestCase {
     }
 
     public void testRule5Valid() {
-        Object valid1 = buildRelation("Valid1", "valid1_id");
-        Object valid2 = buildRelation("Valid2", "valid2_id");
-        Object valid = buildRelation("Valid", "valid_id");
+        Object valid1 = helper.buildRelation("Valid1", "valid1_id");
+        Object valid2 = helper.buildRelation("Valid2", "valid2_id");
+        Object valid = helper.buildRelation("Valid", "valid_id");
 
-        Object association = Model.getCoreFactory().buildAssociation(valid1,
-                false, valid, false, "fk_valid1");
-        Object fkAttribute = addForeignKeyAttribute(valid1, "valid_id");
-        setFkAttributeAssocName(fkAttribute, "fk_valid1");
+        helper.buildAssociation(valid1, 0, -1, valid, 0, 1, "fk_valid1");
+        Object fkAttribute = helper.addForeignKeyAttribute(valid1, "valid_id");
+        helper.setFkAttributeAssocName(fkAttribute, "fk_valid1");
 
-        Collection conns = Model.getFacade().getConnections(association);
-        assertEquals(2, conns.size());
-
-        Iterator it = conns.iterator();
-        Object valid1End = it.next();
-        Object validEnd = it.next();
-        Object mult1 = Model.getDataTypesFactory().createMultiplicity(0, -1);
-        Object mult = Model.getDataTypesFactory().createMultiplicity(0, 1);
-
-        Model.getCoreHelper().setMultiplicity(valid1End, mult1);
-        Model.getCoreHelper().setMultiplicity(validEnd, mult);
-
-        association = Model.getCoreFactory().buildAssociation(valid2,
-                false, valid, false, "fk_valid2");
-        fkAttribute = addForeignKeyAttribute(valid2, "valid_id");
-        setFkAttributeAssocName(fkAttribute, "fk_valid2");
-
-        conns = Model.getFacade().getConnections(association);
-        assertEquals(2, conns.size());
-
-        it = conns.iterator();
-        Object valid2End = it.next();
-        validEnd = it.next();
-        Object mult2 = Model.getDataTypesFactory().createMultiplicity(0, -1);
-        mult = Model.getDataTypesFactory().createMultiplicity(0, 1);
-
-        Model.getCoreHelper().setMultiplicity(valid2End, mult2);
-        Model.getCoreHelper().setMultiplicity(validEnd, mult);
+        helper.buildAssociation(valid2, 0, -1, valid, 0, 1, "fk_valid2");
+        fkAttribute = helper.addForeignKeyAttribute(valid2, "valid_id");
+        helper.setFkAttributeAssocName(fkAttribute, "fk_valid2");
+        Object stereotype = Model.getExtensionMechanismsFactory()
+                .buildStereotype(fkAttribute, "NULL", namespace);
+        Model.getCoreHelper().addStereotype(fkAttribute, stereotype);
 
         ModelValidator mv = new ModelValidator();
         Collection elements = new HashSet();
@@ -335,5 +201,81 @@ public class TestModelValidator extends TestCase {
         Collection problems = mv.validate(elements);
 
         assertEquals(0, problems.size());
+    }
+
+    public void testRule5Invalid() {
+        Object invalid1 = helper.buildRelation("Invalid1", "invalid1_id");
+        Object invalid = helper.buildRelation("Invalid", "invalid_id");
+
+        helper.buildAssociation(invalid1, 0, -1, invalid, 1, 1, "fk_invalid1");
+
+        Object fkAttribute = helper.addForeignKeyAttribute(invalid1,
+                "invalid_id");
+        Object stereotype = Model.getExtensionMechanismsFactory()
+                .buildStereotype(fkAttribute, "NULL", namespace);
+        Model.getCoreHelper().addStereotype(fkAttribute, stereotype);
+
+        helper.setFkAttributeAssocName(fkAttribute, "fk_invalid1");
+
+        ModelValidator mv = new ModelValidator();
+        Collection elements = new HashSet();
+        elements.add(invalid1);
+        elements.add(invalid);
+        Collection problems = mv.validate(elements);
+
+        assertEquals(1, problems.size());
+    }
+
+    public void testRule6Valid() {
+        Object valid1 = helper.buildRelation("Valid1", "valid1_id");
+        Object valid2 = helper.buildRelation("Valid2", "valid2_id");
+        Object valid = helper.buildRelation("Valid", "valid_id");
+
+        helper.buildAssociation(valid1, 0, -1, valid, 1, 1, "fk_valid1");
+        Object fkAttribute = helper.addForeignKeyAttribute(valid1, "valid_id");
+        helper.setFkAttributeAssocName(fkAttribute, "fk_valid1");
+
+        helper.buildAssociation(valid2, 0, -1, valid, 1, 1, "fk_valid2");
+        fkAttribute = helper.addForeignKeyAttribute(valid2, "valid_id");
+        helper.setFkAttributeAssocName(fkAttribute, "fk_valid2");
+        Object stereotype = Model.getExtensionMechanismsFactory()
+                .buildStereotype(fkAttribute, "NOT NULL", namespace);
+        Model.getCoreHelper().addStereotype(fkAttribute, stereotype);
+
+        ModelValidator mv = new ModelValidator();
+        Collection elements = new HashSet();
+        elements.add(valid1);
+        elements.add(valid2);
+        elements.add(valid);
+        Collection problems = mv.validate(elements);
+
+        assertEquals(0, problems.size());
+    }
+
+    public void testRule6Invalid() {
+        Object invalid1 = helper.buildRelation("Invalid1", "invalid1_id");
+        Object invalid = helper.buildRelation("Invalid", "invalid_id");
+
+        helper.buildAssociation(invalid1, 0, -1, invalid, 0, 1, "fk_invalid1");
+
+        Object fkAttribute = helper.addForeignKeyAttribute(invalid1,
+                "invalid_id");
+        Object stereotype = Model.getExtensionMechanismsFactory()
+                .buildStereotype(fkAttribute, "NOT NULL", namespace);
+        Model.getCoreHelper().addStereotype(fkAttribute, stereotype);
+
+        helper.setFkAttributeAssocName(fkAttribute, "fk_invalid1");
+
+        ModelValidator mv = new ModelValidator();
+        Collection elements = new HashSet();
+        elements.add(invalid1);
+        elements.add(invalid);
+        Collection problems = mv.validate(elements);
+
+        assertEquals(1, problems.size());
+    }
+
+    public static Test suite() {
+        return new TestSuite(TestModelValidator.class);
     }
 }

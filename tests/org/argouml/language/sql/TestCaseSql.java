@@ -24,13 +24,42 @@
 
 package org.argouml.language.sql;
 
-import junit.framework.Test;
-import junit.framework.TestSuite;
+import org.argouml.model.Model;
 
-public class TestSuiteSql {
-    public static Test suite() {
-        TestSuite suite = new TestSuite("Test for org.argouml.language.sql");
-        suite.addTest(TestModelValidator.suite());
-        return suite;
+import junit.framework.TestCase;
+
+/**
+ * Base test case class for SQL module. Builds an empty model before every test
+ * and provides an object with methods for easy creation of some model elements.
+ * 
+ * @author Anne und Kai
+ */
+public abstract class TestCaseSql extends TestCase {
+
+    protected Object namespace;
+
+    protected Object intType;
+
+    protected TestHelper helper;
+
+    /**
+     * Create an empty model.
+     * 
+     * @throws Exception
+     * @see junit.framework.TestCase#setUp()
+     */
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        Object mmodel = Model.getModelManagementFactory().createModel();
+        Model.getCoreHelper().setName(mmodel, "untitledModel");
+        Model.getModelManagementFactory().setRootModel(mmodel);
+        namespace = Model.getModelManagementFactory().createPackage();
+        intType = Model.getCoreFactory().buildDataType("int", namespace);
+        Model.getCoreHelper().setName(namespace, "untitledNamespace");
+
+        helper = new TestHelper();
+        helper.setDefaultType(intType);
+        helper.setDefaultNamespace(namespace);
     }
 }

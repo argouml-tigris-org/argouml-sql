@@ -62,6 +62,13 @@ final class Utils {
         return attribute;
     }
 
+    /**
+     * TODO More than one fk-attribute could reference an association. Fix that.
+     * 
+     * @param entity
+     * @param association
+     * @return
+     */
     public static Object getFkAttribute(Object entity, Object association) {
         String assocName = Model.getFacade().getName(association);
 
