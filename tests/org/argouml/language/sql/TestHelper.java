@@ -29,11 +29,13 @@ import java.util.Iterator;
 
 import org.argouml.model.Model;
 
+/**
+ * Helper class for unit tests. Defines methods for simplifying building
+ * relational models.
+ * 
+ * @author drahmann
+ */
 final class TestHelper {
-    // public static Object addForeignKeyAttribute(Object relation,
-    // Object namespace, Object type) {
-    // return addForeignKeyAttribute(relation, "", namespace, type);
-    // }
     private Object defaultType;
 
     private Object defaultNamespace;

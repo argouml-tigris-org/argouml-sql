@@ -43,6 +43,9 @@ class ModelValidator {
 
     private List problems;
 
+    /**
+     * Default constructor.
+     */
     public ModelValidator() {
     }
 
@@ -56,10 +59,10 @@ class ModelValidator {
         problems = new ArrayList();
 
         for (Iterator it = elements.iterator(); it.hasNext();) {
-            Object entity = it.next();
-            if (Model.getFacade().isAClass(entity)
-                    && !Model.getFacade().isAAssociationClass(entity)) {
-                validateEntity(entity);
+            Object relation = it.next();
+            if (Model.getFacade().isAClass(relation)
+                    && !Model.getFacade().isAAssociationClass(relation)) {
+                validateRelation(relation);
             }
         }
 
@@ -78,115 +81,95 @@ class ModelValidator {
         return problems;
     }
 
-    private void validateEntity(Object entity) {
-        validatePrimaryKey(entity);
+    private void validateRelation(Object relation) {
+        validatePrimaryKey(relation);
 
-        Collection attributes = Model.getFacade().getAttributes(entity);
+        Collection attributes = Model.getFacade().getAttributes(relation);
         for (Iterator it = attributes.iterator(); it.hasNext();) {
             Object attribute = it.next();
             if (Utils.isFk(attribute)) {
-                validateFkAttribute(entity, attribute);
+                validateFkAttribute(relation, attribute);
             }
         }
 
-        validateAssociations(entity);
+        validateAssociations(relation);
     }
 
     /**
-     * Checks if every entity has a primary key. (rule 1)
+     * Checks if every relation has a primary key. (rule 1)
      * 
-     * @param entity
-     *            The entity to check.
+     * @param relation
+     *            The relation to validate.
      */
-    private void validatePrimaryKey(Object entity) {
-        List attributes = Model.getFacade().getAttributes(entity);
+    private void validatePrimaryKey(Object relation) {
+        List attributes = Model.getFacade().getAttributes(relation);
         Iterator it = attributes.iterator();
+        boolean valid = false;
         while (it.hasNext()) {
             Object attribute = it.next();
-            if (Model.getFacade().isStereotype(attribute,
-                    GeneratorSql.PRIMARY_KEY_STEREOTYPE)) {
-                return;
+            if (Utils.isPk(attribute)) {
+                valid = true;
+                break;
             }
         }
-        problems.add("Kein Primärschlüssel für "
-                + Model.getFacade().getName(entity) + " definiert");
+
+        if (!valid) {
+            problems.add("Kein Primärschlüssel für "
+                    + Model.getFacade().getName(relation) + " definiert");
+        }
     }
 
     /**
      * Checks if a foreign key attribute is referencing an association. Further
      * checks if this foreign key attribute is referencing an attribute in
-     * another entity. Checks rules 2 to 6.
+     * another relation. Checks rules 2 to 6.
      * 
-     * @param entity
+     * @param relation
      * @param attribute
      */
-    private void validateFkAttribute(Object entity, Object attribute) {
-        String entName = Model.getFacade().getName(entity);
+    private void validateFkAttribute(Object relation, Object attribute) {
+        String relName = Model.getFacade().getName(relation);
         String attrName = Model.getFacade().getName(attribute);
         String assocName = Model.getFacade().getTaggedValueValue(attribute,
                 GeneratorSql.ASSOCIATION_NAME_TAGGED_VALUE);
 
-        Object association = Utils.getAssociationForName(entity, assocName);
+        Object association = Utils.getAssociationForName(relation, assocName);
         if (association == null) {
-            problems.add("association named " + assocName + " for entity "
-                    + Model.getFacade().getName(entity) + " not found");
+            problems.add("association named " + assocName + " for relation "
+                    + Model.getFacade().getName(relation) + " not found");
         } else {
             fkAttrForAssoc.put(association, attribute);
 
-            Object entityAssocEnd = Model.getFacade().getAssociationEnd(entity,
-                    association);
+            Object relationAssocEnd = Model.getFacade().getAssociationEnd(
+                    relation, association);
             Collection otherAssocEnds = Model.getFacade()
-                    .getOtherAssociationEnds(entityAssocEnd);
+                    .getOtherAssociationEnds(relationAssocEnd);
 
             if (otherAssocEnds.size() == 1) {
                 Object otherAssocEnd = otherAssocEnds.iterator().next();
-                Object otherEntity = Model.getFacade().getClassifier(
+                Object otherRelation = Model.getFacade().getClassifier(
                         otherAssocEnd);
 
-                Object srcAttr = getSourceAttribute(attribute, otherEntity);
+                Object srcAttr = Utils.getSourceAttribute(attribute,
+                        otherRelation);
                 if (srcAttr == null) {
-                    problems.add("fk attribute " + entName + "." + attrName
+                    problems.add("fk attribute " + relName + "." + attrName
                             + " does not reference " + " an attribute in "
-                            + Model.getFacade().getName(otherEntity));
+                            + Model.getFacade().getName(otherRelation));
                 }
 
                 int otherUpper = Model.getFacade().getUpper(otherAssocEnd);
                 if (otherUpper != 1) {
-                    problems.add("foreign key attribute " + entName + "."
+                    problems.add("foreign key attribute " + relName + "."
                             + attrName
                             + " cannot be used to reference multiple "
-                            + Model.getFacade().getName(otherEntity));
+                            + Model.getFacade().getName(otherRelation));
                 }
 
                 int otherLower = Model.getFacade().getLower(otherAssocEnd);
-                validateFkConsistence(entity, attribute, otherLower);
+                validateFkConsistence(relation, attribute, otherLower);
             }
         }
-    }
-
-    /**
-     * Get the attribute a foreign key attribute is referencing to.
-     * 
-     * @param fkAttribute
-     *            The foreign key attribute.
-     * @param srcEntity
-     *            The entity the foreign key is referencing to.
-     * @return The referenced attribute.
-     */
-    private Object getSourceAttribute(Object fkAttribute, Object srcEntity) {
-        String srcColName = Model.getFacade().getTaggedValueValue(fkAttribute,
-                GeneratorSql.SOURCE_COLUMN_TAGGED_VALUE);
-        if (srcColName.equals("")) {
-            srcColName = Model.getFacade().getName(fkAttribute);
-        }
-        Object srcAttr = Utils.getAttributeForName(srcEntity, srcColName);
-        if (srcAttr == null) {
-            Collection pkAttrs = Utils.getPrimaryKeyAttributes(srcEntity);
-            if (pkAttrs.size() == 1) {
-                srcAttr = pkAttrs.iterator().next();
-            }
-        }
-        return srcAttr;
     }
 
     /**
@@ -207,23 +190,21 @@ class ModelValidator {
      * 
      * @param fkAttribute
      *            The foreign key attribute to check
-     * @param entity
-     *            The entity the foreign key should refer to
+     * @param relation
+     *            The relatoin the foreign key should refer to
      * @param lowerBound
      *            The lower multiplicity of the corresponding association end
      */
-    private void validateFkConsistence(final Object entity,
-            final Object fkAttribute, final int lowerBound) {
-        String entName = Model.getFacade().getName(entity);
+    private void validateFkConsistence(Object relation, Object fkAttribute,
+            int lowerBound) {
+        String entName = Model.getFacade().getName(relation);
         String attrName = Model.getFacade().getName(fkAttribute);
 
-        if (Model.getFacade().isStereotype(fkAttribute, "NULL")
-                && lowerBound == 1) {
+        if (Utils.isNull(fkAttribute) && lowerBound == 1) {
             problems.add("conflict in " + entName + "." + attrName + ": "
                     + "attribute is nullable and association lower bound "
                     + "is one");
-        } else if (Model.getFacade().isStereotype(fkAttribute, "NOT NULL")
-                && lowerBound == 0) {
+        } else if (Utils.isNotNull(fkAttribute) && lowerBound == 0) {
             problems.add("conflict in " + entName + "." + attrName + ": "
                     + "attribute is not nullable and association lower "
                     + "bound is zero");
@@ -231,18 +212,18 @@ class ModelValidator {
     }
 
     /**
-     * Validate every association for entity.
+     * Validate every association for the given relation.
      * 
-     * @param entity
+     * @param relation
      */
-    private void validateAssociations(Object entity) {
+    private void validateAssociations(Object relation) {
         Collection associationEnds = Model.getFacade().getAssociationEnds(
-                entity);
+                relation);
         Iterator it = associationEnds.iterator();
         while (it.hasNext()) {
-            Object entityAssocEnd = it.next();
+            Object relationAssocEnd = it.next();
             Object association = Model.getFacade().getAssociation(
-                    entityAssocEnd);
+                    relationAssocEnd);
             validateAssociation(association);
         }
     }
@@ -260,7 +241,7 @@ class ModelValidator {
         if (validatedAssociations.contains(association)) {
             return;
         }
-        
+
         validatedAssociations.add(association);
 
         String assocName = Model.getFacade().getName(association);
@@ -269,23 +250,24 @@ class ModelValidator {
                     + " found more than once");
         } else {
             associationForName.put(assocName, association);
-        }
 
-        Collection assocEnds = Model.getFacade().getConnections(association);
-        if (assocEnds.size() != 2) {
-            problems.add("Association " + assocName + " is not binary");
-        } else {
-            Iterator it = assocEnds.iterator();
+            Collection assocEnds = Model.getFacade()
+                    .getConnections(association);
+            if (assocEnds.size() != 2) {
+                problems.add("Association " + assocName + " is not binary");
+            } else {
+                Iterator it = assocEnds.iterator();
 
-            Object assocEnd1 = it.next();
-            Object assocEnd2 = it.next();
+                Object assocEnd1 = it.next();
+                Object assocEnd2 = it.next();
 
-            int end1Upper = Model.getFacade().getUpper(assocEnd1);
-            int end2Upper = Model.getFacade().getUpper(assocEnd2);
+                int end1Upper = Model.getFacade().getUpper(assocEnd1);
+                int end2Upper = Model.getFacade().getUpper(assocEnd2);
 
-            if (end1Upper != 1 && end2Upper != 1) {
-                problems.add("Association " + assocName + " is n:m (not "
-                        + "allowed in a relational data model)");
+                if (end1Upper != 1 && end2Upper != 1) {
+                    problems.add("Association " + assocName + " is n:m (not "
+                            + "allowed in a relational data model)");
+                }
             }
         }
     }

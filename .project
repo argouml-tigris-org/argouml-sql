@@ -11,7 +11,22 @@
 			</arguments>
 		</buildCommand>
 		<buildCommand>
+			<name>org.eclipse.ui.externaltools.ExternalToolBuilder</name>
+			<triggers>full,incremental,</triggers>
+			<arguments>
+				<dictionary>
+					<key>LaunchConfigHandle</key>
+					<value>&lt;project&gt;/.externalToolBuilders/com.cenqua.clover.eclipse.cloverjavabuilder.launch</value>
+				</dictionary>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
 			<name>de.mvmsoft.checkclipse.CheckclipseBuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>com.jcoverage.ide.plugin.coverageInstrumentationBuilder</name>
 			<arguments>
 			</arguments>
 		</buildCommand>
@@ -19,5 +34,7 @@
 	<natures>
 		<nature>de.mvmsoft.checkclipse.CheckclipseNature</nature>
 		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>com.jcoverage.ide.plugin.coverageNature</nature>
+		<nature>com.codign.coview.coviewNature</nature>
 	</natures>
 </projectDescription>

@@ -35,11 +35,19 @@ import junit.framework.TestCase;
  * @author Anne und Kai
  */
 public abstract class TestCaseSql extends TestCase {
-
+    /**
+     * The namespace in which all model elements should be created. 
+     */
     protected Object namespace;
 
+    /**
+     * The default data type.
+     */
     protected Object intType;
 
+    /**
+     * Instance of test helper class.
+     */
     protected TestHelper helper;
 
     /**

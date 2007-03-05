@@ -24,17 +24,29 @@
 
 package org.argouml.language.sql;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 
+import org.argouml.model.Facade;
 import org.argouml.model.Model;
 
 final class Utils {
-    public static Object getAssociationForName(Object entity, String assocName) {
+    /**
+     * Return an association named <code>assocName</code> that is connected to
+     * relation.
+     * 
+     * @param relation
+     *            The relation where to search the association.
+     * @param assocName
+     *            The name of the association to search.
+     * @return The association if found, <code>null</code> else.
+     */
+    public static Object getAssociationForName(Object relation, String assocName) {
         Object association = null;
 
-        Collection assocEnds = Model.getFacade().getAssociationEnds(entity);
+        Collection assocEnds = Model.getFacade().getAssociationEnds(relation);
         for (Iterator it = assocEnds.iterator(); it.hasNext();) {
             Object assocEnd = it.next();
             Object assoc = Model.getFacade().getAssociation(assocEnd);
@@ -47,10 +59,22 @@ final class Utils {
         return association;
     }
 
-    public static Object getAttributeForName(Object entity, String attributeName) {
+    /**
+     * Search the attribute named <code>attributeName</code> in the given
+     * relation. If there exist more than one attribute the first one is
+     * returned.
+     * 
+     * @param relation
+     *            The relation in which to search the attribute.
+     * @param attributeName
+     *            The name of the attribute to search.
+     * @return The attribute if found, <code>null</code> else.
+     */
+    public static Object getAttributeForName(Object relation,
+            String attributeName) {
         Object attribute = null;
 
-        Collection attributes = Model.getFacade().getAttributes(entity);
+        Collection attributes = Model.getFacade().getAttributes(relation);
         for (Iterator it = attributes.iterator(); it.hasNext();) {
             Object attr = it.next();
             if (Model.getFacade().getName(attr).equals(attributeName)) {
@@ -63,41 +87,47 @@ final class Utils {
     }
 
     /**
-     * TODO More than one fk-attribute could reference an association. Fix that.
+     * Build a list of all foreign key attributes that refer a specific
+     * association.
      * 
-     * @param entity
+     * @param relation
+     *            The relation which contains the fk-attributes.
      * @param association
-     * @return
+     *            The association for which to return the fk-attributes.
+     * @return A list of all attributes. If there is no attribute, an empty list
+     *         is returned.
      */
-    public static Object getFkAttribute(Object entity, Object association) {
+    public static List getFkAttribute(Object relation, Object association) {
         String assocName = Model.getFacade().getName(association);
 
-        Collection attributes = Model.getFacade().getAttributes(entity);
+        Collection attributes = Model.getFacade().getAttributes(relation);
         Iterator it = attributes.iterator();
-        Object fkAttribute = null;
+        List fkAttributes = new ArrayList();
         while (it.hasNext()) {
             Object attribute = it.next();
             String s = Model.getFacade().getTaggedValueValue(attribute,
                     GeneratorSql.ASSOCIATION_NAME_TAGGED_VALUE);
 
             if (s.equals(assocName)) {
-                fkAttribute = attribute;
+                fkAttributes.add(attribute);
             }
         }
 
-        return fkAttribute;
+        return fkAttributes;
     }
 
     /**
-     * Build a collection of all primary key attributes of entity.
+     * Build a list of all primary key attributes of entity.
      * 
-     * @param entity
-     * @return
+     * @param relation
+     *            The relation for which to return the pk-attributes.
+     * @return A list of all primary key attributes. If there is no
+     *         pk-attribute, the list is empty.
      */
-    public static Collection getPrimaryKeyAttributes(Object entity) {
-        Collection result = new HashSet();
+    public static List getPrimaryKeyAttributes(Object relation) {
+        List result = new ArrayList();
 
-        Collection attributes = Model.getFacade().getAttributes(entity);
+        Collection attributes = Model.getFacade().getAttributes(relation);
 
         for (Iterator it = attributes.iterator(); it.hasNext();) {
             Object attribute = it.next();
@@ -109,16 +139,100 @@ final class Utils {
         return result;
     }
 
+    /**
+     * Returns if an attribute is a foreign key attribute. Effectively checks if
+     * the attribute is of stereotype
+     * {@link GeneratorSql#FOREIGN_KEY_STEREOTYPE}.
+     * 
+     * @param attribute
+     *            The attribute to check.
+     * @return <code>true</code> if it is a fk-attribute, <code>false</code>
+     *         else.
+     * @see Facade#isStereotype(Object, String)
+     */
     public static boolean isFk(Object attribute) {
         return Model.getFacade().isStereotype(attribute,
                 GeneratorSql.FOREIGN_KEY_STEREOTYPE);
     }
 
+    /**
+     * Returns if an attribute is a primary key attribute. Effectively checks if
+     * the attribute is of stereotype
+     * {@link GeneratorSql#PRIMARY_KEY_STEREOTYPE}.
+     * 
+     * @param attribute
+     *            The attribute to check.
+     * @return <code>true</code> if it is a pk-attribute, <code>false</code>
+     *         else.
+     * @see Facade#isStereotype(Object, String)
+     */
     public static boolean isPk(Object attribute) {
         return Model.getFacade().isStereotype(attribute,
                 GeneratorSql.PRIMARY_KEY_STEREOTYPE);
     }
 
+    /**
+     * Returns if an attribute is not nullable. Effectively checks if the
+     * attribute is of stereotype {@link GeneratorSql#NOT_NULL_STEREOTYPE}.
+     * 
+     * @param attribute
+     *            The attribute to check.
+     * @return <code>true</code> if it is not nullable, <code>false</code>
+     *         else.
+     * @see Facade#isStereotype(Object, String)
+     */
+    public static boolean isNotNull(Object attribute) {
+        return Model.getFacade().isStereotype(attribute,
+                GeneratorSql.NOT_NULL_STEREOTYPE);
+    }
+
+    /**
+     * Returns if an attribute is nullable. Effectively checks if the attribute
+     * is of stereotype {@link GeneratorSql#NULL_STEREOTYPE}.
+     * 
+     * @param attribute
+     *            The attribute to check.
+     * @return <code>true</code> if it is nullable, <code>false</code> else.
+     * @see Facade#isStereotype(Object, String)
+     */
+    public static boolean isNull(Object attribute) {
+        return Model.getFacade().isStereotype(attribute,
+                GeneratorSql.NULL_STEREOTYPE);
+    }
+
+    /**
+     * Get the attribute a foreign key attribute is referencing to. Returns
+     * <code>null</code> if the source attribute cannot be determined.
+     * 
+     * @param fkAttribute
+     *            The foreign key attribute.
+     * @param srcRelation
+     *            The entity the foreign key is referencing to.
+     * @return The referenced attribute.
+     */
+    public static Object getSourceAttribute(Object fkAttribute,
+            Object srcRelation) {
+        String srcColName = Model.getFacade().getTaggedValueValue(fkAttribute,
+                GeneratorSql.SOURCE_COLUMN_TAGGED_VALUE);
+        Object srcAttr = null;
+        if (srcColName.equals("")) {
+            srcColName = Model.getFacade().getName(fkAttribute);
+            srcAttr = Utils.getAttributeForName(srcRelation, srcColName);
+            if (srcAttr == null) {
+                Collection pkAttrs = Utils.getPrimaryKeyAttributes(srcRelation);
+                if (pkAttrs.size() == 1) {
+                    srcAttr = pkAttrs.iterator().next();
+                }
+            }
+        } else {
+            srcAttr = Utils.getAttributeForName(srcRelation, srcColName);
+        }
+        return srcAttr;
+    }
+
+    /**
+     * Private constructor so no instance can be created.
+     */
     private Utils() {
 
     }
