@@ -36,7 +36,7 @@ public class ColumnDefinition {
 
     private String name;
 
-    private boolean nullable;
+    private Boolean nullable;
 
     /**
      * Creates a new column definition.
@@ -53,7 +53,7 @@ public class ColumnDefinition {
      * @param name
      * @param nullable
      */
-    public ColumnDefinition(String datatype, String name, boolean nullable) {
+    public ColumnDefinition(String datatype, String name, Boolean nullable) {
         this();
         this.datatype = datatype;
         this.name = name;
@@ -84,7 +84,7 @@ public class ColumnDefinition {
      * 
      * @return Whether this column is NULLable
      */
-    public boolean isNullable() {
+    public Boolean getNullable() {
         return nullable;
     }
 
@@ -115,7 +115,7 @@ public class ColumnDefinition {
      * 
      * @param nullable
      */
-    public void setNullable(boolean nullable) {
+    public void setNullable(Boolean nullable) {
         this.nullable = nullable;
     }
 }

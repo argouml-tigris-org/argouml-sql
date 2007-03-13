@@ -230,6 +230,23 @@ final class Utils {
         return srcAttr;
     }
 
+    public static String stringsToString(List strings, String separators) {
+        StringBuffer sb = new StringBuffer();
+        Iterator it = strings.iterator();
+        while (it.hasNext()) {
+            String s = (String) it.next();
+            if (sb.length() > 0) {
+                sb.append(",");
+            }
+            sb.append(s);
+        }
+        return sb.toString();
+    }
+    
+    public static String stringsToCommaString(List strings) {
+        return stringsToString(strings, ",");
+    }
+    
     /**
      * Private constructor so no instance can be created.
      */

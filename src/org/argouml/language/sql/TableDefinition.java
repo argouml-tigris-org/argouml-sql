@@ -24,6 +24,7 @@
 
 package org.argouml.language.sql;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TableDefinition {
@@ -31,16 +32,25 @@ public class TableDefinition {
 
     private List columnDefinitions;
 
-    private List primaryKey;
+    private List primaryKeyFields;
+    
+    public TableDefinition() {
+        columnDefinitions = new ArrayList();
+        primaryKeyFields = new ArrayList();
+    }
 
     public List getColumnDefinitions() {
         return columnDefinitions;
     }
 
-    public void setColumnDefinitions(List columnDefinitions) {
-        this.columnDefinitions = columnDefinitions;
+    public void addColumnDefinition(ColumnDefinition cd) {
+        columnDefinitions.add(cd);
     }
-
+    
+    public void addPrimaryKeyField(String name) {
+        primaryKeyFields.add(name);
+    }
+    
     public String getName() {
         return name;
     }
@@ -50,10 +60,6 @@ public class TableDefinition {
     }
 
     public List getPrimaryKey() {
-        return primaryKey;
-    }
-
-    public void setPrimaryKey(List primaryKey) {
-        this.primaryKey = primaryKey;
+        return primaryKeyFields;
     }
 }

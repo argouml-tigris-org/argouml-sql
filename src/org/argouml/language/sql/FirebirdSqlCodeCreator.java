@@ -31,6 +31,12 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
     private static final String LINE_SEPARATOR = System
             .getProperty("line.separator");
 
+    private int primaryKeyCounter;
+
+    public FirebirdSqlCodeCreator() {
+        primaryKeyCounter = 1;
+    }
+
     public String createForeignKey(ForeignKeyDefinition foreignKeyDefinition) {
         String tableName = foreignKeyDefinition.getTableName();
         List columnNames = foreignKeyDefinition.getColumnNames();
@@ -41,32 +47,13 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
         String foreignKeyName = foreignKeyDefinition.getForeignKeyName();
 
         StringBuffer sb = new StringBuffer();
-        sb.append("ALTER TABLE ");
-        sb.append(tableName);
-        sb.append(" ADD CONSTRAINT ");
-        sb.append(foreignKeyName);
+        sb.append("ALTER TABLE ").append(tableName);
+        sb.append(" ADD CONSTRAINT ").append(foreignKeyName);
         sb.append(" FOREIGN KEY (");
-        Iterator it = columnNames.iterator();
-        boolean firstIteration = true;
-        while (it.hasNext()) {
-            if (!firstIteration) {
-                sb.append(",");
-            }
-            String columnName = (String) it.next();
-            sb.append(columnName);
-        }
+        sb.append(Utils.stringsToCommaString(columnNames));
         sb.append(") REFERENCES ");
-        sb.append(referencesTableName);
-        sb.append(" (");
-        it = referencesColumnNames.iterator();
-        firstIteration = true;
-        while (it.hasNext()) {
-            if (!firstIteration) {
-                sb.append(",");
-            }
-            String columnName = (String) it.next();
-            sb.append(columnName);
-        }
+        sb.append(referencesTableName).append(" (");
+        sb.append(Utils.stringsToCommaString(referencesColumnNames));
         sb.append(");");
 
         return sb.toString();
@@ -89,8 +76,42 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
         StringBuffer sb = new StringBuffer();
         sb.append("CREATE TABLE ");
         sb.append(tableDefinition.getName());
+        sb.append(" (").append(LINE_SEPARATOR);
+
+        Iterator it = tableDefinition.getColumnDefinitions().iterator();
+        while (it.hasNext()) {
+            ColumnDefinition colDef = (ColumnDefinition) it.next();
+            sb.append(colDef.getName()).append(" ");
+            sb.append(colDef.getDatatype());
+            Boolean nullable = colDef.getNullable();
+            if (nullable != null) {
+                if (nullable.equals(Boolean.TRUE)) {
+                    sb.append(" ").append("NULL");
+                } else if (nullable.equals(Boolean.FALSE)) {
+                    sb.append(" ").append("NOT NULL");
+                }
+            }
+            sb.append(",").append(LINE_SEPARATOR);
+        }
+
+        StringBuffer sbPk = new StringBuffer();
+        it = tableDefinition.getPrimaryKey().iterator();
+        while (it.hasNext()) {
+            String primaryKeyField = (String) it.next();
+            if (sbPk.length() > 0) {
+                sbPk.append(", ");
+            }
+            sbPk.append(primaryKeyField);
+        }
+
+        sb.append("CONSTRAINT PK").append(primaryKeyCounter);
+        sb.append(" PRIMARY KEY (").append(sbPk).append(")");
         sb.append(LINE_SEPARATOR);
-        sb.append("();");
+
+        sb.append(");");
+
+        primaryKeyCounter++;
+
         return sb.toString();
     }
 }

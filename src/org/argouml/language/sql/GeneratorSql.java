@@ -24,15 +24,20 @@
 
 package org.argouml.language.sql;
 
+import java.io.File;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.argouml.model.Model;
 import org.argouml.uml.generator.CodeGenerator;
 import org.argouml.uml.generator.SourceUnit;
+import org.argouml.uml.generator.TempFileUtils;
 
 /**
  * SQL generator
@@ -51,6 +56,8 @@ class GeneratorSql implements CodeGenerator {
     static final String SOURCE_COLUMN_TAGGED_VALUE = "source column";
 
     static final String ASSOCIATION_NAME_TAGGED_VALUE = "association name";
+
+    private Logger logger = Logger.getLogger(getClass());
 
     /**
      * The instances.
@@ -87,73 +94,56 @@ class GeneratorSql implements CodeGenerator {
      *      boolean)
      */
     public Collection generate(Collection elements, boolean deps) {
-
-        ModelValidator validator = new ModelValidator();
-        Collection problems = validator.validate(elements);
-        if (problems.size() > 0) {
-            // model not valid, do something
-            StringBuffer sb = new StringBuffer();
-            for (Iterator it = problems.iterator(); it.hasNext();) {
-                String s = (String) it.next();
-                sb.append(s).append(LINE_SEPARATOR);
+        logger.debug("generate() called");
+        File tmpdir = null;
+        try {
+            tmpdir = TempFileUtils.createTempDir();
+            if (tmpdir != null) {
+                return generateFiles(elements, tmpdir.getPath(), deps);
             }
-            
-            String sourceCode = sb.toString();
-            SourceUnit su = new SourceUnit("E:\\Test.sql", sourceCode);
-            Collection result = new ArrayList();
-            result.add(su);
-            return result;
-        }
-
-        // Just some testing for understanding the model and facade
-        StringBuffer sb = new StringBuffer();
-        SqlCodeCreator creator = new FirebirdSqlCodeCreator();
-
-        Iterator it = elements.iterator();
-        Collection tableDefinitions = new HashSet();
-        while (it.hasNext()) {
-            Object element = it.next();
-
-            if (Model.getFacade().isAClass(element)) {
-                TableDefinition td = new TableDefinition();
-                td.setName(Model.getFacade().getName(element));
-                td.setColumnDefinitions(getColumnDefinitions(element));
-
-                tableDefinitions.add(td);
+            return Collections.EMPTY_LIST;
+        } finally {
+            if (tmpdir != null) {
+                TempFileUtils.deleteDir(tmpdir);
             }
+            logger.debug("generate() terminated");
         }
-
-        // String s = creator.createTable(td);
-        // sb.append(s);
-
-        String sourceCode = sb.toString();
-        SourceUnit su = new SourceUnit("E:\\Test.sql", sourceCode);
-        Collection result = new ArrayList();
-        result.add(su);
-        return result;
     }
 
-    private List getColumnDefinitions(Object element) {
-        List columnDefinitions = new ArrayList();
+    private TableDefinition getTableDefinition(Object element) {
+        TableDefinition tableDefinition = new TableDefinition();
+        tableDefinition.setName(Model.getFacade().getName(element));
+
         Iterator itAttributes = Model.getFacade().getAttributes(element)
                 .iterator();
         while (itAttributes.hasNext()) {
             Object attribute = itAttributes.next();
+            
+            String name = Model.getFacade().getName(attribute);
 
             ColumnDefinition cd = new ColumnDefinition();
-            cd.setName(Model.getFacade().getName(attribute));
+            cd.setName(name);
 
             Object type = Model.getFacade().getType(attribute);
             cd.setDatatype(Model.getFacade().getName(type));
 
-            if (Model.getFacade().isStereotype(attribute, "NOT NULL")) {
-                cd.setNullable(false);
+            if (Utils.isNull(attribute)) {
+                cd.setNullable(Boolean.TRUE);
+            } else if (Utils.isNotNull(attribute)) {
+                cd.setNullable(Boolean.FALSE);
+            } else {
+                cd.setNullable(null);
             }
-
-            columnDefinitions.add(cd);
+            
+            tableDefinition.addColumnDefinition(cd);
+            
+            if (Utils.isPk(attribute)) {
+                cd.setNullable(Boolean.FALSE);
+                tableDefinition.addPrimaryKeyField(name);
+            }
         }
 
-        return columnDefinitions;
+        return tableDefinition;
     }
 
     /**
@@ -173,7 +163,53 @@ class GeneratorSql implements CodeGenerator {
      */
     public Collection generateFiles(Collection elements, String path,
             boolean deps) {
-        return generate(elements, deps);
+        String filename = "script.sql";
+        if (!path.endsWith(FILE_SEPARATOR)) {
+            path += FILE_SEPARATOR;
+        }
+
+        logger.debug("validating model");
+        ModelValidator validator = new ModelValidator();
+        Collection problems = validator.validate(elements);
+        if (problems.size() > 0) {
+            // model not valid, do something
+            logger.debug("model not valid, exiting code generation");
+            StringBuffer sb = new StringBuffer();
+            for (Iterator it = problems.iterator(); it.hasNext();) {
+                String s = (String) it.next();
+                sb.append(s).append(LINE_SEPARATOR);
+            }
+
+            String sourceCode = sb.toString();
+            SourceUnit su = new SourceUnit(path + filename, sourceCode);
+            Collection result = new ArrayList();
+            result.add(su);
+            return result;
+        }
+
+        // Just some testing for understanding the model and facade
+        StringBuffer sb = new StringBuffer();
+        SqlCodeCreator creator = new FirebirdSqlCodeCreator();
+
+        Iterator it = elements.iterator();
+        // Collection tableDefinitions = new HashSet();
+        while (it.hasNext()) {
+            Object element = it.next();
+
+            if (Model.getFacade().isAClass(element)) {
+
+                sb.append(creator.createTable(getTableDefinition(element)));
+                // tableDefinitions.add(td);
+            }
+        }
+
+        //sb.append("will be replaced with generated code");
+
+        String sourceCode = sb.toString();
+        SourceUnit su = new SourceUnit(path + filename, sourceCode);
+        Collection result = new ArrayList();
+        result.add(su);
+        return result;
     }
 
     /**
