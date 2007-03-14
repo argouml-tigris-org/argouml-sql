@@ -64,11 +64,13 @@ class GeneratorSql implements CodeGenerator {
      */
     private static final GeneratorSql INSTANCE = new GeneratorSql();
 
+    private DomainMapper domainMapper;
+    
     /**
      * Constructor.
      */
     private GeneratorSql() {
-        // Cannot be created from somewhere else.
+        domainMapper = new DomainMapper();
     }
 
     /**
@@ -118,14 +120,16 @@ class GeneratorSql implements CodeGenerator {
                 .iterator();
         while (itAttributes.hasNext()) {
             Object attribute = itAttributes.next();
-            
+
             String name = Model.getFacade().getName(attribute);
 
             ColumnDefinition cd = new ColumnDefinition();
             cd.setName(name);
 
-            Object type = Model.getFacade().getType(attribute);
-            cd.setDatatype(Model.getFacade().getName(type));
+            Object domain = Model.getFacade().getType(attribute);
+            String domainName = Model.getFacade().getName(domain);
+            String datatype = domainMapper.getDatatype(domainName);
+            cd.setDatatype(datatype);
 
             if (Utils.isNull(attribute)) {
                 cd.setNullable(Boolean.TRUE);
@@ -134,9 +138,9 @@ class GeneratorSql implements CodeGenerator {
             } else {
                 cd.setNullable(null);
             }
-            
+
             tableDefinition.addColumnDefinition(cd);
-            
+
             if (Utils.isPk(attribute)) {
                 cd.setNullable(Boolean.FALSE);
                 tableDefinition.addPrimaryKeyField(name);
@@ -187,7 +191,9 @@ class GeneratorSql implements CodeGenerator {
             return result;
         }
 
-        // Just some testing for understanding the model and facade
+        logger.debug("replacing domains with datatypes");
+        
+
         StringBuffer sb = new StringBuffer();
         SqlCodeCreator creator = new FirebirdSqlCodeCreator();
 
@@ -197,13 +203,9 @@ class GeneratorSql implements CodeGenerator {
             Object element = it.next();
 
             if (Model.getFacade().isAClass(element)) {
-
                 sb.append(creator.createTable(getTableDefinition(element)));
-                // tableDefinitions.add(td);
             }
         }
-
-        //sb.append("will be replaced with generated code");
 
         String sourceCode = sb.toString();
         SourceUnit su = new SourceUnit(path + filename, sourceCode);
