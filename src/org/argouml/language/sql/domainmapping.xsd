@@ -16,14 +16,15 @@
 	</complexType>
 
 	<complexType name="mappingType">
-		<sequence>		</sequence>
 		<attribute name="umltype" type="string"></attribute>
 		<attribute name="dbtype" type="string"></attribute>
 	</complexType>
 
 	<complexType name="databaseType">
 		<sequence>
-			<element name="mapping" type="tns:mappingType" maxOccurs="unbounded"></element>
+			<element name="mapping" type="tns:mappingType"
+				maxOccurs="unbounded">
+			</element>
 		</sequence>
 		<attribute name="name" type="string" use="required"></attribute>
 	</complexType>

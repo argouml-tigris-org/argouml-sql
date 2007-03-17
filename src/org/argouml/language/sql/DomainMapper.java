@@ -52,6 +52,10 @@ class DomainMapper {
     private void readMappings(Map mappings, NodeList nodes) {
         for (int i = 0; i < nodes.getLength(); i++) {
             Node mapping = nodes.item(i);
+            if (mapping.getNodeType() != Node.ELEMENT_NODE) {
+                continue;
+            }
+            
             NamedNodeMap attributes = mapping.getAttributes();
             Node src = attributes.getNamedItem("umltype");
             Node dst = attributes.getNamedItem("dbtype");
@@ -74,10 +78,16 @@ class DomainMapper {
             Document document = docBuilder.parse(xmlFile);
             Element root = document.getDocumentElement();
 
-            NodeList childs = root.getElementsByTagName("database");
+            // String uri = root.getNamespaceURI();
+            // NodeList childs = root.getElementsByTagNameNS(uri, "database");
+            NodeList childs = root.getChildNodes();
 
             for (int i = 0; i < childs.getLength(); i++) {
                 Node child = childs.item(i);
+                if (child.getNodeType() != Node.ELEMENT_NODE) {
+                    continue;
+                }
+                
                 NamedNodeMap attributes = child.getAttributes();
                 String name = attributes.getNamedItem("name").getTextContent();
 

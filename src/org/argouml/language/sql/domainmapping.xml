@@ -4,7 +4,7 @@
 	xsi:schemaLocation="http://www.argouml.org/Namespace/argouml-sql domainmapping.xsd ">
 
 	<!-- Mappings for Firebird -->
-	<tns:database name="FirebirdSqlCodeCreator">
+	<tns:database name="org.argouml.language.sql.FirebirdSqlCodeCreator">
 		<tns:mapping umltype="int" dbtype="INTEGER" />
 		<tns:mapping umltype="String" dbtype="VARCHAR(200)" />
 		<tns:mapping umltype="double" dbtype="DOUBLE PRECISION" />
@@ -14,7 +14,7 @@
 	</tns:database>
 
 	<!-- Mappings for MySQL -->
-	<tns:database name="MySqlCodeCreator">
+	<tns:database name="org.argouml.language.sql.MySqlCodeCreator">
 		<tns:mapping umltype="int" dbtype="INTEGER" />
 		<tns:mapping umltype="String" dbtype="VARCHAR(200)" />
 		<tns:mapping umltype="double" dbtype="DOUBLE PRECISION" />
