@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -46,23 +47,23 @@ class DomainMapper {
 
     private Logger LOG = Logger.getLogger(getClass());
 
-    private Map domainMappings;
+    private Map databases;
 
-    private void readMappings(NodeList mappings) {
-        for (int i = 0; i < mappings.getLength(); i++) {
-            Node mapping = mappings.item(i);
+    private void readMappings(Map mappings, NodeList nodes) {
+        for (int i = 0; i < nodes.getLength(); i++) {
+            Node mapping = nodes.item(i);
             NamedNodeMap attributes = mapping.getAttributes();
-            Node src = attributes.getNamedItem("src");
-            Node dst = attributes.getNamedItem("dst");
+            Node src = attributes.getNamedItem("umltype");
+            Node dst = attributes.getNamedItem("dbtype");
             String srcText = src.getTextContent();
             String dstText = dst.getTextContent();
-            
-            domainMappings.put(srcText, dstText);
+
+            mappings.put(srcText, dstText);
         }
     }
-    
+
     public DomainMapper() {
-        domainMappings = new HashMap();
+        databases = new HashMap();
         String filename = getClass().getResource(XML_FILE_NAME).getPath();
         File xmlFile = new File(filename);
 
@@ -72,10 +73,23 @@ class DomainMapper {
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
             Document document = docBuilder.parse(xmlFile);
             Element root = document.getDocumentElement();
-            
-            NodeList childs = root.getElementsByTagName("mapping");
-            readMappings(childs);
-            
+
+            NodeList childs = root.getElementsByTagName("database");
+
+            for (int i = 0; i < childs.getLength(); i++) {
+                Node child = childs.item(i);
+                NamedNodeMap attributes = child.getAttributes();
+                String name = attributes.getNamedItem("name").getTextContent();
+
+                Map mappings = (Map) databases.get(name);
+                if (mappings == null) {
+                    mappings = new HashMap();
+                    databases.put(name, mappings);
+                }
+
+                readMappings(mappings, child.getChildNodes());
+            }
+
         } catch (ParserConfigurationException e) {
             // TODO: Auto-generated catch block
             LOG.error("Exception", e);
@@ -87,12 +101,31 @@ class DomainMapper {
             LOG.error("Exception", e);
         }
     }
-    
-    public String getDatatype(String domain) {
+
+    /**
+     * Returns the datatype for a given domain and code creator. The domain
+     * itself is returned if
+     * <ul>
+     * <li>there does not exist a mapping for the given code creator or</li>
+     * <li>there is no defined mapping for the given domain</li>
+     * </ul>
+     * 
+     * @param codeCreator
+     *            The code creator
+     * @param domain
+     *            The domain
+     * @return The database-specific datatype for the given domain
+     */
+    public String getDatatype(Object codeCreator, String domain) {
+        Map mappings = (Map) databases.get(codeCreator.getClass().getName());
         String datatype = domain;
-        if (domainMappings.containsKey(domain)) {
-            datatype = (String) domainMappings.get(domain);
+        if (mappings != null) {
+            String dt = (String) mappings.get(domain);
+            if (dt != null) {
+                datatype = dt;
+            }
         }
+
         return datatype;
     }
 }

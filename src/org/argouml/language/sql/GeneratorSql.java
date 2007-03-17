@@ -65,7 +65,9 @@ class GeneratorSql implements CodeGenerator {
     private static final GeneratorSql INSTANCE = new GeneratorSql();
 
     private DomainMapper domainMapper;
-    
+
+    private FirebirdSqlCodeCreator sqlCodeCreator;
+
     /**
      * Constructor.
      */
@@ -128,7 +130,8 @@ class GeneratorSql implements CodeGenerator {
 
             Object domain = Model.getFacade().getType(attribute);
             String domainName = Model.getFacade().getName(domain);
-            String datatype = domainMapper.getDatatype(domainName);
+            String datatype = domainMapper.getDatatype(sqlCodeCreator,
+                    domainName);
             cd.setDatatype(datatype);
 
             if (Utils.isNull(attribute)) {
@@ -192,10 +195,9 @@ class GeneratorSql implements CodeGenerator {
         }
 
         logger.debug("replacing domains with datatypes");
-        
 
         StringBuffer sb = new StringBuffer();
-        SqlCodeCreator creator = new FirebirdSqlCodeCreator();
+        sqlCodeCreator = new FirebirdSqlCodeCreator();
 
         Iterator it = elements.iterator();
         // Collection tableDefinitions = new HashSet();
@@ -203,7 +205,8 @@ class GeneratorSql implements CodeGenerator {
             Object element = it.next();
 
             if (Model.getFacade().isAClass(element)) {
-                sb.append(creator.createTable(getTableDefinition(element)));
+                sb.append(sqlCodeCreator
+                        .createTable(getTableDefinition(element)));
             }
         }
 

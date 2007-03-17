@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<mappings>
-    <mapping src="int" dst="INTEGER"/>
-    <mapping src="String" dst="VARCHAR(200)"/>
-    <mapping src="double" dst="DOUBLE PRECISION"/>
-    <mapping src="char" dst="CHAR"/>
-    <mapping src="float" dst="DOUBLE PRECISION"/>
-    <mapping src="LongText" dst="TEXT"/>
-</mappings>
