@@ -48,6 +48,11 @@ etc.
     <path id="run.classpath">
       <fileset dir="${argo.build.dir}" includes="*.jar"/>
     </path>
+  	
+    <copy todir="${build.classes}/org/argouml/language/sql">
+      <fileset dir="${module.src.dir}/org/argouml/language/sql" includes="*.xml"/>
+    </copy>
+  	
   </target>
 
   <!-- =================================================================== -->

@@ -97,7 +97,7 @@ final class Utils {
      * @return A list of all attributes. If there is no attribute, an empty list
      *         is returned.
      */
-    public static List getFkAttribute(Object relation, Object association) {
+    public static List getFkAttributes(Object relation, Object association) {
         String assocName = Model.getFacade().getName(association);
 
         Collection attributes = Model.getFacade().getAttributes(relation);

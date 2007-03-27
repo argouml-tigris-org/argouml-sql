@@ -24,25 +24,56 @@
 
 package org.argouml.language.sql;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class ForeignKeyDefinition {
-    private String tableName;
+    private TableDefinition table;
 
-    private List columnNames;
+    private List columns;
 
-    private String referencesTableName;
+    private TableDefinition referencesTable;
 
-    private List referencesColumnNames;
+    private List referencesColumns;
 
     private String foreignKeyName;
 
+    private int lower;
+
+    private int upper;
+
+    private int referencesLower;
+
+    private int referencesUpper;
+
+    public ForeignKeyDefinition() {
+        columns = new ArrayList();
+        referencesColumns = new ArrayList();
+    }
+    
+    public int getReferencesUpper() {
+        return referencesUpper;
+    }
+
+    public void setReferencesUpper(int referencesUpper) {
+        this.referencesUpper = referencesUpper;
+    }
+
     public List getColumnNames() {
+        List columnNames = new ArrayList();
+        for (Iterator it = columns.iterator(); it.hasNext();) {
+            ColumnDefinition cd = (ColumnDefinition) it.next();
+            columnNames.add(cd.getName());
+        }
         return columnNames;
     }
 
-    public void setColumnNames(List columnNames) {
-        this.columnNames = columnNames;
+    // public void setColumnNames(List columnNames) {
+    // this.columnNames = columnNames;
+    // }
+    public void addColumnDefinition(ColumnDefinition colDef) {
+        columns.add(colDef);
     }
 
     public String getForeignKeyName() {
@@ -54,27 +85,82 @@ public class ForeignKeyDefinition {
     }
 
     public List getReferencesColumnNames() {
+        List referencesColumnNames = new ArrayList();
+        for (Iterator it = referencesColumns.iterator(); it.hasNext();) {
+            ColumnDefinition cd = (ColumnDefinition) it.next();
+            referencesColumnNames.add(cd.getName());
+        }
         return referencesColumnNames;
     }
 
-    public void setReferencesColumnNames(List referencesColumnNames) {
-        this.referencesColumnNames = referencesColumnNames;
+    // public void setReferencesColumnNames(List referencesColumnNames) {
+    // this.referencesColumnNames = referencesColumnNames;
+    // }
+    public void addReferencesColumn(ColumnDefinition colDef) {
+        referencesColumns.add(colDef);
     }
 
     public String getReferencesTableName() {
-        return referencesTableName;
+        return referencesTable.getName();
     }
-
-    public void setReferencesTableName(String referencesTableName) {
-        this.referencesTableName = referencesTableName;
-    }
-
+//
+//    public void setReferencesTableName(String referencesTableName) {
+//        this.referencesTableName = referencesTableName;
+//    }
+//
     public String getTableName() {
-        return tableName;
+        return table.getName();
+    }
+//
+//    public void setTableName(String tableName) {
+//        this.tableName = tableName;
+//    }
+
+    public int getLower() {
+        return lower;
     }
 
-    public void setTableName(String tableName) {
-        this.tableName = tableName;
+    public void setLower(int lower) {
+        this.lower = lower;
     }
 
+    public int getReferencesLower() {
+        return referencesLower;
+    }
+
+    public void setReferencesLower(int referencesLower) {
+        this.referencesLower = referencesLower;
+    }
+
+    public int getUpper() {
+        return upper;
+    }
+
+    public void setUpper(int upper) {
+        this.upper = upper;
+    }
+
+    public List getColumns() {
+        return columns;
+    }
+    
+    public List getReferencesColumns() {
+        return referencesColumns;
+    }
+
+    public TableDefinition getReferencesTable() {
+        return referencesTable;
+    }
+
+    public void setReferencesTable(TableDefinition referencesTable) {
+        this.referencesTable = referencesTable;
+    }
+
+    public TableDefinition getTable() {
+        return table;
+    }
+
+    public void setTable(TableDefinition table) {
+        this.table = table;
+    }
 }

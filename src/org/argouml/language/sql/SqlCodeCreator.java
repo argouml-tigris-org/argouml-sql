@@ -57,6 +57,7 @@ public interface SqlCodeCreator {
      * @param indexDefinition
      *            The definition of the index.
      * @return The created sql statement.
+     * @deprecated
      */
     String createIndex(IndexDefinition indexDefinition);
 

@@ -24,16 +24,23 @@
 
 package org.argouml.language.sql;
 
+import java.io.BufferedWriter;
 import java.io.File;
-import java.net.URL;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.argouml.application.api.Argo;
+import org.argouml.application.api.Configuration;
 import org.argouml.model.Model;
 import org.argouml.uml.generator.CodeGenerator;
 import org.argouml.uml.generator.SourceUnit;
@@ -66,7 +73,7 @@ class GeneratorSql implements CodeGenerator {
 
     private DomainMapper domainMapper;
 
-    private FirebirdSqlCodeCreator sqlCodeCreator;
+    private SqlCodeCreator sqlCodeCreator;
 
     /**
      * Constructor.
@@ -103,7 +110,9 @@ class GeneratorSql implements CodeGenerator {
         try {
             tmpdir = TempFileUtils.createTempDir();
             if (tmpdir != null) {
-                return generateFiles(elements, tmpdir.getPath(), deps);
+                Collection filenames = generateFiles(elements,
+                        tmpdir.getPath(), deps);
+                return TempFileUtils.readAllFiles(tmpdir);
             }
             return Collections.EMPTY_LIST;
         } finally {
@@ -153,6 +162,23 @@ class GeneratorSql implements CodeGenerator {
         return tableDefinition;
     }
 
+    private void setNullable(TableDefinition tableDef, List columnNames,
+            boolean nullable) {
+        for (Iterator it = columnNames.iterator(); it.hasNext();) {
+            String name = (String) it.next();
+            tableDef.getColumnDefinition(name).setNullable(
+                    Boolean.valueOf(nullable));
+        }
+    }
+
+    private void buildDefinitions(Object element) {
+
+    }
+
+    private Map tableDefinitions;
+
+    private List foreignKeyDefinitions;
+
     /**
      * Generate files for the specified classifiers.
      * 
@@ -194,27 +220,161 @@ class GeneratorSql implements CodeGenerator {
             return result;
         }
 
-        logger.debug("replacing domains with datatypes");
-
-        StringBuffer sb = new StringBuffer();
+        // TODO Make the sqlCodeCreator variable
         sqlCodeCreator = new FirebirdSqlCodeCreator();
+        tableDefinitions = new HashMap();
+        foreignKeyDefinitions = new ArrayList();
 
-        Iterator it = elements.iterator();
-        // Collection tableDefinitions = new HashSet();
-        while (it.hasNext()) {
+        for (Iterator it = elements.iterator(); it.hasNext();) {
             Object element = it.next();
-
             if (Model.getFacade().isAClass(element)) {
-                sb.append(sqlCodeCreator
-                        .createTable(getTableDefinition(element)));
+                TableDefinition tableDef = getTableDefinition(element);
+                tableDefinitions.put(element, tableDef);
             }
         }
 
-        String sourceCode = sb.toString();
-        SourceUnit su = new SourceUnit(path + filename, sourceCode);
+        for (Iterator it = elements.iterator(); it.hasNext();) {
+            Object element = it.next();
+            Collection fkDefs = getForeignKeyDefinitions(element);
+            TableDefinition tableDef = (TableDefinition) tableDefinitions
+                    .get(element);
+            for (Iterator it2 = fkDefs.iterator(); it2.hasNext();) {
+                ForeignKeyDefinition fkDef = (ForeignKeyDefinition) it2.next();
+
+                if (fkDef.getReferencesLower() == 0) {
+                    setNullable(tableDef, fkDef.getColumnNames(), true);
+                } else {
+                    setNullable(tableDef, fkDef.getColumnNames(), false);
+                }
+            }
+            foreignKeyDefinitions.addAll(fkDefs);
+        }
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("-- Table definitions").append(LINE_SEPARATOR);
+        for (Iterator it = tableDefinitions.values().iterator(); it.hasNext();) {
+            TableDefinition tableDef = (TableDefinition) it.next();
+            sb.append(sqlCodeCreator.createTable(tableDef));
+        }
+
+        sb.append("-- Foreign key definitions").append(LINE_SEPARATOR);
+        for (Iterator it = foreignKeyDefinitions.iterator(); it.hasNext();) {
+            ForeignKeyDefinition fkDef = (ForeignKeyDefinition) it.next();
+            sb.append(sqlCodeCreator.createForeignKey(fkDef));
+        }
+
+        String fullFilename = path + filename;
+        BufferedWriter fos = null;
+        try {
+            String inputSrcEnc = Configuration
+                    .getString(Argo.KEY_INPUT_SOURCE_ENCODING);
+            if (inputSrcEnc == null || inputSrcEnc.trim().equals("")) {
+                inputSrcEnc = System.getProperty("file.encoding");
+            }
+            fos = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(fullFilename), inputSrcEnc));
+            fos.write(sb.toString());
+        } catch (IOException e) {
+            logger.error("IO Exception: " + e);
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                logger.error("FAILED: " + fullFilename);
+            }
+        }
+
         Collection result = new ArrayList();
-        result.add(su);
+        result.add(fullFilename);
         return result;
+    }
+
+    private Collection getForeignKeyDefinitions(Object relation) {
+        Collection fkDefs = new HashSet();
+        Collection assocEnds = Model.getFacade().getAssociationEnds(relation);
+
+        for (Iterator it = assocEnds.iterator(); it.hasNext();) {
+            Object assocEnd = it.next();
+
+            Collection otherAssocEnds = Model.getFacade()
+                    .getOtherAssociationEnds(assocEnd);
+            Object otherAssocEnd = otherAssocEnds.iterator().next();
+
+            ForeignKeyDefinition fkDef = getFkDef(relation, assocEnd,
+                    otherAssocEnd);
+            if (fkDef != null) {
+                fkDefs.add(fkDef);
+            }
+        }
+
+        return fkDefs;
+    }
+
+    private ForeignKeyDefinition getFkDef(Object relation, Object assocEnd,
+            Object otherAssocEnd) {
+        Object assoc = Model.getFacade().getAssociation(assocEnd);
+        List fkAttributes = Utils.getFkAttributes(relation, assoc);
+        int otherUpper = Model.getFacade().getUpper(otherAssocEnd);
+        if (otherUpper != 1 || fkAttributes.size() == 0) {
+            return null;
+        }
+        ForeignKeyDefinition fkDef = new ForeignKeyDefinition();
+
+        List srcAttributes = new ArrayList();
+
+        Object srcRelation = Model.getFacade().getClassifier(otherAssocEnd);
+        for (Iterator it2 = fkAttributes.iterator(); it2.hasNext();) {
+            Object fkAttr = it2.next();
+            Object srcAttr = Utils.getSourceAttribute(fkAttr, srcRelation);
+            srcAttributes.add(srcAttr);
+        }
+
+        // List colNames = new ArrayList();
+        TableDefinition tableDef = (TableDefinition) tableDefinitions
+                .get(relation);
+        fkDef.setTable(tableDef);
+        for (Iterator it = fkAttributes.iterator(); it.hasNext();) {
+            Object fkAttr = it.next();
+            // colNames.add(Model.getFacade().getName(fkAttr));
+
+            ColumnDefinition colDef = tableDef.getColumnDefinition(Model
+                    .getFacade().getName(fkAttr));
+            fkDef.addColumnDefinition(colDef);
+        }
+
+        // List refColNames = new ArrayList();
+        tableDef = (TableDefinition) tableDefinitions.get(srcRelation);
+        fkDef.setReferencesTable(tableDef);
+        for (Iterator it = srcAttributes.iterator(); it.hasNext();) {
+            Object srcAttr = it.next();
+            // refColNames.add(Model.getFacade().getName(srcAttr));
+
+            ColumnDefinition colDef = tableDef.getColumnDefinition(Model
+                    .getFacade().getName(srcAttr));
+            fkDef.addReferencesColumn(colDef);
+        }
+
+        int lower = Model.getFacade().getLower(assocEnd);
+        int upper = Model.getFacade().getUpper(assocEnd);
+        int refLower = Model.getFacade().getLower(otherAssocEnd);
+        int refUpper = Model.getFacade().getUpper(otherAssocEnd);
+
+        fkDef.setForeignKeyName(Model.getFacade().getName(assoc));
+
+        // fkDef.setTableName(Model.getFacade().getName(relation));
+        // fkDef.setColumnNames(colNames);
+
+        // fkDef.setReferencesTableName(Model.getFacade().getName(srcRelation));
+        // fkDef.setReferencesColumnNames(refColNames);
+
+        fkDef.setLower(lower);
+        fkDef.setUpper(upper);
+        fkDef.setReferencesLower(refLower);
+        fkDef.setReferencesUpper(refUpper);
+
+        return fkDef;
     }
 
     /**

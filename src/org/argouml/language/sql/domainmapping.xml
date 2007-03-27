@@ -20,6 +20,6 @@
 		<tns:mapping umltype="double" dbtype="DOUBLE PRECISION" />
 		<tns:mapping umltype="char" dbtype="CHAR" />
 		<tns:mapping umltype="float" dbtype="DOUBLE PRECISION" />
-		<tns:mapping umltype="Text" dbtype="VARCHAR(10000)" />
+		<tns:mapping umltype="Text" dbtype="LONGTEXT" />
 	</tns:database>
 </tns:mappings>

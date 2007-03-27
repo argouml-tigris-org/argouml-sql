@@ -111,16 +111,16 @@ public class TestUtils extends TestCaseSql {
         Object association = helper.buildAssociation(relation1, 0, -1,
                 relation2, 0, 1, "fk_12");
 
-        Object methodReturn = Utils.getFkAttribute(relation2, association);
+        Object methodReturn = Utils.getFkAttributes(relation2, association);
         assertEquals(null, methodReturn);
 
-        methodReturn = Utils.getFkAttribute(relation1, association);
+        methodReturn = Utils.getFkAttributes(relation1, association);
         assertEquals(null, methodReturn);
 
         Object fkAttr = helper.addForeignKeyAttribute(relation1, "rel2_id");
         helper.setFkAttributeAssocName(fkAttr, "fk_12");
 
-        methodReturn = Utils.getFkAttribute(relation1, association);
+        methodReturn = Utils.getFkAttributes(relation1, association);
         assertEquals(fkAttr, methodReturn);
     }
 

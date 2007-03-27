@@ -28,12 +28,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.logging.Log;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -68,14 +68,13 @@ class DomainMapper {
 
     public DomainMapper() {
         databases = new HashMap();
-        String filename = getClass().getResource(XML_FILE_NAME).getPath();
-        File xmlFile = new File(filename);
+        String filename = getClass().getResource(XML_FILE_NAME).toExternalForm();
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory
                 .newInstance();
         try {
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document document = docBuilder.parse(xmlFile);
+            Document document = docBuilder.parse(filename);
             Element root = document.getDocumentElement();
 
             // String uri = root.getNamespaceURI();
