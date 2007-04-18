@@ -40,26 +40,64 @@ final class TestHelper {
 
     private Object defaultNamespace;
 
+    /**
+     * Set the default namespace.
+     * 
+     * @param defaultNamespace
+     */
     public void setDefaultNamespace(Object defaultNamespace) {
         this.defaultNamespace = defaultNamespace;
     }
 
+    /**
+     * Get the default datatype for creating attributes.
+     * 
+     * @return The default datatype
+     */
     public Object getDefaultType() {
         return defaultType;
     }
 
+    /**
+     * Set the default datatype for creating attributes.
+     * 
+     * @param defaultType
+     */
     public void setDefaultType(Object defaultType) {
         this.defaultType = defaultType;
     }
 
+    /**
+     * 
+     * @return The default namespace
+     */
     public Object getDefaultNamespace() {
         return defaultNamespace;
     }
 
+    /**
+     * Adds a foreign key attribute with the given name to the given relation.
+     * The attribute is created in the default namespace.
+     * 
+     * @param relation
+     *            The relation.
+     * @param attrName
+     *            The name.
+     * @return The added foreign key attribute.
+     */
     public Object addForeignKeyAttribute(Object relation, String attrName) {
         return addForeignKeyAttribute(defaultNamespace, relation, attrName);
     }
 
+    /**
+     * Adds a foreign key attribute with the given name to the given relation.
+     * The attribute is created in the given namespace.
+     * 
+     * @param namespace
+     * @param relation
+     * @param attrName
+     * @return The added foreign key attribute.
+     */
     public Object addForeignKeyAttribute(Object namespace, Object relation,
             String attrName) {
         Object fkAttribute = Model.getCoreFactory().buildAttribute(relation,
@@ -71,10 +109,27 @@ final class TestHelper {
         return fkAttribute;
     }
 
+    /**
+     * Adds a primary key attribute with the given name to the given relation.
+     * The attribute is created in the default namespace.
+     * 
+     * @param relation
+     * @param attrName
+     * @return The added primary key attribute.
+     */
     public Object addPrimaryKeyAttribute(Object relation, String attrName) {
         return addPrimaryKeyAttribute(defaultNamespace, relation, attrName);
     }
 
+    /**
+     * Adds a primary key attribute with the given name to the given relation.
+     * The attribute is created in the given namespace.
+     * 
+     * @param relation
+     * @param attrName
+     * @param namespace
+     * @return The added primary key attribute.
+     */
     public Object addPrimaryKeyAttribute(Object namespace, Object relation,
             String attrName) {
         Object pkAttribute = Model.getCoreFactory().buildAttribute(relation,
@@ -86,6 +141,19 @@ final class TestHelper {
         return pkAttribute;
     }
 
+    /**
+     * Adds an association between the given relations. The multiplicities and
+     * the name is set to the given arguments.
+     * 
+     * @param relation1
+     * @param lower1
+     * @param upper1
+     * @param relation2
+     * @param lower2
+     * @param upper2
+     * @param name
+     * @return The association.
+     */
     public Object buildAssociation(Object relation1, int lower1, int upper1,
             Object relation2, int lower2, int upper2, String name) {
         Object association = Model.getCoreFactory().buildAssociation(relation1,
@@ -107,20 +175,51 @@ final class TestHelper {
         return association;
     }
 
+    /**
+     * Build a new relation with the given name and a primary key attribute with
+     * the name "id".
+     * 
+     * @param name
+     * @return The relation.
+     */
     public Object buildRelation(String name) {
         return buildRelation(defaultNamespace, name, "id");
     }
 
+    /**
+     * Build a new relation with the given name and a primary key attribute with
+     * the given name. The relation is created in the default namespace.
+     * 
+     * @param name
+     * @param pkAttrName
+     * @return The relation.
+     */
     public Object buildRelation(String name, String pkAttrName) {
         return buildRelation(defaultNamespace, name, pkAttrName);
     }
 
+    /**
+     * Build a new relation with the given name and a primary key attribute with
+     * the given name. The relation is created in the given namespace.
+     * 
+     * @param namespace
+     * @param name
+     * @param pkAttrName
+     * @return The relation
+     */
     public Object buildRelation(Object namespace, String name, String pkAttrName) {
         Object relation = Model.getCoreFactory().buildClass(name, namespace);
         addPrimaryKeyAttribute(namespace, relation, pkAttrName);
         return relation;
     }
 
+    /**
+     * Sets the association name for the given foreign key attribute to the
+     * given name.
+     * 
+     * @param fkAttribute
+     * @param assocName
+     */
     public void setFkAttributeAssocName(Object fkAttribute, String assocName) {
         if (assocName != null && assocName.length() > 0) {
             Object taggedValue = Model.getExtensionMechanismsFactory()
@@ -132,6 +231,13 @@ final class TestHelper {
         }
     }
 
+    /**
+     * Sets the source column for the given foreign key attribute to the given
+     * name.
+     * 
+     * @param fkAttribute
+     * @param srcColName
+     */
     public void setFkAttributeSrcCol(Object fkAttribute, String srcColName) {
         if (srcColName != null && srcColName.length() > 0) {
             Object taggedValue = Model.getExtensionMechanismsFactory()
@@ -141,5 +247,4 @@ final class TestHelper {
                     taggedValue);
         }
     }
-
 }

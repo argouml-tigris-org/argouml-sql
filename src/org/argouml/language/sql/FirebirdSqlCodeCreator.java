@@ -28,12 +28,21 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Class for creating DDL statements for Firebird.
+ *
+ * @author Kai
+ */
 public class FirebirdSqlCodeCreator implements SqlCodeCreator {
     private static final String LINE_SEPARATOR = System
             .getProperty("line.separator");
 
     private int primaryKeyCounter;
 
+    /**
+     * Construct a new code creator.
+     *
+     */
     public FirebirdSqlCodeCreator() {
         primaryKeyCounter = 1;
     }
@@ -41,7 +50,7 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
     /**
      * 
      * @param fkDef
-     * @return
+     * @return 
      */
     private String storedProcForInserting(ForeignKeyDefinition fkDef) {
         StringBuffer sb = new StringBuffer();
@@ -121,16 +130,6 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
 
         sb.append("END !!").append(LINE_SEPARATOR);
         sb.append("SET TERM ; !!");
-
-        sb.append("GRANT SELECT ON ").append(tableName);
-        sb.append(" TO PUBLIC;").append(LINE_SEPARATOR);
-
-        sb.append("GRANT SELECT ON ").append(refTableName);
-        sb.append(" TO PUBLIC;").append(LINE_SEPARATOR);
-
-        sb.append("GRANT ALL PRIVILEGES ON ").append(tableName);
-        sb.append(" TO PROCEDURE ").append(storedProcName);
-        sb.append(LINE_SEPARATOR);
 
         return sb.toString();
     }
@@ -280,8 +279,6 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
         sb.append(")");
 
         int refLower = foreignKeyDefinition.getReferencesLower();
-        int upper = foreignKeyDefinition.getUpper();
-        int lower = foreignKeyDefinition.getLower();
 
         if (refLower == 0) {
             sb.append(" ON DELETE SET NULL");
@@ -294,6 +291,8 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
 
         // Since Firebird doesn't support deferred constraints (yet), code
         // for the X:(1,n)-relationships cannot be generated.
+        // int upper = foreignKeyDefinition.getUpper();
+        // int lower = foreignKeyDefinition.getLower();
         // if (lower == 1 && upper == -1) {
         // if (refLower == 1) {
         // sb.append(create1Nto11(foreignKeyDefinition));

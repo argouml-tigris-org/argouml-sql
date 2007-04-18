@@ -330,8 +330,8 @@ public class TestModelValidator extends TestCaseSql {
     }
 
     /**
-     * Tests if ModelValidator considers a fk-attribute invalid if it is of the 
-     * stereotype GeneratorSql.NOT_NULL_STEREOTYPE and the lower limit of the 
+     * Tests if ModelValidator considers a fk-attribute invalid if it is of the
+     * stereotype GeneratorSql.NOT_NULL_STEREOTYPE and the lower limit of the
      * multiplicity of the opposite side of the association is zero
      */
     public void testRule6Invalid() {
@@ -358,7 +358,7 @@ public class TestModelValidator extends TestCaseSql {
     }
 
     /**
-     * Tests if ModelValidator considers a model valid if all association names 
+     * Tests if ModelValidator considers a model valid if all association names
      * are unique.
      */
     public void testRule7Valid() {
@@ -385,7 +385,7 @@ public class TestModelValidator extends TestCaseSql {
     }
 
     /**
-     * Tests if ModelValidator considers a model invalid if some association 
+     * Tests if ModelValidator considers a model invalid if some association
      * names are equal.
      */
     public void testRule7Invalid() {
@@ -434,7 +434,7 @@ public class TestModelValidator extends TestCaseSql {
     }
 
     /**
-     * Tests if ModelValidator considers an association invalid if there exists 
+     * Tests if ModelValidator considers an association invalid if there exists
      * no fk-attribute which references the association.
      */
     public void testRule9Invalid() {
@@ -452,6 +452,10 @@ public class TestModelValidator extends TestCaseSql {
         assertTrue(problems.size() > 0);
     }
 
+    /**
+     * 
+     * @return A TestSuite containing TestModelValidator.
+     */
     public static Test suite() {
         return new TestSuite(TestModelValidator.class);
     }

@@ -53,9 +53,11 @@ class ModelValidator {
      * Validate the specified elements.
      * 
      * @param elements
-     * @return
+     *            The elements to validate.
+     * @return A list of problems found by validation. If there are no problems
+     *         the returned list is empty.
      */
-    public Collection validate(Collection elements) {
+    public List validate(Collection elements) {
         problems = new ArrayList();
 
         for (Iterator it = elements.iterator(); it.hasNext();) {
@@ -83,7 +85,11 @@ class ModelValidator {
 
     private void validateRelation(Object relation) {
         validatePrimaryKey(relation);
+        validateFkAttributes(relation);
+        validateAssociations(relation);
+    }
 
+    private void validateFkAttributes(Object relation) {
         Collection attributes = Model.getFacade().getAttributes(relation);
         for (Iterator it = attributes.iterator(); it.hasNext();) {
             Object attribute = it.next();
@@ -91,8 +97,6 @@ class ModelValidator {
                 validateFkAttribute(relation, attribute);
             }
         }
-
-        validateAssociations(relation);
     }
 
     /**
@@ -114,8 +118,8 @@ class ModelValidator {
         }
 
         if (!valid) {
-            problems.add("Kein Primärschlüssel für "
-                    + Model.getFacade().getName(relation) + " definiert");
+            problems.add("Primary key missing for "
+                    + Model.getFacade().getName(relation));
         }
     }
 

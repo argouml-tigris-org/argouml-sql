@@ -27,6 +27,11 @@ package org.argouml.language.sql;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Class for creating DDL statements for MySQL.
+ * 
+ * @author Kai
+ */
 public class MySqlCodeCreator implements SqlCodeCreator {
     private static final String LINE_SEPARATOR = System
             .getProperty("line.separator");

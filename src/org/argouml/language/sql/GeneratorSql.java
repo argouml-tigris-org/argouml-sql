@@ -42,6 +42,9 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.model.Model;
+import org.argouml.ui.ExceptionDialog;
+import org.argouml.ui.ProjectBrowser;
+import org.argouml.uml.diagram.ui.FigAssociation;
 import org.argouml.uml.generator.CodeGenerator;
 import org.argouml.uml.generator.SourceUnit;
 import org.argouml.uml.generator.TempFileUtils;
@@ -171,55 +174,7 @@ class GeneratorSql implements CodeGenerator {
         }
     }
 
-    private void buildDefinitions(Object element) {
-
-    }
-
-    private Map tableDefinitions;
-
-    private List foreignKeyDefinitions;
-
-    /**
-     * Generate files for the specified classifiers.
-     * 
-     * @see #generate(Collection, boolean)
-     * @param elements
-     *            the UML model elements to generate code for.
-     * @param path
-     *            The source base path.
-     * @param deps
-     *            Recursively generate dependency files too.
-     * @return The filenames (with relative path) as a collection of Strings.
-     *         The collection may be empty if no file will be generated.
-     * @see org.argouml.uml.generator.CodeGenerator#generateFiles( Collection,
-     *      String, boolean)
-     */
-    public Collection generateFiles(Collection elements, String path,
-            boolean deps) {
-        String filename = "script.sql";
-        if (!path.endsWith(FILE_SEPARATOR)) {
-            path += FILE_SEPARATOR;
-        }
-
-        logger.debug("validating model");
-        ModelValidator validator = new ModelValidator();
-        Collection problems = validator.validate(elements);
-        if (problems.size() > 0) {
-            // model not valid, do something
-            logger.debug("model not valid, exiting code generation");
-            StringBuffer sb = new StringBuffer();
-            for (Iterator it = problems.iterator(); it.hasNext();) {
-                String s = (String) it.next();
-                sb.append(s).append(LINE_SEPARATOR);
-            }
-
-            String sourceCode = sb.toString();
-            SourceUnit su = new SourceUnit(path + filename, sourceCode);
-            Collection result = new ArrayList();
-            result.add(su);
-            return result;
-        }
-
+    private String generateCode(Collection elements) {
         // TODO Make the sqlCodeCreator variable
         sqlCodeCreator = new FirebirdSqlCodeCreator();
         tableDefinitions = new HashMap();
@@ -263,31 +218,76 @@ class GeneratorSql implements CodeGenerator {
             sb.append(sqlCodeCreator.createForeignKey(fkDef));
         }
 
-        String fullFilename = path + filename;
-        BufferedWriter fos = null;
-        try {
-            String inputSrcEnc = Configuration
-                    .getString(Argo.KEY_INPUT_SOURCE_ENCODING);
-            if (inputSrcEnc == null || inputSrcEnc.trim().equals("")) {
-                inputSrcEnc = System.getProperty("file.encoding");
-            }
-            fos = new BufferedWriter(new OutputStreamWriter(
-                    new FileOutputStream(fullFilename), inputSrcEnc));
-            fos.write(sb.toString());
-        } catch (IOException e) {
-            logger.error("IO Exception: " + e);
-        } finally {
-            try {
-                if (fos != null) {
-                    fos.close();
-                }
-            } catch (IOException e) {
-                logger.error("FAILED: " + fullFilename);
-            }
+        return sb.toString();
+    }
+
+    private Map tableDefinitions;
+
+    private List foreignKeyDefinitions;
+
+    /**
+     * Generate files for the specified classifiers.
+     * 
+     * @see #generate(Collection, boolean)
+     * @param elements
+     *            the UML model elements to generate code for.
+     * @param path
+     *            The source base path.
+     * @param deps
+     *            Recursively generate dependency files too.
+     * @return The filenames (with relative path) as a collection of Strings.
+     *         The collection may be empty if no file will be generated.
+     * @see org.argouml.uml.generator.CodeGenerator#generateFiles( Collection,
+     *      String, boolean)
+     */
+    public Collection generateFiles(Collection elements, String path,
+            boolean deps) {
+        String filename = "script.sql";
+        if (!path.endsWith(FILE_SEPARATOR)) {
+            path += FILE_SEPARATOR;
         }
 
         Collection result = new ArrayList();
-        result.add(fullFilename);
+
+        logger.debug("validating model");
+        ModelValidator validator = new ModelValidator();
+        List problems = validator.validate(elements);
+        if (problems.size() > 0) {
+            logger.debug("model not valid, exiting code generation");
+            String error = Utils.stringsToString(problems, LINE_SEPARATOR);
+
+            ExceptionDialog ed = new ExceptionDialog(ProjectBrowser
+                    .getInstance(), "Error in model", "Model not valid", error);
+            ed.setModal(true);
+            ed.setVisible(true);
+        } else {
+            String code = generateCode(elements);
+
+            String fullFilename = path + filename;
+            BufferedWriter fos = null;
+            try {
+                String inputSrcEnc = Configuration
+                        .getString(Argo.KEY_INPUT_SOURCE_ENCODING);
+                if (inputSrcEnc == null || inputSrcEnc.trim().equals("")) {
+                    inputSrcEnc = System.getProperty("file.encoding");
+                }
+                fos = new BufferedWriter(new OutputStreamWriter(
+                        new FileOutputStream(fullFilename), inputSrcEnc));
+                fos.write(code);
+            } catch (IOException e) {
+                logger.error("IO Exception: " + e);
+            } finally {
+                try {
+                    if (fos != null) {
+                        fos.close();
+                    }
+                } catch (IOException e) {
+                    logger.error("FAILED: " + fullFilename);
+                }
+            }
+
+            result.add(fullFilename);
+        }
         return result;
     }
 

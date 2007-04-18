@@ -230,23 +230,39 @@ final class Utils {
         return srcAttr;
     }
 
+    /**
+     * Takes a list of strings and joins them with <code>separators</code>.
+     * 
+     * @param strings
+     *            The list of strings to be joined.
+     * @param separators
+     *            The string that should be put between the separate strings.
+     * @return The joined string.
+     */
     public static String stringsToString(List strings, String separators) {
         StringBuffer sb = new StringBuffer();
         Iterator it = strings.iterator();
         while (it.hasNext()) {
             String s = (String) it.next();
             if (sb.length() > 0) {
-                sb.append(",");
+                sb.append(separators);
             }
             sb.append(s);
         }
         return sb.toString();
     }
-    
+
+    /**
+     * Takes a list of strings and joins them with a comma.
+     * 
+     * @param strings
+     *            The list of strings.
+     * @return The joined string.
+     */
     public static String stringsToCommaString(List strings) {
         return stringsToString(strings, ",");
     }
-    
+
     /**
      * Private constructor so no instance can be created.
      */
