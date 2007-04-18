@@ -44,9 +44,7 @@ import org.argouml.application.api.Configuration;
 import org.argouml.model.Model;
 import org.argouml.ui.ExceptionDialog;
 import org.argouml.ui.ProjectBrowser;
-import org.argouml.uml.diagram.ui.FigAssociation;
 import org.argouml.uml.generator.CodeGenerator;
-import org.argouml.uml.generator.SourceUnit;
 import org.argouml.uml.generator.TempFileUtils;
 
 /**
@@ -113,8 +111,7 @@ class GeneratorSql implements CodeGenerator {
         try {
             tmpdir = TempFileUtils.createTempDir();
             if (tmpdir != null) {
-                Collection filenames = generateFiles(elements,
-                        tmpdir.getPath(), deps);
+                generateFiles(elements, tmpdir.getPath(), deps);
                 return TempFileUtils.readAllFiles(tmpdir);
             }
             return Collections.EMPTY_LIST;
@@ -188,21 +185,24 @@ class GeneratorSql implements CodeGenerator {
             }
         }
 
-        for (Iterator it = elements.iterator(); it.hasNext();) {
-            Object element = it.next();
-            Collection fkDefs = getForeignKeyDefinitions(element);
-            TableDefinition tableDef = (TableDefinition) tableDefinitions
-                    .get(element);
-            for (Iterator it2 = fkDefs.iterator(); it2.hasNext();) {
-                ForeignKeyDefinition fkDef = (ForeignKeyDefinition) it2.next();
+        if (elements.size() > 1) {
+            for (Iterator it = elements.iterator(); it.hasNext();) {
+                Object element = it.next();
+                Collection fkDefs = getForeignKeyDefinitions(element);
+                TableDefinition tableDef = (TableDefinition) tableDefinitions
+                        .get(element);
+                for (Iterator it2 = fkDefs.iterator(); it2.hasNext();) {
+                    ForeignKeyDefinition fkDef = (ForeignKeyDefinition) it2
+                            .next();
 
-                if (fkDef.getReferencesLower() == 0) {
-                    setNullable(tableDef, fkDef.getColumnNames(), true);
-                } else {
-                    setNullable(tableDef, fkDef.getColumnNames(), false);
+                    if (fkDef.getReferencesLower() == 0) {
+                        setNullable(tableDef, fkDef.getColumnNames(), true);
+                    } else {
+                        setNullable(tableDef, fkDef.getColumnNames(), false);
+                    }
                 }
+                foreignKeyDefinitions.addAll(fkDefs);
             }
-            foreignKeyDefinitions.addAll(fkDefs);
         }
 
         StringBuffer sb = new StringBuffer();
@@ -212,10 +212,12 @@ class GeneratorSql implements CodeGenerator {
             sb.append(sqlCodeCreator.createTable(tableDef));
         }
 
-        sb.append("-- Foreign key definitions").append(LINE_SEPARATOR);
-        for (Iterator it = foreignKeyDefinitions.iterator(); it.hasNext();) {
-            ForeignKeyDefinition fkDef = (ForeignKeyDefinition) it.next();
-            sb.append(sqlCodeCreator.createForeignKey(fkDef));
+        if (elements.size() > 1) {
+            sb.append("-- Foreign key definitions").append(LINE_SEPARATOR);
+            for (Iterator it = foreignKeyDefinitions.iterator(); it.hasNext();) {
+                ForeignKeyDefinition fkDef = (ForeignKeyDefinition) it.next();
+                sb.append(sqlCodeCreator.createForeignKey(fkDef));
+            }
         }
 
         return sb.toString();
@@ -248,11 +250,12 @@ class GeneratorSql implements CodeGenerator {
         }
 
         Collection result = new ArrayList();
+        String fullFilename = path + filename;
 
         logger.debug("validating model");
         ModelValidator validator = new ModelValidator();
         List problems = validator.validate(elements);
-        if (problems.size() > 0) {
+        if (problems.size() > 0 && elements.size() > 1) {
             logger.debug("model not valid, exiting code generation");
             String error = Utils.stringsToString(problems, LINE_SEPARATOR);
 
@@ -262,33 +265,34 @@ class GeneratorSql implements CodeGenerator {
             ed.setVisible(true);
         } else {
             String code = generateCode(elements);
-
-            String fullFilename = path + filename;
-            BufferedWriter fos = null;
-            try {
-                String inputSrcEnc = Configuration
-                        .getString(Argo.KEY_INPUT_SOURCE_ENCODING);
-                if (inputSrcEnc == null || inputSrcEnc.trim().equals("")) {
-                    inputSrcEnc = System.getProperty("file.encoding");
-                }
-                fos = new BufferedWriter(new OutputStreamWriter(
-                        new FileOutputStream(fullFilename), inputSrcEnc));
-                fos.write(code);
-            } catch (IOException e) {
-                logger.error("IO Exception: " + e);
-            } finally {
-                try {
-                    if (fos != null) {
-                        fos.close();
-                    }
-                } catch (IOException e) {
-                    logger.error("FAILED: " + fullFilename);
-                }
-            }
-
+            writeFile(fullFilename, code);
             result.add(fullFilename);
         }
         return result;
+    }
+
+    private void writeFile(String filename, String content) {
+        BufferedWriter fos = null;
+        try {
+            String inputSrcEnc = Configuration
+                    .getString(Argo.KEY_INPUT_SOURCE_ENCODING);
+            if (inputSrcEnc == null || inputSrcEnc.trim().equals("")) {
+                inputSrcEnc = System.getProperty("file.encoding");
+            }
+            fos = new BufferedWriter(new OutputStreamWriter(
+                    new FileOutputStream(filename), inputSrcEnc));
+            fos.write(content);
+        } catch (IOException e) {
+            logger.error("IO Exception: " + e);
+        } finally {
+            try {
+                if (fos != null) {
+                    fos.close();
+                }
+            } catch (IOException e) {
+                logger.error("FAILED: " + filename);
+            }
+        }
     }
 
     private Collection getForeignKeyDefinitions(Object relation) {
