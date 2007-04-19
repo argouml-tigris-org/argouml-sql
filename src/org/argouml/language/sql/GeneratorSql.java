@@ -29,7 +29,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -43,7 +42,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
-import org.apache.tools.ant.util.ClasspathUtils;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.model.Model;
@@ -80,15 +78,6 @@ class GeneratorSql implements CodeGenerator {
     private DomainMapper domainMapper;
 
     private SqlCodeCreator sqlCodeCreator;
-
-    private void tryLoadClass(String fullClassName)
-            throws ClassNotFoundException {
-        Class c = getClass().getClassLoader().loadClass(fullClassName);
-        Class c2 = SqlCodeCreator.class;
-        if (c != c2 && c2.isAssignableFrom(c)) {
-            sqlCodeCreators.add(c);
-        }
-    }
 
     private List sqlCodeCreators;
 
