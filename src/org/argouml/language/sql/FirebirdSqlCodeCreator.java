@@ -306,19 +306,6 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
         return sb.toString();
     }
 
-    public String getPhysicalDatatype(String logicalDatatype) {
-        String result = logicalDatatype;
-        if (logicalDatatype.equals("TEXT")) {
-            result = "VARCHAR(4000)";
-        }
-        return result;
-    }
-
-    public String createIndex(IndexDefinition indexDefinition) {
-        // TODO: Auto-generated method stub
-        return null;
-    }
-
     public String createTable(TableDefinition tableDefinition) {
         StringBuffer sb = new StringBuffer();
         sb.append("CREATE TABLE ");

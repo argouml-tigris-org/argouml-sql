@@ -1,4 +1,4 @@
-// $Id: eclipse-argo-codetemplates.xml 11347 2006-10-26 22:37:44Z linus $
+// $Id$
 // Copyright (c) 2007 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -45,7 +45,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-class DomainMapper {
+public class DomainMapper {
     private static final String ROOT_TAG = "<tns:mappings "
             + "xmlns:tns=\"http://www.argouml.org/Namespace/argouml-sql\""
             + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""

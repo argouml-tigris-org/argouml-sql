@@ -22,12 +22,37 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.language.sql;
+package org.argouml.ui;
 
-/**
- * Class for assembling TransferObjects.
- *
- * @author Anne und Kai
- */
-class TransferObjectAssembler {
+import java.util.Collection;
+import java.util.HashSet;
+
+import javax.swing.ListModel;
+import javax.swing.event.ListDataListener;
+
+import org.argouml.language.sql.GeneratorSql;
+
+class ListModelCodeCreators implements ListModel {
+    private Collection listDataListeners;
+
+    public ListModelCodeCreators() {
+        listDataListeners = new HashSet();
+    }
+
+    public void addListDataListener(ListDataListener l) {
+        listDataListeners.add(l);
+    }
+
+    public Object getElementAt(int index) {
+        return GeneratorSql.getInstance().getSqlCodeCreators().get(index);
+    }
+
+    public int getSize() {
+        return GeneratorSql.getInstance().getSqlCodeCreators().size();
+    }
+
+    public void removeListDataListener(ListDataListener l) {
+        listDataListeners.remove(l);
+    }
 }
+

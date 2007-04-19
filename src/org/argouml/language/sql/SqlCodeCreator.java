@@ -49,28 +49,4 @@ public interface SqlCodeCreator {
      * @return The created sql statement.
      */
     String createForeignKey(ForeignKeyDefinition foreignKeyDefinition);
-
-    /**
-     * Creates sql for an index definition. The sql for index definitions is
-     * generated after the sql for all tables is generated.
-     * 
-     * @param indexDefinition
-     *            The definition of the index.
-     * @return The created sql statement.
-     * @deprecated
-     */
-    String createIndex(IndexDefinition indexDefinition);
-
-    /**
-     * Some datatypes cannot be named equal for all existing database systems.
-     * An example is the treating of long text columns. This method returns the
-     * appropriate database-typename for this cases. If the type used in the
-     * model already is correct it should be returned.
-     * 
-     * @param logicalDatatype
-     *            The typename used in the model.
-     * @return The typename to use in the SQL statement.
-     * @deprecated
-     */    
-    String getPhysicalDatatype(String logicalDatatype);
 }

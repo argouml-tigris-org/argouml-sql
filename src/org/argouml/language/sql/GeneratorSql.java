@@ -47,13 +47,14 @@ import org.argouml.application.api.Configuration;
 import org.argouml.model.Model;
 import org.argouml.ui.ExceptionDialog;
 import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.SelectCodeCreatorDialog;
 import org.argouml.uml.generator.CodeGenerator;
 import org.argouml.uml.generator.TempFileUtils;
 
 /**
  * SQL generator
  */
-class GeneratorSql implements CodeGenerator {
+public class GeneratorSql implements CodeGenerator {
     static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
     static final String PRIMARY_KEY_STEREOTYPE = "PK";
@@ -94,6 +95,7 @@ class GeneratorSql implements CodeGenerator {
 
         if (extForm.startsWith("file:")) {
             String className = getClass().getName();
+            // ... - 7 because of length of ".class" and the trailing "/"
             extForm = extForm.substring(0, extForm.length()
                     - className.length() - 7);
         }
@@ -199,7 +201,6 @@ class GeneratorSql implements CodeGenerator {
     }
 
     private String generateCode(Collection elements) {
-        // TODO Make the sqlCodeCreator variable
         sqlCodeCreator = new FirebirdSqlCodeCreator();
         tableDefinitions = new HashMap();
         foreignKeyDefinitions = new ArrayList();
@@ -290,7 +291,7 @@ class GeneratorSql implements CodeGenerator {
                     .getInstance(), "Error in model", "Model not valid", error);
             ed.setModal(true);
             ed.setVisible(true);
-        } else {
+        } else if (SelectCodeCreatorDialog.execute()) {
             String code = generateCode(elements);
             writeFile(fullFilename, code);
             result.add(fullFilename);

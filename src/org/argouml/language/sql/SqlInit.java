@@ -27,6 +27,7 @@ package org.argouml.language.sql;
 import org.argouml.application.helpers.ResourceLoaderWrapper;
 import org.argouml.moduleloader.ModuleInterface;
 import org.argouml.ui.GUI;
+import org.argouml.ui.SettingsTabSql;
 import org.argouml.uml.generator.GeneratorHelper;
 import org.argouml.uml.generator.GeneratorManager;
 import org.argouml.uml.generator.Language;

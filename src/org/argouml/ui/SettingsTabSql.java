@@ -1,4 +1,4 @@
-// $Id: eclipse-argo-codetemplates.xml 11347 2006-10-26 22:37:44Z linus $
+// $Id$
 // Copyright (c) 2007 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
@@ -22,7 +22,7 @@
 // CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
 // UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
 
-package org.argouml.language.sql;
+package org.argouml.ui;
 
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
@@ -45,6 +45,9 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 
+import org.argouml.i18n.Translator;
+import org.argouml.language.sql.DomainMapper;
+import org.argouml.language.sql.GeneratorSql;
 import org.argouml.ui.GUISettingsTabInterface;
 
 public class SettingsTabSql extends JPanel implements GUISettingsTabInterface {
@@ -57,30 +60,6 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface {
             tblDomainMappings.setModel(tm);
 
             previousSelected = (Class) selected;
-        }
-    }
-
-    private class ListModelCodeCreators implements ListModel {
-        private Collection listDataListeners;
-
-        public ListModelCodeCreators() {
-            listDataListeners = new HashSet();
-        }
-
-        public void addListDataListener(ListDataListener l) {
-            listDataListeners.add(l);
-        }
-
-        public Object getElementAt(int index) {
-            return GeneratorSql.getInstance().getSqlCodeCreators().get(index);
-        }
-
-        public int getSize() {
-            return GeneratorSql.getInstance().getSqlCodeCreators().size();
-        }
-
-        public void removeListDataListener(ListDataListener l) {
-            listDataListeners.remove(l);
         }
     }
 
@@ -133,7 +112,8 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface {
         }
     }
 
-    private String[] columnNames = { "domain", "datatype" };
+    private String[] columnNames = { Translator.localize("argouml-sql.domain"),
+            Translator.localize("argouml-sql.datatype") };
 
     private Object[][] elements;
 
@@ -155,7 +135,7 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface {
     }
 
     public String getTabKey() {
-        return "tab.sql";
+        return "argouml-sql.settings";
     }
 
     public JPanel getTabPanel() {

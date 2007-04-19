@@ -1,4 +1,4 @@
-package org.argouml.language.sql;
+package org.argouml.ui;
 
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
