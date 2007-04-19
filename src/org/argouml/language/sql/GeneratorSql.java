@@ -90,17 +90,6 @@ class GeneratorSql implements CodeGenerator {
         }
     }
 
-    private void tryLoadClass(File file) throws ClassNotFoundException {
-        String name = file.getName();
-        if (name.endsWith(".class")) {
-            Package p = getClass().getPackage();
-            String packageName = p.getName();
-            String className = name.substring(0, name.length() - 6);
-
-            tryLoadClass(packageName + "." + className);
-        }
-    }
-
     private List sqlCodeCreators;
 
     /**
