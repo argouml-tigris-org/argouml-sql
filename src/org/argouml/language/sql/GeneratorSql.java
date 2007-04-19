@@ -29,6 +29,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -39,6 +43,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
+import org.apache.tools.ant.util.ClasspathUtils;
 import org.argouml.application.api.Argo;
 import org.argouml.application.api.Configuration;
 import org.argouml.model.Model;
@@ -65,7 +70,7 @@ class GeneratorSql implements CodeGenerator {
 
     static final String ASSOCIATION_NAME_TAGGED_VALUE = "association name";
 
-    private Logger logger = Logger.getLogger(getClass());
+    private Logger LOG = Logger.getLogger(getClass());
 
     /**
      * The instances.
@@ -76,11 +81,55 @@ class GeneratorSql implements CodeGenerator {
 
     private SqlCodeCreator sqlCodeCreator;
 
+    private void tryLoadClass(String fullClassName)
+            throws ClassNotFoundException {
+        Class c = getClass().getClassLoader().loadClass(fullClassName);
+        Class c2 = SqlCodeCreator.class;
+        if (c != c2 && c2.isAssignableFrom(c)) {
+            sqlCodeCreators.add(c);
+        }
+    }
+
+    private void tryLoadClass(File file) throws ClassNotFoundException {
+        String name = file.getName();
+        if (name.endsWith(".class")) {
+            Package p = getClass().getPackage();
+            String packageName = p.getName();
+            String className = name.substring(0, name.length() - 6);
+
+            tryLoadClass(packageName + "." + className);
+        }
+    }
+
+    private List sqlCodeCreators;
+
     /**
      * Constructor.
      */
     private GeneratorSql() {
         domainMapper = new DomainMapper();
+
+        sqlCodeCreators = new ArrayList();
+
+        URL url = getClass().getResource("GeneratorSql.class");
+        String extForm = url.toExternalForm();
+
+        if (extForm.startsWith("file:")) {
+            String className = getClass().getName();
+            extForm = extForm.substring(0, extForm.length()
+                    - className.length() - 7);
+        }
+
+        SqlCreatorLoader el = new SqlCreatorLoader();
+        try {
+            URI uri = new URI(extForm);
+            Collection classes = el.getLoadableClassesFromUri(uri,
+                    SqlCodeCreator.class);
+            sqlCodeCreators.addAll(classes);
+        } catch (URISyntaxException e) {
+            LOG.error("Exception", e);
+            System.out.println(e.getStackTrace());
+        }
     }
 
     /**
@@ -106,7 +155,7 @@ class GeneratorSql implements CodeGenerator {
      *      boolean)
      */
     public Collection generate(Collection elements, boolean deps) {
-        logger.debug("generate() called");
+        LOG.debug("generate() called");
         File tmpdir = null;
         try {
             tmpdir = TempFileUtils.createTempDir();
@@ -119,7 +168,7 @@ class GeneratorSql implements CodeGenerator {
             if (tmpdir != null) {
                 TempFileUtils.deleteDir(tmpdir);
             }
-            logger.debug("generate() terminated");
+            LOG.debug("generate() terminated");
         }
     }
 
@@ -139,8 +188,8 @@ class GeneratorSql implements CodeGenerator {
 
             Object domain = Model.getFacade().getType(attribute);
             String domainName = Model.getFacade().getName(domain);
-            String datatype = domainMapper.getDatatype(sqlCodeCreator,
-                    domainName);
+            String datatype = domainMapper.getDatatype(sqlCodeCreator
+                    .getClass(), domainName);
             cd.setDatatype(datatype);
 
             if (Utils.isNull(attribute)) {
@@ -252,11 +301,11 @@ class GeneratorSql implements CodeGenerator {
         Collection result = new ArrayList();
         String fullFilename = path + filename;
 
-        logger.debug("validating model");
+        LOG.debug("validating model");
         ModelValidator validator = new ModelValidator();
         List problems = validator.validate(elements);
         if (problems.size() > 0 && elements.size() > 1) {
-            logger.debug("model not valid, exiting code generation");
+            LOG.debug("model not valid, exiting code generation");
             String error = Utils.stringsToString(problems, LINE_SEPARATOR);
 
             ExceptionDialog ed = new ExceptionDialog(ProjectBrowser
@@ -283,14 +332,14 @@ class GeneratorSql implements CodeGenerator {
                     new FileOutputStream(filename), inputSrcEnc));
             fos.write(content);
         } catch (IOException e) {
-            logger.error("IO Exception: " + e);
+            LOG.error("IO Exception: " + e);
         } finally {
             try {
                 if (fos != null) {
                     fos.close();
                 }
             } catch (IOException e) {
-                logger.error("FAILED: " + filename);
+                LOG.error("FAILED: " + filename);
             }
         }
     }
@@ -397,5 +446,13 @@ class GeneratorSql implements CodeGenerator {
      */
     public Collection generateFileList(Collection elements, boolean deps) {
         throw new Error("Not yet implemented");
+    }
+
+    public List getSqlCodeCreators() {
+        return sqlCodeCreators;
+    }
+
+    public DomainMapper getDomainMapper() {
+        return domainMapper;
     }
 } /* end class GeneratorSql */
