@@ -24,28 +24,30 @@
 
 package org.argouml.ui;
 
-import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
+import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.language.sql.GeneratorSql;
+import org.argouml.language.sql.SqlCodeCreator;
 
 public class SelectCodeCreatorDialog extends ArgoDialog {
     private JLabel lblSelect;
 
     private JScrollPane spList;
 
-    private JList listCreators;
+    private JTable tblCreators;
 
     private static boolean executed;
+
+    private Logger LOG = Logger.getLogger(getClass());
 
     public static boolean execute() {
         executed = false;
@@ -70,9 +72,10 @@ public class SelectCodeCreatorDialog extends ArgoDialog {
         content.setLayout(l);
 
         lblSelect = new JLabel(Translator
-                .localize("argouml-sql.select-dialog.label-select"));
-        listCreators = new JList(new ListModelCodeCreators());
-        spList = new JScrollPane(listCreators);
+                .localize("argouml-sql.select-dialog.label-select")
+                + ":");
+        tblCreators = new JTable(new TableModelCodeCreators());
+        spList = new JScrollPane(tblCreators);
 
         content.add(lblSelect, GridBagUtils.captionConstraints(0, 0,
                 GridBagUtils.left));
@@ -82,7 +85,22 @@ public class SelectCodeCreatorDialog extends ArgoDialog {
 
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == getOkButton()) {
-            executed = true;
+            try {
+                int index = tblCreators.getSelectedRow();
+                SqlCodeCreator scc = (SqlCodeCreator) tblCreators.getModel()
+                        .getValueAt(index, -1);
+                GeneratorSql.getInstance().setSqlCodeCreator(scc);
+                executed = true;
+            } catch (Exception exc) {
+                LOG.error("Exception", exc);
+                String message = Translator
+                        .localize("argouml-sql.exceptions.no_sqlcodecreator");
+                ExceptionDialog ed = new ExceptionDialog(ProjectBrowser
+                        .getInstance(), message, exc);
+                ed.setModal(true);
+                ed.setVisible(true);
+                executed = false;
+            }
         } else {
             executed = false;
         }

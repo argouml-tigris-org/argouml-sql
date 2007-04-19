@@ -49,4 +49,12 @@ public interface SqlCodeCreator {
      * @return The created sql statement.
      */
     String createForeignKey(ForeignKeyDefinition foreignKeyDefinition);
+
+    /**
+     * Returns a name for the SqlCodeCreator for displaying it in GUI
+     * components.
+     * 
+     * @return
+     */
+    String getName();
 }

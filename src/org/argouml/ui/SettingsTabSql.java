@@ -26,8 +26,6 @@ package org.argouml.ui;
 
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -38,8 +36,6 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.ListModel;
-import javax.swing.event.ListDataListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
@@ -48,19 +44,19 @@ import javax.swing.table.TableModel;
 import org.argouml.i18n.Translator;
 import org.argouml.language.sql.DomainMapper;
 import org.argouml.language.sql.GeneratorSql;
-import org.argouml.ui.GUISettingsTabInterface;
+import org.argouml.language.sql.SqlCodeCreator;
 
-public class SettingsTabSql extends JPanel implements GUISettingsTabInterface {
-    private class ListCodeCreatorSelectionListener implements
-            ListSelectionListener {
-        public void valueChanged(ListSelectionEvent e) {
-            updateMappings();
-            Object selected = lstFound.getSelectedValue();
-            TableModel tm = new TableModelDomainMappings((Class) selected);
-            tblDomainMappings.setModel(tm);
+public class SettingsTabSql extends JPanel implements GUISettingsTabInterface,
+        ListSelectionListener {
+    public void valueChanged(ListSelectionEvent e) {
+        updateMappings();
+        int index = tblFound.getSelectedRow();
+        SqlCodeCreator scc = (SqlCodeCreator) tblFound.getModel().getValueAt(
+                index, -1);
+        TableModel tm = new TableModelDomainMappings(scc.getClass());
+        tblDomainMappings.setModel(tm);
 
-            previousSelected = (Class) selected;
-        }
+        previousSelected = scc;
     }
 
     private class TableModelDomainMappings extends AbstractTableModel {
@@ -112,8 +108,9 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface {
         }
     }
 
-    private String[] columnNames = { Translator.localize("argouml-sql.domain"),
-            Translator.localize("argouml-sql.datatype") };
+    private String[] columnNames = {
+            Translator.localize("argouml-sql.settings.domain"),
+            Translator.localize("argouml-sql.settings.datatype") };
 
     private Object[][] elements;
 
@@ -123,9 +120,9 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface {
 
     private JLabel lblFound;
 
-    private JList lstFound;
+    private JTable tblFound;
 
-    private Class previousSelected;
+    private SqlCodeCreator previousSelected;
 
     private JTable tblDomainMappings;
 
@@ -135,7 +132,7 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface {
     }
 
     public String getTabKey() {
-        return "argouml-sql.settings";
+        return "argouml-sql.settings.title";
     }
 
     public JPanel getTabPanel() {
@@ -146,15 +143,18 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface {
 
             setLayout(l);
 
-            lblFound = new JLabel("Found code creators:");
-            lstFound = new JList(new ListModelCodeCreators());
-            lstFound
-                    .addListSelectionListener(new ListCodeCreatorSelectionListener());
-            lblDomainMappings = new JLabel("DomainMappings for:");
+            lblFound = new JLabel(Translator
+                    .localize("argouml-sql.settings.found-creators")
+                    + ":");
+            tblFound = new JTable(new TableModelCodeCreators());
+            tblFound.getSelectionModel().addListSelectionListener(this);
+            lblDomainMappings = new JLabel(Translator
+                    .localize("argouml-sql.settings.mapped-domains")
+                    + ":");
             tblDomainMappings = new JTable();
 
             add(lblFound, GridBagUtils.captionConstraints(0, 0));
-            JScrollPane spFound = new JScrollPane(lstFound);
+            JScrollPane spFound = new JScrollPane(tblFound);
             spFound.setPreferredSize(new Dimension(300, 200));
             add(spFound, GridBagUtils.clientAlignConstraints(0, 1, 2, 1));
             add(lblDomainMappings, GridBagUtils.captionConstraints(0, 2));
@@ -187,11 +187,11 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface {
     private void updateMappings() {
         if (previousSelected != null) {
             DomainMapper m = GeneratorSql.getInstance().getDomainMapper();
-            m.clear(previousSelected);
+            m.clear(previousSelected.getClass());
             for (int i = 0; i < elements.length; i++) {
                 String domain = (String) elements[i][0];
                 String datatype = (String) elements[i][1];
-                m.setDatatype(previousSelected, domain, datatype);
+                m.setDatatype(previousSelected.getClass(), domain, datatype);
             }
         }
     }

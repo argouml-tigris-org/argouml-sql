@@ -95,7 +95,7 @@ public class GeneratorSql implements CodeGenerator {
 
         if (extForm.startsWith("file:")) {
             String className = getClass().getName();
-            // ... - 7 because of length of ".class" and the trailing "/"
+            // ... minus 7 because of length of ".class" and the trailing "/"
             extForm = extForm.substring(0, extForm.length()
                     - className.length() - 7);
         }
@@ -105,10 +105,18 @@ public class GeneratorSql implements CodeGenerator {
             URI uri = new URI(extForm);
             Collection classes = el.getLoadableClassesFromUri(uri,
                     SqlCodeCreator.class);
-            sqlCodeCreators.addAll(classes);
+            for (Iterator it = classes.iterator(); it.hasNext();) {
+                Class c = (Class) it.next();
+                SqlCodeCreator scc = (SqlCodeCreator) c.newInstance();
+                sqlCodeCreators.add(scc);
+            }
         } catch (URISyntaxException e) {
             LOG.error("Exception", e);
-            System.out.println(e.getStackTrace());
+        } catch (InstantiationException e) {
+            LOG.error("Exception while instantiating a SqlCodeCreator", e);
+        } catch (IllegalAccessException e) {
+            LOG.error("Exception while accessing the constructor of a "
+                    + "SqlCodeCreator", e);
         }
     }
 
@@ -201,7 +209,6 @@ public class GeneratorSql implements CodeGenerator {
     }
 
     private String generateCode(Collection elements) {
-        sqlCodeCreator = new FirebirdSqlCodeCreator();
         tableDefinitions = new HashMap();
         foreignKeyDefinitions = new ArrayList();
 
@@ -433,5 +440,9 @@ public class GeneratorSql implements CodeGenerator {
 
     public DomainMapper getDomainMapper() {
         return domainMapper;
+    }
+
+    public void setSqlCodeCreator(SqlCodeCreator sqlCodeCreator) {
+        this.sqlCodeCreator = sqlCodeCreator;
     }
 } /* end class GeneratorSql */

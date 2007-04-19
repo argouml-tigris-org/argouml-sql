@@ -347,4 +347,8 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
 
         return sb.toString();
     }
+
+    public String getName() {
+        return "Firebird";
+    }
 }

@@ -101,4 +101,8 @@ public class MySqlCodeCreator implements SqlCodeCreator {
 
         return sb.toString();
     }
+
+    public String getName() {
+        return "MySQL";
+    }
 }

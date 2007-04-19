@@ -24,35 +24,44 @@
 
 package org.argouml.ui;
 
-import java.util.Collection;
-import java.util.HashSet;
+import javax.swing.table.AbstractTableModel;
 
-import javax.swing.ListModel;
-import javax.swing.event.ListDataListener;
-
+import org.argouml.i18n.Translator;
 import org.argouml.language.sql.GeneratorSql;
+import org.argouml.language.sql.SqlCodeCreator;
 
-class ListModelCodeCreators implements ListModel {
-    private Collection listDataListeners;
+class TableModelCodeCreators extends AbstractTableModel {
+    private String[] columnNames = {
+            Translator.localize("argouml-sql.settings.code-creator-name"),
+            Translator.localize("argouml-sql.settings.code-creator-classname") };
 
-    public ListModelCodeCreators() {
-        listDataListeners = new HashSet();
+    public Class getColumnClass(int columnIndex) {
+        return String.class;
     }
 
-    public void addListDataListener(ListDataListener l) {
-        listDataListeners.add(l);
+    public int getColumnCount() {
+        return columnNames.length;
     }
 
-    public Object getElementAt(int index) {
-        return GeneratorSql.getInstance().getSqlCodeCreators().get(index);
+    public String getColumnName(int column) {
+        return columnNames[column];
     }
 
-    public int getSize() {
+    public int getRowCount() {
         return GeneratorSql.getInstance().getSqlCodeCreators().size();
     }
 
-    public void removeListDataListener(ListDataListener l) {
-        listDataListeners.remove(l);
+    public Object getValueAt(int rowIndex, int columnIndex) {
+        Object result = null;
+        SqlCodeCreator scc = (SqlCodeCreator) GeneratorSql.getInstance()
+                .getSqlCodeCreators().get(rowIndex);
+        if (columnIndex == 0) {
+            result = scc.getName();
+        } else if (columnIndex == 1) {
+            result = scc.getClass().getName();
+        } else if (columnIndex == -1) {
+            result = scc;
+        }
+        return result;
     }
 }
-

@@ -36,6 +36,7 @@ import java.util.Map.Entry;
 
 import org.argouml.model.Model;
 
+// TODO Use Translator for error messages
 class ModelValidator {
     private Map associationForName = new HashMap();
 
