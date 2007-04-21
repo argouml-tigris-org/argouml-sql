@@ -82,7 +82,7 @@ etc.
 		<javac srcdir="src" destdir="${build.classes}" 
 				includes="org/argouml/**/*.java" debug="${debug}" 
 				deprecation="${deprecation}" optimize="${optimize}" 
-				source="1.4" target="1.4">
+				source="1.5" target="1.5">
 			<classpath>
 				<path refid="compile.classpath" />
 			</classpath>
@@ -126,7 +126,7 @@ etc.
 		<javac srcdir="${module.tests.dir}" destdir="${build.classes}" 
 				includes="org/argouml/**/*.java" debug="${debug}" 
 				deprecation="${deprecation}" optimize="${optimize}" 
-				source="1.4" target="1.4">
+				source="1.5" target="1.5">
 			<classpath>
 				<path refid="compile.classpath" />
 			</classpath>
