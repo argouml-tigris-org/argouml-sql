@@ -36,6 +36,9 @@ import java.util.StringTokenizer;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
+import org.apache.log4j.Logger;
+import org.argouml.application.api.Argo;
+
 public class SqlCreatorLoader {
     private Collection getClassesFromJar(JarFile jarFile)
             throws ClassNotFoundException {
@@ -72,8 +75,6 @@ public class SqlCreatorLoader {
             try {
                 String name = files[i].getName();
                 if (name.endsWith(".class")) {
-                    // Package p = getClass().getPackage();
-                    // String packageName = p.getName();
                     String className = name.substring(0, name.length() - 6);
 
                     String fullClassName = packageName + "." + className;
@@ -88,7 +89,15 @@ public class SqlCreatorLoader {
         return classes;
     }
 
-    public Collection getLoadableClassesFromUri(URI uri, Class superclass) {
+    /**
+     * @deprecated Hmmm..., works much simpler with
+     *             {@link SqlCreatorLoader#getCodeCreators()} instead.
+     * 
+     * @param uri
+     * @param superclass
+     * @return
+     */
+    private Collection getLoadableClassesFromUri(URI uri, Class superclass) {
         Collection foundClasses = new HashSet();
         try {
             String scheme = uri.getScheme();
@@ -133,4 +142,52 @@ public class SqlCreatorLoader {
         return returnClasses;
     }
 
+    private Logger LOG = Logger.getLogger(getClass());
+
+    private Collection getCodeCreators(File dir) {
+        Collection result = new HashSet();
+        File[] files = dir.listFiles();
+        for (int i = 0; i < files.length; i++) {
+            File file = files[i];
+            if (file.isDirectory()) {
+                result.addAll(getCodeCreators(file));
+            } else if (file.getName().endsWith(".jar")) {
+                try {
+                    JarFile jarFile = new JarFile(file);
+                    result.addAll(getClassesFromJar(jarFile));
+                } catch (IOException e) {
+                    LOG.error("Exception", e);
+                } catch (ClassNotFoundException e) {
+                    LOG.error("Exception", e);
+                }
+            } else if (file.getName().endsWith(".class")) {
+                String className = file.getName();
+                className = className.substring(0, className.length() - 6);
+                String packageName = dir.getName();
+                packageName = packageName.substring(extdir.getPath().length());
+            }
+        }
+
+        return result;
+    }
+
+    private File extdir;
+
+    public Collection getCodeCreators() {
+        Collection classes = new HashSet();
+        String dirname = Argo.getDirectory();
+        extdir = new File(dirname, "ext");
+        classes.addAll(getCodeCreators(extdir));
+
+        Collection result = new HashSet();
+        for (Iterator it = classes.iterator(); it.hasNext();) {
+            Class foundClass = (Class) it.next();
+            if (foundClass != SqlCodeCreator.class
+                    && SqlCodeCreator.class.isAssignableFrom(foundClass)) {
+                result.add(foundClass);
+            }
+        }
+
+        return result;
+    }
 }

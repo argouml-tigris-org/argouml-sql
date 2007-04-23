@@ -24,6 +24,7 @@
 
 package org.argouml.language.sql;
 
+import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
+import org.argouml.application.api.Argo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -47,8 +49,8 @@ import org.xml.sax.SAXException;
 
 public class DomainMapper {
     private static final String ROOT_TAG = "<tns:mappings "
-            + "xmlns:tns=\"http://www.argouml.org/Namespace/argouml-sql\""
-            + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\""
+            + "xmlns:tns=\"http://www.argouml.org/Namespace/argouml-sql\" "
+            + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" "
             + "xsi:schemaLocation=\""
             + "http://www.argouml.org/Namespace/argouml-sql domainmapping.xsd \">";
 
@@ -103,25 +105,34 @@ public class DomainMapper {
         return datatype;
     }
 
-    public Map getMappingsFor(Class codeCreatorClass) {
-        return (Map) databases.get(codeCreatorClass.getName());
+    private Map getMappingsFor(String codeCreatorClassName) {
+        Map mappings = (Map) databases.get(codeCreatorClassName);
+        if (mappings == null) {
+            mappings = new TreeMap(String.CASE_INSENSITIVE_ORDER);
+            databases.put(codeCreatorClassName, mappings);
+        }
+        return mappings;
     }
 
-    private String getFilename() {
-        // return System.getProperty("argo.ext.dir").toString() + XML_FILE_NAME;
-        return getClass().getResource(XML_FILE_NAME).toExternalForm();
+    public Map getMappingsFor(Class codeCreatorClass) {
+        return getMappingsFor(codeCreatorClass.getName());
     }
-    
-    
+
+    private File getFile() {
+        File result = null;
+        String dir = Argo.getDirectory() + File.separator + "ext";
+        result = new File(dir, XML_FILE_NAME);
+        return result;
+    }
 
     public void load() {
-        String filename = getFilename();
+        File file = getFile();
 
         DocumentBuilderFactory docFactory = DocumentBuilderFactory
                 .newInstance();
         try {
             DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
-            Document document = docBuilder.parse(filename);
+            Document document = docBuilder.parse(file);
             Element root = document.getDocumentElement();
             NodeList childs = root.getChildNodes();
 
@@ -134,15 +145,9 @@ public class DomainMapper {
                 NamedNodeMap attributes = child.getAttributes();
                 String name = attributes.getNamedItem("name").getTextContent();
 
-                Map mappings = (Map) databases.get(name);
-                if (mappings == null) {
-                    mappings = new TreeMap(String.CASE_INSENSITIVE_ORDER);
-                    databases.put(name, mappings);
-                }
-
+                Map mappings = getMappingsFor(name);
                 readMappings(mappings, child.getChildNodes());
             }
-
         } catch (ParserConfigurationException e) {
             LOG.error("Exception", e);
         } catch (SAXException e) {
@@ -153,10 +158,14 @@ public class DomainMapper {
     }
 
     public void save() {
-        String filename = getFilename();
+        File file = getFile();
 
         try {
-            FileWriter fw = new FileWriter(filename);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+
+            FileWriter fw = new FileWriter(file);
 
             fw.write(XML_TAG);
             fw.write(GeneratorSql.LINE_SEPARATOR);
@@ -178,6 +187,8 @@ public class DomainMapper {
                 fw.write(sb.toString());
 
                 writeMappings(fw, mappings);
+
+                fw.write("</tns:database>");
             }
 
             fw.write("</tns:mappings>");

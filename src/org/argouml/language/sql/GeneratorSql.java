@@ -103,8 +103,9 @@ public class GeneratorSql implements CodeGenerator {
         SqlCreatorLoader el = new SqlCreatorLoader();
         try {
             URI uri = new URI(extForm);
-            Collection classes = el.getLoadableClassesFromUri(uri,
-                    SqlCodeCreator.class);
+//            Collection classes = el.getLoadableClassesFromUri(uri,
+//                    SqlCodeCreator.class);
+            Collection classes = el.getCodeCreators();
             for (Iterator it = classes.iterator(); it.hasNext();) {
                 Class c = (Class) it.next();
                 SqlCodeCreator scc = (SqlCodeCreator) c.newInstance();

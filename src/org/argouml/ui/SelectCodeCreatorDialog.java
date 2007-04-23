@@ -49,6 +49,13 @@ public class SelectCodeCreatorDialog extends ArgoDialog {
 
     private Logger LOG = Logger.getLogger(getClass());
 
+    /**
+     * Shows the dialog for selecting a code creator for generating proper DDL
+     * statements.
+     * 
+     * @return <code>true</code>, if the user selected OK, <code>false</code>
+     *         otherwise.
+     */
     public static boolean execute() {
         executed = false;
 
@@ -58,7 +65,11 @@ public class SelectCodeCreatorDialog extends ArgoDialog {
         return executed;
     }
 
-    public SelectCodeCreatorDialog() {
+    /**
+     * Creates a new dialog for selecting a code creator.
+     * 
+     */
+    private SelectCodeCreatorDialog() {
         super(Translator.localize("argouml-sql.select-dialog.title"),
                 OK_CANCEL_OPTION, true);
 

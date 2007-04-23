@@ -26,13 +26,14 @@ package org.argouml.ui;
 
 import java.awt.Dimension;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -59,20 +60,30 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface,
         previousSelected = scc;
     }
 
+    private Object[] getElementForRow(int index) {
+        return (Object[]) elements.get(index);
+    }
+
     private class TableModelDomainMappings extends AbstractTableModel {
         public TableModelDomainMappings(Class codeCreatorClass) {
             DomainMapper m = GeneratorSql.getInstance().getDomainMapper();
             Map mappings = m.getMappingsFor(codeCreatorClass);
 
-            elements = new Object[mappings.size()][2];
-            Set entries = mappings.entrySet();
-            int i = 0;
-            for (Iterator it = entries.iterator(); it.hasNext();) {
-                Entry entry = (Entry) it.next();
-                elements[i][0] = entry.getKey();
-                elements[i][1] = entry.getValue();
-                i++;
+            elements = new ArrayList();
+            if (mappings != null) {
+                Set entries = mappings.entrySet();
+                for (Iterator it = entries.iterator(); it.hasNext();) {
+                    Entry entry = (Entry) it.next();
+                    elements.add(newElement(entry.getKey(), entry.getValue()));
+                }
             }
+        }
+
+        private Object[] newElement(Object key, Object value) {
+            Object[] element = new Object[2];
+            element[0] = key;
+            element[1] = value;
+            return element;
         }
 
         public Class getColumnClass(int columnIndex) {
@@ -91,11 +102,18 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface,
         }
 
         public int getRowCount() {
-            return elements.length;
+            return elements.size() + 1;
         }
 
         public Object getValueAt(int rowIndex, int columnIndex) {
-            return elements[rowIndex][columnIndex];
+            Object result = null;
+            if (rowIndex == elements.size()) {
+                result = "";
+            } else {
+                Object[] element = getElementForRow(rowIndex);
+                result = element[columnIndex];
+            }
+            return result;
         }
 
         public boolean isCellEditable(int rowIndex, int columnIndex) {
@@ -104,7 +122,15 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface,
         }
 
         public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
-            elements[rowIndex][columnIndex] = aValue;
+            if (rowIndex == elements.size()) {
+                if (columnIndex == 0) {
+                    elements.add(newElement(aValue, ""));
+                } else if (columnIndex == 1) {
+                    elements.add(newElement("", aValue));
+                }
+            } else {
+                getElementForRow(rowIndex)[columnIndex] = aValue;
+            }
         }
     }
 
@@ -112,7 +138,9 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface,
             Translator.localize("argouml-sql.settings.domain"),
             Translator.localize("argouml-sql.settings.datatype") };
 
-    private Object[][] elements;
+    private List elements;
+
+    // private Object[][] elements;
 
     private boolean initialized;
 
@@ -188,9 +216,10 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface,
         if (previousSelected != null) {
             DomainMapper m = GeneratorSql.getInstance().getDomainMapper();
             m.clear(previousSelected.getClass());
-            for (int i = 0; i < elements.length; i++) {
-                String domain = (String) elements[i][0];
-                String datatype = (String) elements[i][1];
+            for (int i = 0; i < elements.size(); i++) {
+                Object[] element = getElementForRow(i);
+                String domain = (String) element[0];
+                String datatype = (String) element[1];
                 m.setDatatype(previousSelected.getClass(), domain, datatype);
             }
         }
