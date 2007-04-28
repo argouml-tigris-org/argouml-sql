@@ -21,7 +21,10 @@ etc.
 		<property name="build.dir" value="build" />
 		<property name="build.classes" value="${build.dir}/classes" />
 		<property name="module.src.dir" value="src" />
-		<property name="module.tests.dir" value="tests" />
+		<property name="module.tests.src" value="tests" />
+		<property name="module.tests.reports" value="${build.dir}/tests" />
+		<property name="module.tests.html-reports" 
+				value="${module.tests.reports}/html" />
 
 		<property name="debug" value="yes" />
 		<property name="deprecation" value="yes" />
@@ -49,11 +52,6 @@ etc.
 		<path id="run.classpath">
 			<fileset dir="${argo.build.dir}" includes="*.jar" />
 		</path>
-
-		<copy todir="${build.classes}/org/argouml/language/sql">
-			<fileset dir="${module.src.dir}/org/argouml/language/sql" includes="*.xml" />
-		</copy>
-
 	</target>
 
 	<!-- =================================================================== -->
@@ -61,7 +59,7 @@ etc.
 	<!-- =================================================================== -->
 	<target name="run" depends="install" description="Run with this module.">
 		<java classname="org.argouml.application.Main" fork="yes" 
-					taskname="argouml" jvmargs="-Xmx500M">
+				taskname="argouml" jvmargs="-Xmx500M">
 			<sysproperty key="log4j.configuration" 
 					value="org/argouml/resource/error_console.lcf" />
 			<classpath>
@@ -87,13 +85,18 @@ etc.
 				<path refid="compile.classpath" />
 			</classpath>
 		</javac>
-		<copy file="src/manifest.mf" todir="${build.classes}" />
+		<copy file="${module.src.dir}/manifest.mf" todir="${build.classes}" />
+		<copy todir="${build.classes}/org/argouml/i18n">
+			<fileset dir="${module.src.dir}/org/argouml/i18n" 
+					includes="*.properties" />
+		</copy>
 	</target>
 
 	<!-- =================================================================== -->
 	<!-- Creates the jar file                                                -->
 	<!-- =================================================================== -->
-	<target name="jar" depends="compile" description="Build the ${result.jar} file.">
+	<target name="jar" depends="compile" 
+			description="Build the ${result.jar} file.">
 		<jar basedir="${build.classes}" includes="org/argouml/**" 
 				jarfile="${build.dir}/${result.jar}" 
 				manifest="${build.classes}/manifest.mf" />
@@ -122,28 +125,74 @@ etc.
 	<!-- =================================================================== -->
 	<!-- Tests                                                               -->
 	<!-- =================================================================== -->
-	<target name="compile-tests" depends="init" description="Compiles all tests.">
-		<javac srcdir="${module.tests.dir}" destdir="${build.classes}" 
+	<target name="compile-tests" depends="compile" 
+			description="Compiles all tests.">
+		<javac srcdir="${module.tests.src}" destdir="${build.classes}" 
 				includes="org/argouml/**/*.java" debug="${debug}" 
 				deprecation="${deprecation}" optimize="${optimize}" 
 				source="1.5" target="1.5">
 			<classpath>
 				<path refid="compile.classpath" />
+				<pathelement location="${junit.jar.path}" />
 			</classpath>
 		</javac>
-		<copy file="${module.tests.dir}/org/argouml/language/sql/test.zargo" 
-				todir="${build.classes}" />
 	</target>
 
-	<target name="run-tests" depends="compile-tests" description="Runs all tests.">
-		<junit classname="org.argouml.language.sql.TestCodeCreation" fork="yes" 
-					taskname="argouml" jvmargs="-Xmx500M">
+	  <target name="ant.optional.init" depends="init">
+	    <path id="ant.optional.classpath">
+	      <pathelement location="${ant.home}/libopt/ant-junit.jar"/>
+	      <pathelement location="${junit.jar.path}"/>
+	      <pathelement location="${jdepend.jar.path}"/>
+	    </path>
+
+	    <taskdef classname="org.apache.tools.ant.taskdefs.optional.junit.JUnitTask" name="junit">
+	      <classpath>
+		 <path refid="ant.optional.classpath"/>
+	      </classpath>
+	    </taskdef>
+
+	    <taskdef classname="org.apache.tools.ant.taskdefs.optional.junit.XMLResultAggregator" name="junitreport">
+	      <classpath>
+		 <path refid="ant.optional.classpath"/>
+	      </classpath>
+	    </taskdef>
+	    
+	  </target>
+	  
+
+	<target name="run-tests" depends="compile-tests,ant.optional.init" 
+			description="Runs all tests.">
+		<mkdir dir="${module.tests.reports}"/>
+		<mkdir dir="${module.tests.html-reports}" />
+		
+	    <junit errorproperty="junit.failure" failureproperty="junit.failure" 
+	           fork="yes" haltonfailure="false"
+	           maxmemory="48M" printsummary="true">
 			<sysproperty key="log4j.configuration" 
 					value="org/argouml/resource/error_console.lcf" />
 			<classpath>
-				<pathelement location="${build.dir}/${result.jar}" />
-				<path refid="run.classpath" />
+				<pathelement location="${build.classes}" />
+				<path refid="compile.classpath" />
 			</classpath>
+
+			<formatter type="xml"/>
+	    	
+	    	<batchtest todir="${module.tests.reports}">
+				<fileset dir="${module.tests.src}">
+					<include name="org/argouml/language/sql/Test*.java"/>
+				</fileset>
+	    	</batchtest>
+
 		</junit>
+	    	<antcall target="junit-report-create" />
+	</target>
+
+	<target name="junit-report-create">
+		<junitreport todir="${module.tests.reports}">
+	    	<fileset dir="${module.tests.reports}">
+				<include name="TEST-*.xml"/>
+			</fileset>
+			<report format="frames" todir="${module.tests.html-reports}"/>
+		</junitreport>
 	</target>
 </project>

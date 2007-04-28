@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import org.argouml.model.Facade;
 import org.argouml.model.Model;
@@ -268,5 +269,23 @@ final class Utils {
      */
     private Utils() {
 
+    }
+    
+    public static List stringToStringList(String string, String delimiter) {
+        StringTokenizer st = new StringTokenizer(string, delimiter);
+        List result = new ArrayList();
+        while (st.hasMoreTokens()) {
+            result.add(st.nextToken());
+        }
+        return result;
+    }
+
+    public static List stringToStringList(String string) {
+        StringTokenizer st = new StringTokenizer(string);
+        List result = new ArrayList();
+        while (st.hasMoreTokens()) {
+            result.add(st.nextToken());
+        }
+        return result;
     }
 }

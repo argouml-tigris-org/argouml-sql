@@ -41,7 +41,7 @@ import org.argouml.model.Model;
  * 
  * @author drahmann
  */
-public class TestModelValidator extends TestCaseSql {
+public class TestModelValidator extends BaseTestCaseSql {
     /**
      * Tests if ModelValidator considers a relation with a pk-attribute valid.
      */

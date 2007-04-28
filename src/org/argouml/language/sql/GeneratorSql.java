@@ -29,9 +29,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -90,19 +87,19 @@ public class GeneratorSql implements CodeGenerator {
 
         sqlCodeCreators = new ArrayList();
 
-        URL url = getClass().getResource("GeneratorSql.class");
-        String extForm = url.toExternalForm();
-
-        if (extForm.startsWith("file:")) {
-            String className = getClass().getName();
+//        URL url = getClass().getResource("GeneratorSql.class");
+//        String extForm = url.toExternalForm();
+//
+//        if (extForm.startsWith("file:")) {
+//            String className = getClass().getName();
             // ... minus 7 because of length of ".class" and the trailing "/"
-            extForm = extForm.substring(0, extForm.length()
-                    - className.length() - 7);
-        }
+//            extForm = extForm.substring(0, extForm.length()
+//                    - className.length() - 7);
+//        }
 
         SqlCreatorLoader el = new SqlCreatorLoader();
         try {
-            URI uri = new URI(extForm);
+//            URI uri = new URI(extForm);
 //            Collection classes = el.getLoadableClassesFromUri(uri,
 //                    SqlCodeCreator.class);
             Collection classes = el.getCodeCreators();
@@ -111,8 +108,8 @@ public class GeneratorSql implements CodeGenerator {
                 SqlCodeCreator scc = (SqlCodeCreator) c.newInstance();
                 sqlCodeCreators.add(scc);
             }
-        } catch (URISyntaxException e) {
-            LOG.error("Exception", e);
+//        } catch (URISyntaxException e) {
+//            LOG.error("Exception", e);
         } catch (InstantiationException e) {
             LOG.error("Exception while instantiating a SqlCodeCreator", e);
         } catch (IllegalAccessException e) {

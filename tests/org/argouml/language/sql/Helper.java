@@ -35,7 +35,7 @@ import org.argouml.model.Model;
  * 
  * @author drahmann
  */
-final class TestHelper {
+final class Helper {
     private Object defaultType;
 
     private Object defaultNamespace;

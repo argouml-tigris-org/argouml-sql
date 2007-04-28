@@ -26,8 +26,11 @@ package org.argouml.language.sql;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
@@ -38,10 +41,11 @@ import java.util.zip.ZipEntry;
 
 import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
+import org.argouml.persistence.PersistenceManager;
 
 public class SqlCreatorLoader {
-    private Collection getClassesFromJar(JarFile jarFile)
-            throws ClassNotFoundException {
+    private Collection getClassesFromJar(ClassLoader classLoader,
+            JarFile jarFile) throws ClassNotFoundException {
         Collection classes = new HashSet();
         Enumeration e = jarFile.entries();
         while (e.hasMoreElements()) {
@@ -50,7 +54,8 @@ public class SqlCreatorLoader {
             if (name.endsWith(".class")) {
                 name = name.substring(0, name.length() - 6);
                 name = name.replace("/", ".");
-                classes.add(Class.forName(name));
+                
+                classes.add(classLoader.loadClass(name));// lass.forName(name));
             }
         }
         return classes;
@@ -112,7 +117,7 @@ public class SqlCreatorLoader {
                 }
                 uri = new URI(jarFileName);
                 JarFile jf = new JarFile(uri.getSchemeSpecificPart());
-                foundClasses.addAll(getClassesFromJar(jf));
+                foundClasses.addAll(getClassesFromJar(getClass().getClassLoader(), jf));
             } else if (scheme.equalsIgnoreCase("file")) {
                 File dir = new File(uri);
                 if (dir.isDirectory()) {
@@ -154,7 +159,9 @@ public class SqlCreatorLoader {
             } else if (file.getName().endsWith(".jar")) {
                 try {
                     JarFile jarFile = new JarFile(file);
-                    result.addAll(getClassesFromJar(jarFile));
+                    ClassLoader cl = new URLClassLoader(new URL[] { file
+                            .toURL() }, getClass().getClassLoader());
+                    result.addAll(getClassesFromJar(cl, jarFile));
                 } catch (IOException e) {
                     LOG.error("Exception", e);
                 } catch (ClassNotFoundException e) {
@@ -163,7 +170,7 @@ public class SqlCreatorLoader {
             } else if (file.getName().endsWith(".class")) {
                 String className = file.getName();
                 className = className.substring(0, className.length() - 6);
-                String packageName = dir.getName();
+                String packageName = dir.getAbsolutePath();
                 packageName = packageName.substring(extdir.getPath().length());
             }
         }
@@ -173,10 +180,70 @@ public class SqlCreatorLoader {
 
     private File extdir;
 
+    /**
+     * The prefix in URL:s that are files.
+     */
+    private static final String FILE_PREFIX = "file:";
+
+    /**
+     * The prefix in URL:s that are jars.
+     */
+    private static final String JAR_PREFIX = "jar:";
+
+    /**
+     * Class file suffix.
+     */
+    public static final String CLASS_SUFFIX = ".class";
+
     public Collection getCodeCreators() {
+        // Use a little trick to find out where Argo is being loaded from.
+        String extForm = getClass().getResource(Argo.ARGOINI).toExternalForm();
+        String argoRoot = extForm.substring(0, extForm.length()
+                - Argo.ARGOINI.length());
+
+        // If it's a jar, clean it up and make it look like a file url
+        if (argoRoot.startsWith(JAR_PREFIX)) {
+            argoRoot = argoRoot.substring(JAR_PREFIX.length());
+            if (argoRoot.endsWith("!")) {
+                argoRoot = argoRoot.substring(0, argoRoot.length() - 1);
+            }
+        }
+
+        String argoHome = null;
+
+        if (argoRoot != null) {
+            LOG.info("argoRoot is " + argoRoot);
+            if (argoRoot.startsWith(FILE_PREFIX)) {
+                argoHome = new File(argoRoot.substring(FILE_PREFIX.length()))
+                        .getAbsoluteFile().getParent();
+            } else {
+                argoHome = new File(argoRoot).getAbsoluteFile().getParent();
+            }
+
+            try {
+                argoHome = java.net.URLDecoder.decode(argoHome,
+                        PersistenceManager.getEncoding());
+            } catch (UnsupportedEncodingException e) {
+                LOG.warn("Encoding " + PersistenceManager.getEncoding()
+                        + " is unknown.");
+            }
+
+            LOG.info("argoHome is " + argoHome);
+        }
+
+        String extdirName = null;
+        if (argoHome != null) {
+            if (argoHome.startsWith(FILE_PREFIX)) {
+                extdirName = argoHome.substring(FILE_PREFIX.length())
+                        + File.separator + "ext";
+            } else {
+                extdirName = argoHome + File.separator + "ext";
+            }
+        }
+
         Collection classes = new HashSet();
-        String dirname = Argo.getDirectory();
-        extdir = new File(dirname, "ext");
+        String dirname = extdirName;
+        extdir = new File(dirname);
         classes.addAll(getCodeCreators(extdir));
 
         Collection result = new HashSet();

@@ -86,8 +86,8 @@ public class DomainMapper {
      * <li>there is no defined mapping for the given domain</li>
      * </ul>
      * 
-     * @param codeCreator
-     *            The code creator
+     * @param codeCreatorClass
+     *            The class of the code creator
      * @param domain
      *            The domain
      * @return The database-specific datatype for the given domain

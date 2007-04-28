@@ -25,6 +25,10 @@
 package org.argouml.language.sql;
 
 import java.util.Collection;
+import java.util.List;
+
+import junit.framework.Test;
+import junit.framework.TestSuite;
 
 import org.argouml.model.Model;
 
@@ -34,7 +38,7 @@ import org.argouml.model.Model;
  *
  * @author drahmann
  */
-public class TestUtils extends TestCaseSql {
+public class TestUtils extends BaseTestCaseSql {
     /**
      * Test method for
      * 'org.argouml.language.sql.Utils.getAssociationForName(Object, String)'
@@ -111,17 +115,18 @@ public class TestUtils extends TestCaseSql {
         Object association = helper.buildAssociation(relation1, 0, -1,
                 relation2, 0, 1, "fk_12");
 
-        Object methodReturn = Utils.getFkAttributes(relation2, association);
-        assertEquals(null, methodReturn);
+        List methodReturn = Utils.getFkAttributes(relation2, association);
+        assertEquals(0, methodReturn.size());
 
         methodReturn = Utils.getFkAttributes(relation1, association);
-        assertEquals(null, methodReturn);
+        assertEquals(0, methodReturn.size());
 
         Object fkAttr = helper.addForeignKeyAttribute(relation1, "rel2_id");
         helper.setFkAttributeAssocName(fkAttr, "fk_12");
 
         methodReturn = Utils.getFkAttributes(relation1, association);
-        assertEquals(fkAttr, methodReturn);
+        assertTrue(methodReturn.contains(fkAttr));
+        assertEquals(1, methodReturn.size());
     }
 
     /**
@@ -179,5 +184,9 @@ public class TestUtils extends TestCaseSql {
         fkAttr = helper.addForeignKeyAttribute(relation1, "rel2_id5");
         methodReturn = Utils.getSourceAttribute(fkAttr, relation2);
         assertEquals(null, methodReturn);
+    }
+    
+    public static Test suite() {
+        return new TestSuite(TestUtils.class);
     }
 }
