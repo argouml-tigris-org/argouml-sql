@@ -47,6 +47,18 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+/**
+ * Class providing access to domain mappings. Domain mappings are required to
+ * map uml datatypes (domains in db-language) to datatypes of a target database.
+ * This way there can be modelled <code>String</code>s, <code>int</code>s
+ * or <code>double</code>s for a database model. The DomainMapper maps
+ * <code>String</code> to a <code>VARCHAR(100)</code>, <code>int</code>
+ * to <code>INTEGER</code> or <code>double</code> to
+ * <code>DOUBLE PRECISION</code>, according its configuration. This
+ * configuration can be changed in the settings dialog.
+ * 
+ * @author drahmann
+ */
 public class DomainMapper {
     private static final String ROOT_TAG = "<tns:mappings "
             + "xmlns:tns=\"http://www.argouml.org/Namespace/argouml-sql\" "
@@ -74,6 +86,11 @@ public class DomainMapper {
         load();
     }
 
+    /**
+     * Clears all mappings for the specified database code creator.
+     * 
+     * @param codeCreatorClass
+     */
     public void clear(Class codeCreatorClass) {
         getMappingsFor(codeCreatorClass).clear();
     }
@@ -114,6 +131,11 @@ public class DomainMapper {
         return mappings;
     }
 
+    /**
+     * 
+     * @param codeCreatorClass
+     * @return All mappings for the given database code creator class.
+     */
     public Map getMappingsFor(Class codeCreatorClass) {
         return getMappingsFor(codeCreatorClass.getName());
     }
@@ -125,6 +147,10 @@ public class DomainMapper {
         return result;
     }
 
+    /**
+     * Load all mappings from the file domainmapping.xml located in the same
+     * directory than the module.
+     */
     public void load() {
         File file = getFile();
 
@@ -157,6 +183,10 @@ public class DomainMapper {
         }
     }
 
+    /**
+     * Save all mappings to the file domainmapping.xml located in the same
+     * directory than the module.
+     */
     public void save() {
         File file = getFile();
 
@@ -198,6 +228,17 @@ public class DomainMapper {
         }
     }
 
+    /**
+     * Set specified mapping for the given database code creator class.
+     * 
+     * @param codeCreatorClass
+     *            The class of the code creator for which this mapping should be
+     *            set.
+     * @param domain
+     *            The domain (uml datatype).
+     * @param datatype
+     *            The datatype (database-specific).
+     */
     public void setDatatype(Class codeCreatorClass, String domain,
             String datatype) {
         Map mappings = getMappingsFor(codeCreatorClass);

@@ -54,7 +54,7 @@ public interface SqlCodeCreator {
      * Returns a name for the SqlCodeCreator for displaying it in GUI
      * components.
      * 
-     * @return
+     * @return The name of this code creator.
      */
     String getName();
 }

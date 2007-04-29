@@ -270,9 +270,20 @@ final class Utils {
     private Utils() {
 
     }
-    
-    public static List stringToStringList(String string, String delimiter) {
-        StringTokenizer st = new StringTokenizer(string, delimiter);
+
+    /**
+     * Separates a <code>String</code> using the given delimiters and puts the
+     * resulting tokens to a <code>List</code>.
+     * 
+     * @param string
+     *            The string to separate.
+     * @param delimiters
+     *            The delimiters that should used to separate the string.
+     * 
+     * @return A <code>List</code> containing all string tokens.
+     */
+    public static List stringToStringList(String string, String delimiters) {
+        StringTokenizer st = new StringTokenizer(string, delimiters);
         List result = new ArrayList();
         while (st.hasMoreTokens()) {
             result.add(st.nextToken());
@@ -280,6 +291,16 @@ final class Utils {
         return result;
     }
 
+    /**
+     * Separates a <code>String</code> using the standard
+     * <code>StringTokenizer</code> delimiters and puts the resulting tokens
+     * to a <code>List</code>.
+     * 
+     * @param string
+     *            The string to separate.
+     * 
+     * @return A <code>List</code> containing all string tokens.
+     */
     public static List stringToStringList(String string) {
         StringTokenizer st = new StringTokenizer(string);
         List result = new ArrayList();

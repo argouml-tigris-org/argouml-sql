@@ -38,6 +38,12 @@ import org.argouml.i18n.Translator;
 import org.argouml.language.sql.GeneratorSql;
 import org.argouml.language.sql.SqlCodeCreator;
 
+/**
+ * Small dialog for selecting a {@link SqlCodeCreator} for creating DDL
+ * statements.
+ * 
+ * @author drahmann
+ */
 public class SelectCodeCreatorDialog extends ArgoDialog {
     private JLabel lblSelect;
 

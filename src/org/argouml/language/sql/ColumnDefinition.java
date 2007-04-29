@@ -68,6 +68,10 @@ public class ColumnDefinition {
         return datatype;
     }
 
+    /**
+     * 
+     * @return The default Value of the column definition.
+     */
     public Object getDefaultValue() {
         return defaultValue;
     }
@@ -97,6 +101,11 @@ public class ColumnDefinition {
         this.datatype = datatype;
     }
 
+    /**
+     * Set the default value of the column.
+     * 
+     * @param defaultValue
+     */
     public void setDefaultValue(Object defaultValue) {
         this.defaultValue = defaultValue;
     }

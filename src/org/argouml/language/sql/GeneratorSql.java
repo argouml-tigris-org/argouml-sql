@@ -87,29 +87,29 @@ public class GeneratorSql implements CodeGenerator {
 
         sqlCodeCreators = new ArrayList();
 
-//        URL url = getClass().getResource("GeneratorSql.class");
-//        String extForm = url.toExternalForm();
-//
-//        if (extForm.startsWith("file:")) {
-//            String className = getClass().getName();
-            // ... minus 7 because of length of ".class" and the trailing "/"
-//            extForm = extForm.substring(0, extForm.length()
-//                    - className.length() - 7);
-//        }
+        // URL url = getClass().getResource("GeneratorSql.class");
+        // String extForm = url.toExternalForm();
+        //
+        // if (extForm.startsWith("file:")) {
+        // String className = getClass().getName();
+        // ... minus 7 because of length of ".class" and the trailing "/"
+        // extForm = extForm.substring(0, extForm.length()
+        // - className.length() - 7);
+        // }
 
         SqlCreatorLoader el = new SqlCreatorLoader();
         try {
-//            URI uri = new URI(extForm);
-//            Collection classes = el.getLoadableClassesFromUri(uri,
-//                    SqlCodeCreator.class);
+            // URI uri = new URI(extForm);
+            // Collection classes = el.getLoadableClassesFromUri(uri,
+            // SqlCodeCreator.class);
             Collection classes = el.getCodeCreators();
             for (Iterator it = classes.iterator(); it.hasNext();) {
                 Class c = (Class) it.next();
                 SqlCodeCreator scc = (SqlCodeCreator) c.newInstance();
                 sqlCodeCreators.add(scc);
             }
-//        } catch (URISyntaxException e) {
-//            LOG.error("Exception", e);
+            // } catch (URISyntaxException e) {
+            // LOG.error("Exception", e);
         } catch (InstantiationException e) {
             LOG.error("Exception while instantiating a SqlCodeCreator", e);
         } catch (IllegalAccessException e) {
@@ -256,6 +256,8 @@ public class GeneratorSql implements CodeGenerator {
         return sb.toString();
     }
 
+    private static final String SCRIPT_FILENAME = "script.sql";
+
     private Map tableDefinitions;
 
     private List foreignKeyDefinitions;
@@ -277,7 +279,7 @@ public class GeneratorSql implements CodeGenerator {
      */
     public Collection generateFiles(Collection elements, String path,
             boolean deps) {
-        String filename = "script.sql";
+        String filename = SCRIPT_FILENAME;
         if (!path.endsWith(FILE_SEPARATOR)) {
             path += FILE_SEPARATOR;
         }
@@ -429,17 +431,33 @@ public class GeneratorSql implements CodeGenerator {
      *      Collection, boolean)
      */
     public Collection generateFileList(Collection elements, boolean deps) {
-        throw new Error("Not yet implemented");
+        Collection c = new HashSet();
+        c.add(SCRIPT_FILENAME);
+        return c;
     }
 
+    /**
+     * @return A <code>List</code> of all code creators known to this class.
+     */
     public List getSqlCodeCreators() {
         return sqlCodeCreators;
     }
 
+    /**
+     * @return The {@link DomainMapper} class responsible for mappings of
+     *         domains to datatypes.
+     */
     public DomainMapper getDomainMapper() {
         return domainMapper;
     }
 
+    /**
+     * Set a {@link SqlCodeCreator} to be the one to generate code.
+     * 
+     * @param sqlCodeCreator
+     *            The {@link SqlCodeCreator} that should be used to generate DDL
+     *            statements.
+     */
     public void setSqlCodeCreator(SqlCodeCreator sqlCodeCreator) {
         this.sqlCodeCreator = sqlCodeCreator;
     }

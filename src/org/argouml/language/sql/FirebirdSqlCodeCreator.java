@@ -1,15 +1,8 @@
 package org.argouml.language.sql;
 
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import org.argouml.language.sql.ColumnDefinition;
-import org.argouml.language.sql.ForeignKeyDefinition;
-import org.argouml.language.sql.SqlCodeCreator;
-import org.argouml.language.sql.TableDefinition;
-import org.argouml.language.sql.Utils;
 
 /**
  * Class for creating DDL statements for Firebird.

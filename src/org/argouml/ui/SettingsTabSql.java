@@ -47,6 +47,11 @@ import org.argouml.language.sql.DomainMapper;
 import org.argouml.language.sql.GeneratorSql;
 import org.argouml.language.sql.SqlCodeCreator;
 
+/**
+ * Settings tab for this module. Allows configuration of domain mappings.
+ *
+ * @author drahmann
+ */
 public class SettingsTabSql extends JPanel implements GUISettingsTabInterface,
         ListSelectionListener {
     public void valueChanged(ListSelectionEvent e) {
@@ -154,6 +159,9 @@ public class SettingsTabSql extends JPanel implements GUISettingsTabInterface,
 
     private JTable tblDomainMappings;
 
+    /**
+     * Create a new instance of this settings tab.
+     */
     public SettingsTabSql() {
         super();
         initialized = false;

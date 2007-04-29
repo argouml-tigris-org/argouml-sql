@@ -19,14 +19,10 @@ public final class GridBagUtils {
         buttonInsets = new Insets(rowDistance, 5, rowDistance, 5);
         captionInsets = new Insets(rowDistance + 2, 5, rowDistance, 5);
         inputFieldInsets = new Insets(rowDistance, 0, rowDistance, 0);
-
-        instances = new HashMap();
     }
 
     private GridBagUtils() {
     }
-
-    private static Map instances;
 
     public static GridBagConstraints buttonConstraints(int x, int y) {
         return buttonConstraints(x, y, 1, 1);

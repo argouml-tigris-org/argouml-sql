@@ -43,6 +43,12 @@ import org.apache.log4j.Logger;
 import org.argouml.application.api.Argo;
 import org.argouml.persistence.PersistenceManager;
 
+/**
+ * Class for looking through the argouml extension dir for classes implementing
+ * {@link SqlCodeCreator}. Creates an instance of all found classes.
+ * 
+ * @author drahmann
+ */
 public class SqlCreatorLoader {
     private Collection getClassesFromJar(ClassLoader classLoader,
             JarFile jarFile) throws ClassNotFoundException {
@@ -54,7 +60,7 @@ public class SqlCreatorLoader {
             if (name.endsWith(".class")) {
                 name = name.substring(0, name.length() - 6);
                 name = name.replace("/", ".");
-                
+
                 classes.add(classLoader.loadClass(name));// lass.forName(name));
             }
         }
@@ -117,7 +123,8 @@ public class SqlCreatorLoader {
                 }
                 uri = new URI(jarFileName);
                 JarFile jf = new JarFile(uri.getSchemeSpecificPart());
-                foundClasses.addAll(getClassesFromJar(getClass().getClassLoader(), jf));
+                foundClasses.addAll(getClassesFromJar(getClass()
+                        .getClassLoader(), jf));
             } else if (scheme.equalsIgnoreCase("file")) {
                 File dir = new File(uri);
                 if (dir.isDirectory()) {
@@ -195,6 +202,16 @@ public class SqlCreatorLoader {
      */
     public static final String CLASS_SUFFIX = ".class";
 
+    /**
+     * Scans through the argouml extension dir and looks for classes
+     * implementing {@link SqlCodeCreator}. If such a class is found, it is
+     * tried to instanciate it using the standard constructor. If this can be
+     * done the instance is added to the <code>Collection</code> that will be
+     * returned.
+     * 
+     * @return A <code>Collection</code> containing all found classes that
+     *         implement {@link SqlCodeCreator}.
+     */
     public Collection getCodeCreators() {
         // Use a little trick to find out where Argo is being loaded from.
         String extForm = getClass().getResource(Argo.ARGOINI).toExternalForm();
