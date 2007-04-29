@@ -28,6 +28,11 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Transfer object holding all necessary data for a foreign key definition.
+ * 
+ * @author drahmann
+ */
 public class ForeignKeyDefinition {
     private TableDefinition table;
 
@@ -47,19 +52,17 @@ public class ForeignKeyDefinition {
 
     private int referencesUpper;
 
+    /**
+     * Creates a new ForeignKeyDefinition.
+     */
     public ForeignKeyDefinition() {
         columns = new ArrayList();
         referencesColumns = new ArrayList();
     }
-    
-    public int getReferencesUpper() {
-        return referencesUpper;
-    }
 
-    public void setReferencesUpper(int referencesUpper) {
-        this.referencesUpper = referencesUpper;
-    }
-
+    /**
+     * @return A List of all column names.
+     */
     public List getColumnNames() {
         List columnNames = new ArrayList();
         for (Iterator it = columns.iterator(); it.hasNext();) {
@@ -69,21 +72,19 @@ public class ForeignKeyDefinition {
         return columnNames;
     }
 
-    // public void setColumnNames(List columnNames) {
-    // this.columnNames = columnNames;
-    // }
+    /**
+     * Add a column definition.
+     * 
+     * @param colDef
+     *            The column definition to add.
+     */
     public void addColumnDefinition(ColumnDefinition colDef) {
         columns.add(colDef);
     }
 
-    public String getForeignKeyName() {
-        return foreignKeyName;
-    }
-
-    public void setForeignKeyName(String foreignKeyName) {
-        this.foreignKeyName = foreignKeyName;
-    }
-
+    /**
+     * @return A List with all referenced column definitions.
+     */
     public List getReferencesColumnNames() {
         List referencesColumnNames = new ArrayList();
         for (Iterator it = referencesColumns.iterator(); it.hasNext();) {
@@ -93,74 +94,146 @@ public class ForeignKeyDefinition {
         return referencesColumnNames;
     }
 
-    // public void setReferencesColumnNames(List referencesColumnNames) {
-    // this.referencesColumnNames = referencesColumnNames;
-    // }
+    /**
+     * Add a referenced column definition.
+     * 
+     * @param colDef
+     *            The column definition to add.
+     */
     public void addReferencesColumn(ColumnDefinition colDef) {
         referencesColumns.add(colDef);
     }
 
-    public String getReferencesTableName() {
-        return referencesTable.getName();
+    /**
+     * @return Returns the columns.
+     */
+    public List getColumns() {
+        return columns;
     }
-//
-//    public void setReferencesTableName(String referencesTableName) {
-//        this.referencesTableName = referencesTableName;
-//    }
-//
-    public String getTableName() {
-        return table.getName();
-    }
-//
-//    public void setTableName(String tableName) {
-//        this.tableName = tableName;
-//    }
 
+    /**
+     * @return Returns the foreignKeyName.
+     */
+    public String getForeignKeyName() {
+        return foreignKeyName;
+    }
+
+    /**
+     * @return Returns the lower.
+     */
     public int getLower() {
         return lower;
     }
 
-    public void setLower(int lower) {
-        this.lower = lower;
-    }
-
-    public int getReferencesLower() {
-        return referencesLower;
-    }
-
-    public void setReferencesLower(int referencesLower) {
-        this.referencesLower = referencesLower;
-    }
-
-    public int getUpper() {
-        return upper;
-    }
-
-    public void setUpper(int upper) {
-        this.upper = upper;
-    }
-
-    public List getColumns() {
-        return columns;
-    }
-    
+    /**
+     * @return Returns the referencesColumns.
+     */
     public List getReferencesColumns() {
         return referencesColumns;
     }
 
+    /**
+     * @return Returns the referencesLower.
+     */
+    public int getReferencesLower() {
+        return referencesLower;
+    }
+
+    /**
+     * @return Returns the referencesTable.
+     */
     public TableDefinition getReferencesTable() {
         return referencesTable;
     }
 
-    public void setReferencesTable(TableDefinition referencesTable) {
-        this.referencesTable = referencesTable;
+    /**
+     * @return Returns the referencesUpper.
+     */
+    public int getReferencesUpper() {
+        return referencesUpper;
     }
 
+    /**
+     * @return Returns the table.
+     */
     public TableDefinition getTable() {
         return table;
     }
 
+    /**
+     * @return Returns the upper.
+     */
+    public int getUpper() {
+        return upper;
+    }
+
+    /**
+     * @return The name of the referenced table.
+     */
+    public String getReferencesTableName() {
+        return referencesTable.getName();
+    }
+
+    /**
+     * @return The name of the table.
+     */
+    public String getTableName() {
+        return table.getName();
+    }
+
+    /**
+     * @param foreignKeyName
+     *            The foreignKeyName to set.
+     */
+    public void setForeignKeyName(String foreignKeyName) {
+        this.foreignKeyName = foreignKeyName;
+    }
+
+    /**
+     * @param referencesTable
+     *            The referencesTable to set.
+     */
+    public void setReferencesTable(TableDefinition referencesTable) {
+        this.referencesTable = referencesTable;
+    }
+
+    /**
+     * @param table
+     *            The table to set.
+     */
     public void setTable(TableDefinition table) {
         this.table = table;
+    }
+
+    /**
+     * @param lower
+     *            The lower to set.
+     */
+    public void setLower(int lower) {
+        this.lower = lower;
+    }
+
+    /**
+     * @param referencesLower
+     *            The referencesLower to set.
+     */
+    public void setReferencesLower(int referencesLower) {
+        this.referencesLower = referencesLower;
+    }
+
+    /**
+     * @param referencesUpper
+     *            The referencesUpper to set.
+     */
+    public void setReferencesUpper(int referencesUpper) {
+        this.referencesUpper = referencesUpper;
+    }
+
+    /**
+     * @param upper
+     *            The upper to set.
+     */
+    public void setUpper(int upper) {
+        this.upper = upper;
     }
 }

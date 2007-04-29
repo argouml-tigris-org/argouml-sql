@@ -82,7 +82,7 @@ public class MySqlCodeCreator implements SqlCodeCreator {
         }
 
         StringBuffer sbPk = new StringBuffer();
-        it = tableDefinition.getPrimaryKey().iterator();
+        it = tableDefinition.getPrimaryKeyFields().iterator();
         while (it.hasNext()) {
             String primaryKeyField = (String) it.next();
             if (sbPk.length() > 0) {

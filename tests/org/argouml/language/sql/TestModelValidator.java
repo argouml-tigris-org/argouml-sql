@@ -62,7 +62,7 @@ public class TestModelValidator extends BaseTestCaseSql {
     public void testRule1Invalid() {
         Object invalid = Model.getCoreFactory()
                 .buildClass("Invalid", namespace);
-        Model.getCoreFactory().buildAttribute(invalid, namespace, intType);
+        Model.getCoreFactory().buildAttribute2(invalid, intType);
 
         ModelValidator mv = new ModelValidator();
         Collection elements = new HashSet();

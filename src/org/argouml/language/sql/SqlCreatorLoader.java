@@ -27,15 +27,12 @@ package org.argouml.language.sql;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.StringTokenizer;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -98,60 +95,6 @@ public class SqlCreatorLoader {
             }
         }
         return classes;
-    }
-
-    /**
-     * @deprecated Hmmm..., works much simpler with
-     *             {@link SqlCreatorLoader#getCodeCreators()} instead.
-     * 
-     * @param uri
-     * @param superclass
-     * @return
-     */
-    private Collection getLoadableClassesFromUri(URI uri, Class superclass) {
-        Collection foundClasses = new HashSet();
-        try {
-            String scheme = uri.getScheme();
-            if (scheme.equalsIgnoreCase("jar")) {
-                uri = new URI(uri.getSchemeSpecificPart());
-                StringTokenizer st = new StringTokenizer(uri.toString(), "!");
-
-                String jarFileName = st.nextToken();
-                String internalFileName = st.nextToken();
-                if (internalFileName.startsWith("/")) {
-                    internalFileName = internalFileName.substring(1);
-                }
-                uri = new URI(jarFileName);
-                JarFile jf = new JarFile(uri.getSchemeSpecificPart());
-                foundClasses.addAll(getClassesFromJar(getClass()
-                        .getClassLoader(), jf));
-            } else if (scheme.equalsIgnoreCase("file")) {
-                File dir = new File(uri);
-                if (dir.isDirectory()) {
-                    foundClasses.addAll(getClassesFromDirectory("", dir));
-                }
-            }
-        } catch (URISyntaxException e) {
-            // LOG.error("Exception", e);
-        } catch (IOException e) {
-            // LOG.error("Exception", e);
-        } catch (ClassNotFoundException e) {
-            // LOG.error("Exception", e);
-        }
-
-        Collection returnClasses = foundClasses;
-        if (superclass != null) {
-            returnClasses = new HashSet();
-            for (Iterator it = foundClasses.iterator(); it.hasNext();) {
-                Class foundClass = (Class) it.next();
-                if (foundClass != superclass
-                        && superclass.isAssignableFrom(foundClass)) {
-                    returnClasses.add(foundClass);
-                }
-            }
-        }
-
-        return returnClasses;
     }
 
     private static final Logger LOG = Logger.getLogger(SqlCreatorLoader.class);

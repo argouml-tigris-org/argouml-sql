@@ -142,8 +142,8 @@ public class TestUtils extends BaseTestCaseSql {
         Collection methodReturn = Utils.getPrimaryKeyAttributes(relation1);
         assertEquals(0, methodReturn.size());
 
-        Object attr = Model.getCoreFactory().buildAttribute(relation1,
-                namespace, intType);
+        Object attr = Model.getCoreFactory().buildAttribute2(relation1,
+                intType);
         methodReturn = Utils.getPrimaryKeyAttributes(relation1);
         assertEquals(0, methodReturn.size());
 

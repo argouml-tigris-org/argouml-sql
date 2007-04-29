@@ -26,6 +26,12 @@ package org.argouml.language.sql;
 
 import java.util.List;
 
+/**
+ * Data transfer object holding necessary information for an index definition.
+ * Not used yet.
+ *
+ * @author drahmann
+ */
 public class IndexDefinition {
     private String indexName;
 

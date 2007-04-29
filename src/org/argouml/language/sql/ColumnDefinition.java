@@ -27,7 +27,7 @@ package org.argouml.language.sql;
 /**
  * Represents a column definition.
  * 
- * @author Kai
+ * @author drahmann
  */
 public class ColumnDefinition {
     private String datatype;

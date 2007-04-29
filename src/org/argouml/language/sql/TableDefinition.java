@@ -29,6 +29,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Data transfer object containing all necessary data for creating a table.
+ * 
+ * @author drahmann
+ */
 public class TableDefinition {
     private String name;
 
@@ -38,37 +43,74 @@ public class TableDefinition {
 
     private Map columnDefNames;
 
+    /**
+     * Creates a new TableDefinition.
+     */
     public TableDefinition() {
         columnDefinitions = new ArrayList();
         primaryKeyFields = new ArrayList();
         columnDefNames = new HashMap();
     }
 
+    /**
+     * @return Returns the columnDefinitions.
+     */
     public List getColumnDefinitions() {
         return columnDefinitions;
     }
 
+    /**
+     * Adds a {@link ColumnDefinition} to this table's column definitions.
+     * 
+     * @param cd
+     *            The {@link ColumnDefinition} to add.
+     */
     public void addColumnDefinition(ColumnDefinition cd) {
         columnDefinitions.add(cd);
         columnDefNames.put(cd.getName(), cd);
     }
 
+    /**
+     * Adds a field to the primary key of this table.
+     * 
+     * @param name
+     *            The fieldname.
+     */
     public void addPrimaryKeyField(String name) {
         primaryKeyFields.add(name);
     }
 
+    /**
+     * @return Returns the name.
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * @param name
+     *            The name to set.
+     */
     public void setName(String name) {
         this.name = name;
     }
 
-    public List getPrimaryKey() {
+    /**
+     * @return Returns the primaryKeyFields.
+     */
+    public List getPrimaryKeyFields() {
         return primaryKeyFields;
     }
 
+    /**
+     * Returns the {@link ColumnDefinition} with the given name.
+     * 
+     * @param name
+     *            The name of the {@link ColumnDefinition} to return.
+     * @return The {@link ColumnDefinition} with the given name. If no such
+     *         {@link ColumnDefinition} exists, this method return
+     *         <code>null</code>.
+     */
     public ColumnDefinition getColumnDefinition(String name) {
         return (ColumnDefinition) columnDefNames.get(name);
     }

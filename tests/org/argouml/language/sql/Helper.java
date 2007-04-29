@@ -100,8 +100,8 @@ final class Helper {
      */
     public Object addForeignKeyAttribute(Object namespace, Object relation,
             String attrName) {
-        Object fkAttribute = Model.getCoreFactory().buildAttribute(relation,
-                namespace, defaultType);
+        Object fkAttribute = Model.getCoreFactory().buildAttribute2(relation,
+                defaultType);
         Object stereotype = Model.getExtensionMechanismsFactory()
                 .buildStereotype(fkAttribute, "FK", namespace);
         Model.getCoreHelper().addStereotype(fkAttribute, stereotype);
@@ -132,8 +132,8 @@ final class Helper {
      */
     public Object addPrimaryKeyAttribute(Object namespace, Object relation,
             String attrName) {
-        Object pkAttribute = Model.getCoreFactory().buildAttribute(relation,
-                namespace, defaultType);
+        Object pkAttribute = Model.getCoreFactory().buildAttribute2(relation,
+                defaultType);
         Object stereotype = Model.getExtensionMechanismsFactory()
                 .buildStereotype(pkAttribute, "PK", namespace);
         Model.getCoreHelper().addStereotype(pkAttribute, stereotype);
