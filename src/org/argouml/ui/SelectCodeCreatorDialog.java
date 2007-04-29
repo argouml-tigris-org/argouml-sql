@@ -44,7 +44,7 @@ import org.argouml.language.sql.SqlCodeCreator;
  * 
  * @author drahmann
  */
-public class SelectCodeCreatorDialog extends ArgoDialog {
+public final class SelectCodeCreatorDialog extends ArgoDialog {
     private JLabel lblSelect;
 
     private JScrollPane spList;
@@ -53,7 +53,7 @@ public class SelectCodeCreatorDialog extends ArgoDialog {
 
     private static boolean executed;
 
-    private Logger LOG = Logger.getLogger(getClass());
+    private static final Logger LOG = Logger.getLogger(SelectCodeCreatorDialog.class);
 
     /**
      * Shows the dialog for selecting a code creator for generating proper DDL
@@ -95,7 +95,7 @@ public class SelectCodeCreatorDialog extends ArgoDialog {
         spList = new JScrollPane(tblCreators);
 
         content.add(lblSelect, GridBagUtils.captionConstraints(0, 0,
-                GridBagUtils.left));
+                GridBagUtils.LEFT));
         content.add(spList, GridBagUtils.clientAlignConstraints(0, 1));
         setContent(content);
     }

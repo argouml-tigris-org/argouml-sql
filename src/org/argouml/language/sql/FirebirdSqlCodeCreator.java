@@ -1,12 +1,11 @@
 package org.argouml.language.sql;
 
-
 import java.util.Iterator;
 import java.util.List;
 
 /**
  * Class for creating DDL statements for Firebird.
- *
+ * 
  * @author Kai
  */
 public class FirebirdSqlCodeCreator implements SqlCodeCreator {
@@ -17,14 +16,14 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
 
     /**
      * Construct a new code creator.
-     *
+     * 
      */
     public FirebirdSqlCodeCreator() {
         primaryKeyCounter = 1;
     }
 
     /**
-     * Generate DDL statements for the specified foreign key definition
+     * Generate DDL statements for the specified foreign key definition.
      * 
      * @param foreignKeyDefinition
      *            The foreign key definition
@@ -42,7 +41,7 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
         String foreignKeyName = foreignKeyDefinition.getForeignKeyName();
 
         StringBuffer sb = new StringBuffer();
-//        sb.append("/* Foreign key ").append(foreignKeyName).append(" */");
+        // sb.append("/* Foreign key ").append(foreignKeyName).append(" */");
         sb.append(LINE_SEPARATOR);
         sb.append("ALTER TABLE ").append(tableName);
         sb.append(" ADD CONSTRAINT ").append(foreignKeyName).append(
@@ -68,6 +67,16 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
         return sb.toString();
     }
 
+    /**
+     * Generates DDL statements for creating a table according to the parameter
+     * <code>tableDefinition</code>.
+     * 
+     * @param tableDefinition
+     *            A <code>TableDefinition</code> object that holds alls
+     *            necessary data for generating code.
+     * @return The generated code.
+     * @see org.argouml.language.sql.SqlCodeCreator#createTable(org.argouml.language.sql.TableDefinition)
+     */
     public String createTable(TableDefinition tableDefinition) {
         StringBuffer sb = new StringBuffer();
         sb.append("CREATE TABLE ");
@@ -110,6 +119,10 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
         return sb.toString();
     }
 
+    /**
+     * @return The name of this code creator.
+     * @see org.argouml.language.sql.SqlCodeCreator#getName()
+     */
     public String getName() {
         return "Firebird";
     }

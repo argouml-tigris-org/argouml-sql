@@ -75,7 +75,7 @@ public class DomainMapper {
 
     private String indent;
 
-    private Logger LOG = Logger.getLogger(getClass());
+    private static final Logger LOG = Logger.getLogger(DomainMapper.class);
 
     /**
      * Creates a new DomainMapper.
@@ -89,7 +89,7 @@ public class DomainMapper {
     /**
      * Clears all mappings for the specified database code creator.
      * 
-     * @param codeCreatorClass
+     * @param codeCreatorClass The class object of the code creator.
      */
     public void clear(Class codeCreatorClass) {
         getMappingsFor(codeCreatorClass).clear();

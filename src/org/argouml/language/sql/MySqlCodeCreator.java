@@ -1,6 +1,5 @@
 package org.argouml.language.sql;
 
-
 import java.util.Iterator;
 import java.util.List;
 
@@ -21,6 +20,14 @@ public class MySqlCodeCreator implements SqlCodeCreator {
 
     private int primaryKeyCounter;
 
+    /**
+     * Creates DDL statements for creating a foreign key.
+     * 
+     * @param foreignKeyDefinition
+     *            The {@link ForeignKeyDefinition} holding all necessary data.
+     * @return The generated code.
+     * @see org.argouml.language.sql.SqlCodeCreator#createForeignKey(org.argouml.language.sql.ForeignKeyDefinition)
+     */
     public String createForeignKey(ForeignKeyDefinition foreignKeyDefinition) {
         String tableName = foreignKeyDefinition.getTableName();
         List columnNames = foreignKeyDefinition.getColumnNames();
@@ -42,6 +49,16 @@ public class MySqlCodeCreator implements SqlCodeCreator {
         return sb.toString();
     }
 
+    /**
+     * Generates DDL statements for creating a table according to the parameter
+     * <code>tableDefinition</code>.
+     * 
+     * @param tableDefinition
+     *            A <code>TableDefinition</code> object that holds alls
+     *            necessary data for generating code.
+     * @return The generated code.
+     * @see org.argouml.language.sql.SqlCodeCreator#createTable(org.argouml.language.sql.TableDefinition)
+     */
     public String createTable(TableDefinition tableDefinition) {
         StringBuffer sb = new StringBuffer();
         sb.append("CREATE TABLE ");

@@ -37,6 +37,9 @@ import java.util.Map.Entry;
 import org.argouml.model.Model;
 
 // TODO Use Translator for error messages
+/**
+ * Class that validates an UML model to be a valid relational model.
+ */
 class ModelValidator {
     private Map associationForName = new HashMap();
 

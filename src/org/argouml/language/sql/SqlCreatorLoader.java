@@ -154,7 +154,7 @@ public class SqlCreatorLoader {
         return returnClasses;
     }
 
-    private Logger LOG = Logger.getLogger(getClass());
+    private static final Logger LOG = Logger.getLogger(SqlCreatorLoader.class);
 
     private Collection getCodeCreators(File dir) {
         Collection result = new HashSet();

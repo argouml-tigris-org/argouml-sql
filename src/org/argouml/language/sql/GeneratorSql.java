@@ -49,24 +49,53 @@ import org.argouml.uml.generator.CodeGenerator;
 import org.argouml.uml.generator.TempFileUtils;
 
 /**
- * SQL generator
+ * SQL generator.
  */
-public class GeneratorSql implements CodeGenerator {
+public final class GeneratorSql implements CodeGenerator {
+    /**
+     * Constant representing the system dependent line separator.
+     */
     static final String LINE_SEPARATOR = System.getProperty("line.separator");
 
+    /**
+     * Constant representing the attribute stereotype (as <code>String</code>)
+     * that will be used to recognize a primary key attribute.
+     */
     static final String PRIMARY_KEY_STEREOTYPE = "PK";
 
+    /**
+     * Constant representing the attribute stereotype (as <code>String</code>)
+     * that will be used to recognize a foreign key attribute.
+     */
     static final String FOREIGN_KEY_STEREOTYPE = "FK";
 
+    /**
+     * Constant representing the attribute stereotype (as <code>String</code>)
+     * that will be used to recognize an attribute to be not nullable.
+     */
     static final String NOT_NULL_STEREOTYPE = "NOT NULL";
 
+    /**
+     * Constant representing the attribute stereotype (as <code>String</code>)
+     * that will be used to recognize an attribute to be nullable.
+     */
     static final String NULL_STEREOTYPE = "NULL";
 
+    /**
+     * Constant representing the attribute tagged value (as <code>String</code>)
+     * that will be used to recognize what column a foreign key attribute is
+     * referencing to.
+     */
     static final String SOURCE_COLUMN_TAGGED_VALUE = "source column";
 
+    /**
+     * Constant representing the attribute tagged value (as <code>String</code>)
+     * that will be used to recognize what association a foreign key attribute
+     * is referencing to.
+     */
     static final String ASSOCIATION_NAME_TAGGED_VALUE = "association name";
 
-    private Logger LOG = Logger.getLogger(getClass());
+    private static final Logger LOG = Logger.getLogger(GeneratorSql.class);
 
     /**
      * The instances.

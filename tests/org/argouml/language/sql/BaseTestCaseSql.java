@@ -53,7 +53,7 @@ public abstract class BaseTestCaseSql extends TestCase {
     /**
      * Create an empty model.
      * 
-     * @throws Exception
+     * @throws Exception If something works wrong.
      * @see junit.framework.TestCase#setUp()
      */
     protected void setUp() throws Exception {
