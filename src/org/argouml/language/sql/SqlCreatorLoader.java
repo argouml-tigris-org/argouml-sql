@@ -101,6 +101,11 @@ public class SqlCreatorLoader {
 
     private Collection getCodeCreators(File dir) {
         Collection result = new HashSet();
+
+        if (!dir.exists()) {
+            return result;
+        }
+        
         File[] files = dir.listFiles();
         for (int i = 0; i < files.length; i++) {
             File file = files[i];
@@ -205,6 +210,8 @@ public class SqlCreatorLoader {
         String dirname = extdirName;
         extdir = new File(dirname);
         classes.addAll(getCodeCreators(extdir));
+        File userdir = new File(System.getProperty("user.dir"));
+        classes.addAll(getCodeCreators(userdir));
 
         Collection result = new HashSet();
         for (Iterator it = classes.iterator(); it.hasNext();) {

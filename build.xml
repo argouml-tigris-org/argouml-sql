@@ -25,6 +25,7 @@ etc.
 		<property name="module.tests.reports" value="${build.dir}/tests" />
 		<property name="module.tests.html-reports" 
 				value="${module.tests.reports}/html" />
+		<property name="module.javadocs.dir" value="${build.dir}/javadocs" />
 
 		<property name="debug" value="yes" />
 		<property name="deprecation" value="yes" />
@@ -195,4 +196,28 @@ etc.
 			<report format="frames" todir="${module.tests.html-reports}"/>
 		</junitreport>
 	</target>
+	
+	<!-- =================================================================== -->
+	<!-- Javadoc                                                             -->
+	<!-- =================================================================== -->
+	<target name="javadocs" depends="init">
+		<mkdir dir="${module.javadocs.dir}"/>
+
+	    <javadoc bottom="&lt;table width=&apos;100%&apos;&gt;&lt;tr&gt;&lt;td width=&apos;25%&apos; align=&apos;left&apos;&gt;ArgoUML &amp;copy; 1996-2006&lt;/td&gt;&lt;td width=&apos;25%&apos; align=&apos;center&apos;&gt;&lt;a href=&apos;http://argouml.tigris.org/&apos; target=&apos;_blank&apos;&gt;ArgoUML Homepage&lt;/a&gt;&lt;/td&gt;&lt;td width=&apos;25%&apos; align=&apos;center&apos;&gt;&lt;a href=&apos;http://argouml.tigris.org/dev.html&apos; target=&apos;_blank&apos;&gt;ArgoUML Developers' page&lt;/a&gt;&lt;/td&gt;&lt;td width=&apos;25%&apos; align=&apos;right&apos;&gt;&lt;a href=&apos;http://argouml.tigris.org/documentation/defaulthtml/cookbook/&apos; target=&apos;_blank&apos;&gt;ArgoUML Cookbook&lt;/a&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;"
+	             destdir="${module.javadocs.dir}"
+	             maxmemory="128M"
+	             packagenames="org.argouml.*"
+	             source="1.5"
+	             use="true"
+	             windowtitle="ArgoUML-SQL Javadoc for internal use">
+			<sourcepath>
+				<pathelement location="${module.src.dir}"/>
+			</sourcepath>
+	
+			<classpath>
+				<path refid="compile.classpath"/>
+			</classpath>	
+		</javadoc>
+	</target>
+
 </project>

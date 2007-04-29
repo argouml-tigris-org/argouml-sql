@@ -24,6 +24,7 @@
 
 package org.argouml.language.sql;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -33,9 +34,9 @@ import junit.framework.TestSuite;
 import org.argouml.model.Model;
 
 /**
- * Test class for Utils. Contains methods for reaching full base path coverage 
- * of Utils' methods (except the very simple ones).
- *
+ * Test class for Utils. Contains methods for reaching full base path coverage
+ * of Utils' methods (except the very simple ones with only one path).
+ * 
  * @author drahmann
  */
 public class TestUtils extends BaseTestCaseSql {
@@ -105,9 +106,9 @@ public class TestUtils extends BaseTestCaseSql {
      * Object)'
      * 
      * @CoViewTest (coview_methodundertest=org.argouml.language.sql
-     *             .Utils#getFkAttribute(Object,Object))
+     *             .Utils#getFkAttributes(Object,Object))
      */
-    public void testGetFkAttributeObjectObject() {
+    public void testGetFkAttributesObjectObject() {
         Object relation1 = Model.getCoreFactory().buildClass("Relation1",
                 namespace);
         Object relation2 = helper.buildRelation("Relation2", "rel2_id");
@@ -142,8 +143,8 @@ public class TestUtils extends BaseTestCaseSql {
         Collection methodReturn = Utils.getPrimaryKeyAttributes(relation1);
         assertEquals(0, methodReturn.size());
 
-        Object attr = Model.getCoreFactory().buildAttribute2(relation1,
-                intType);
+        Object attr = Model.getCoreFactory()
+                .buildAttribute2(relation1, intType);
         methodReturn = Utils.getPrimaryKeyAttributes(relation1);
         assertEquals(0, methodReturn.size());
 
@@ -185,8 +186,66 @@ public class TestUtils extends BaseTestCaseSql {
         methodReturn = Utils.getSourceAttribute(fkAttr, relation2);
         assertEquals(null, methodReturn);
     }
-    
+
     public static Test suite() {
         return new TestSuite(TestUtils.class);
+    }
+
+    /**
+     * Test method for 'org.argouml.language.sql.Utils.stringsToString(List,
+     * String)'
+     * 
+     * @CoViewTest (coview_methodundertest=org.argouml.language.sql
+     *             .Utils#stringsToString(List,String))
+     */
+    public void testStringsToStringListString() {
+        List strings = new ArrayList();
+        String separators = ",";
+
+        String string = Utils.stringsToString(strings, separators);
+        assertEquals(string, "");
+
+        strings.add("string1");
+        string = Utils.stringsToString(strings, separators);
+        assertEquals(string, "string1");
+
+        strings.add("string2");
+        string = Utils.stringsToString(strings, separators);
+        assertEquals(string, "string1,string2");
+    }
+
+    /**
+     * Test method for
+     * 'org.argouml.language.sql.Utils.stringToStringList(String, String)'
+     * 
+     * @CoViewTest (coview_methodundertest=org.argouml.language.sql
+     *             .Utils#stringToStringList(String,String))
+     * 
+     */
+    public void testStringToStringListStringString() {
+        String s = "";
+        List l = Utils.stringToStringList(s, " ");
+        assertEquals(0, l.size());
+
+        s = "some string value";
+        l = Utils.stringToStringList(s, " ");
+        assertEquals(s, Utils.stringsToString(l, " "));
+    }
+
+    /**
+     * Test method for
+     * 'org.argouml.language.sql.Utils.stringToStringList(String)'
+     * 
+     * @CoViewTest (coview_methodundertest=org.argouml.language.sql
+     *             .Utils#stringToStringList(String))
+     */
+    public void testStringToStringListString() {
+        String s = "";
+        List l = Utils.stringToStringList(s);
+        assertEquals(0, l.size());
+
+        s = "some string value";
+        l = Utils.stringToStringList(s);
+        assertEquals(s, Utils.stringsToString(l, " "));
     }
 }

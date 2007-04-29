@@ -14,12 +14,23 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
 
     private int primaryKeyCounter;
 
+    private int exceptionCounter;
+
     /**
      * Construct a new code creator.
      * 
      */
     public FirebirdSqlCodeCreator() {
+        resetCounters();
+    }
+
+    /**
+     * Resets counters which are used for auto-generated names (e.g. for primary
+     * keys or for exceptions).
+     */
+    public void resetCounters() {
         primaryKeyCounter = 1;
+        exceptionCounter = 1;
     }
 
     /**
@@ -41,7 +52,6 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
         String foreignKeyName = foreignKeyDefinition.getForeignKeyName();
 
         StringBuffer sb = new StringBuffer();
-        // sb.append("/* Foreign key ").append(foreignKeyName).append(" */");
         sb.append(LINE_SEPARATOR);
         sb.append("ALTER TABLE ").append(tableName);
         sb.append(" ADD CONSTRAINT ").append(foreignKeyName).append(
@@ -62,6 +72,98 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
         }
 
         sb.append(";").append(LINE_SEPARATOR);
+        sb.append(LINE_SEPARATOR);
+
+        int upper = foreignKeyDefinition.getUpper();
+        if (upper == 1) {
+            sb.append(getOneToOneTrigger(foreignKeyDefinition));
+        }
+
+        return sb.toString();
+    }
+
+    private String getOneToOneTriggerBody(ForeignKeyDefinition fkDef,
+            String exceptionName) {
+        String tableName = fkDef.getTableName();
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("    DECLARE VARIABLE x INTEGER;").append(LINE_SEPARATOR);
+
+        sb.append("BEGIN").append(LINE_SEPARATOR);
+
+        sb.append("    ");
+        sb.append("SELECT COUNT(*) FROM ").append(tableName);
+        sb.append(" WHERE ");
+
+        StringBuffer sbWhere = new StringBuffer();
+        List columnNames = fkDef.getColumnNames();
+        for (int i = 0; i < columnNames.size(); i++) {
+            if (sbWhere.length() > 0) {
+                sbWhere.append(" AND ");
+            }
+
+            String colName = (String) columnNames.get(i);
+
+            sbWhere.append(colName);
+            sbWhere.append(" = NEW.").append(colName);
+        }
+
+        List pkFields = fkDef.getTable().getPrimaryKeyFields();
+        for (int i = 0; i < pkFields.size(); i++) {
+            String pkFieldName = (String) pkFields.get(i);
+            sbWhere.append(" AND ").append(pkFieldName);
+            sbWhere.append(" <> NEW.").append(pkFieldName);
+            sbWhere.append(" ");
+        }
+
+        sb.append(sbWhere).append(" INTO :x;").append(LINE_SEPARATOR);
+
+        sb.append("    IF (:x = 1) THEN").append(LINE_SEPARATOR);
+
+        sb.append("        ");
+        sb.append("EXCEPTION ").append(exceptionName);
+        sb.append(";").append(LINE_SEPARATOR);
+
+        sb.append("END !!").append(LINE_SEPARATOR);
+
+        return sb.toString();
+    }
+
+    private String getOneToOneTrigger(ForeignKeyDefinition fkDef) {
+        String excName1to1violated = "EXC_ONE_TO_ONE_VIOLATED"
+                + exceptionCounter;
+
+        String tableName = fkDef.getTableName();
+        String referencesTableName = fkDef.getReferencesTableName();
+
+        StringBuffer sb = new StringBuffer();
+        sb.append("CREATE EXCEPTION ").append(excName1to1violated);
+        sb.append(" 'One record in ").append(referencesTableName);
+        sb.append(" references more than one record in ").append(tableName);
+        sb.append("';").append(LINE_SEPARATOR);
+
+        sb.append("SET TERM !! ;").append(LINE_SEPARATOR);
+        sb.append(LINE_SEPARATOR);
+
+        sb.append("CREATE TRIGGER trig_bef_ins_").append(tableName);
+        sb.append(" FOR ").append(tableName);
+        sb.append(LINE_SEPARATOR);
+
+        sb.append("BEFORE INSERT AS").append(LINE_SEPARATOR);
+
+        sb.append(getOneToOneTriggerBody(fkDef, excName1to1violated));
+        sb.append(LINE_SEPARATOR).append(LINE_SEPARATOR);
+        
+        sb.append("CREATE TRIGGER trig_bef_upd_").append(tableName);
+        sb.append(" FOR ").append(tableName);
+        sb.append(LINE_SEPARATOR);
+
+        sb.append("BEFORE UPDATE AS").append(LINE_SEPARATOR);
+
+        sb.append(getOneToOneTriggerBody(fkDef, excName1to1violated));
+        sb.append(LINE_SEPARATOR).append(LINE_SEPARATOR);
+        
+        sb.append("SET TERM ; !!").append(LINE_SEPARATOR);
         sb.append(LINE_SEPARATOR);
 
         return sb.toString();

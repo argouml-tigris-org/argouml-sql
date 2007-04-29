@@ -24,10 +24,8 @@
 
 package org.argouml.language.sql;
 
-
 import java.util.Iterator;
 import java.util.List;
-
 
 import junit.framework.Test;
 import junit.framework.TestSuite;
@@ -38,6 +36,46 @@ import junit.framework.TestSuite;
  * @author Anne und Kai
  */
 public class TestFirebirdCodeCreation extends BaseTestCaseSql {
+    private void compareWhenOneToOne(ForeignKeyDefinition fd,
+            StringBuffer sbExpectedCode, FirebirdSqlCodeCreator c) {
+        // FK for (1,1):(0,1)-relationship
+        fd.setUpper(1);
+        c.resetCounters();
+        String generatedCode = c.createForeignKey(fd);
+
+        String exceptionName = "EXC_ONE_TO_ONE_VIOLATED1";
+
+        StringBuffer sbExpTriggerBody = new StringBuffer();
+        sbExpTriggerBody.append("DECLARE VARIABLE x INTEGER; ");
+        sbExpTriggerBody.append("BEGIN ");
+        sbExpTriggerBody.append("SELECT COUNT(*) FROM A ");
+        sbExpTriggerBody.append("WHERE b_id = NEW.b_id AND ");
+        sbExpTriggerBody.append("id <> NEW.id INTO :x; ");
+        sbExpTriggerBody.append("IF (:x = 1) THEN EXCEPTION ");
+        sbExpTriggerBody.append(exceptionName).append("; ");
+        sbExpTriggerBody.append("END !! ");
+
+        sbExpectedCode.append("CREATE EXCEPTION ").append(exceptionName);
+        sbExpectedCode.append(" 'One record in B references ");
+        sbExpectedCode.append("more than one record in A'; ");
+
+        sbExpectedCode.append("SET TERM !! ; ");
+
+        sbExpectedCode.append("CREATE TRIGGER trig_bef_ins_A FOR A ");
+        sbExpectedCode.append("BEFORE INSERT AS ");
+
+        sbExpectedCode.append(sbExpTriggerBody);
+
+        sbExpectedCode.append("CREATE TRIGGER trig_bef_upd_A FOR A ");
+        sbExpectedCode.append("BEFORE UPDATE AS ");
+
+        sbExpectedCode.append(sbExpTriggerBody);
+
+        sbExpectedCode.append("SET TERM ; !! ");
+
+        compare(generatedCode, sbExpectedCode.toString());
+    }
+
     public void testCreateForeignKeyNotNull() {
         TableDefinition tdA = new TableDefinition();
         tdA.setName("A");
@@ -68,16 +106,98 @@ public class TestFirebirdCodeCreation extends BaseTestCaseSql {
 
         fd.setForeignKeyName("fk_test");
 
+        // FK for (1,1):(0,n)-relationship
         FirebirdSqlCodeCreator c = new FirebirdSqlCodeCreator();
         String generatedCode = c.createForeignKey(fd);
 
         StringBuffer sbExpectedCode = new StringBuffer();
         sbExpectedCode.append("ALTER TABLE A ADD CONSTRAINT fk_test ");
         sbExpectedCode.append("FOREIGN KEY (b_id) REFERENCES B (id) ");
-        sbExpectedCode.append("ON DELETE CASCADE;");
+        sbExpectedCode.append("ON DELETE CASCADE; ");
         String expectedCode = sbExpectedCode.toString();
 
         compare(generatedCode, expectedCode);
+        compareWhenOneToOne(fd, sbExpectedCode, c);
+    }
+    
+    public void testMultipleFkColumns() {
+        TableDefinition tdA = new TableDefinition();
+        tdA.setName("A");
+        tdA.addColumnDefinition(new ColumnDefinition("INTEGER", "id",
+                Boolean.FALSE));
+        ColumnDefinition cd_A_b_id = new ColumnDefinition("INTEGER", "b_id",
+                Boolean.FALSE);
+        ColumnDefinition cd_A_b_id2 = new ColumnDefinition("INTEGER", "b_id2",
+                Boolean.FALSE);
+        tdA.addColumnDefinition(cd_A_b_id);
+        tdA.addColumnDefinition(cd_A_b_id2);
+        tdA.addPrimaryKeyField("id");
+
+        TableDefinition tdB = new TableDefinition();
+        tdB.setName("B");
+        ColumnDefinition cd_B_id = new ColumnDefinition("INTEGER", "id",
+                Boolean.FALSE);
+        ColumnDefinition cd_B_id2 = new ColumnDefinition("INTEGER", "id2",
+                Boolean.FALSE);
+        tdB.addColumnDefinition(cd_B_id);
+        tdB.addColumnDefinition(cd_B_id2);
+        tdB.addPrimaryKeyField("id");
+        tdB.addPrimaryKeyField("id2");
+
+        ForeignKeyDefinition fd = new ForeignKeyDefinition();
+        fd.setTable(tdA);
+        fd.addColumnDefinition(cd_A_b_id);
+        fd.addColumnDefinition(cd_A_b_id2);
+        fd.setLower(0);
+        fd.setUpper(1);
+
+        fd.setReferencesTable(tdB);
+        fd.addReferencesColumn(cd_B_id);
+        fd.addReferencesColumn(cd_B_id2);
+        fd.setReferencesLower(1);
+        fd.setReferencesUpper(1);
+
+        fd.setForeignKeyName("fk_test");
+        
+        StringBuffer sbExpectedCode = new StringBuffer();
+        sbExpectedCode.append("ALTER TABLE A ADD CONSTRAINT fk_test ");
+        sbExpectedCode.append("FOREIGN KEY (b_id,b_id2) REFERENCES B (id,id2) ");
+        sbExpectedCode.append("ON DELETE CASCADE; ");
+        String exceptionName = "EXC_ONE_TO_ONE_VIOLATED1";
+
+        StringBuffer sbExpTriggerBody = new StringBuffer();
+        sbExpTriggerBody.append("DECLARE VARIABLE x INTEGER; ");
+        sbExpTriggerBody.append("BEGIN ");
+        sbExpTriggerBody.append("SELECT COUNT(*) FROM A ");
+        sbExpTriggerBody.append("WHERE b_id = NEW.b_id AND ");
+        sbExpTriggerBody.append("b_id2 = NEW.b_id2 AND ");
+        sbExpTriggerBody.append("id <> NEW.id INTO :x; ");
+        sbExpTriggerBody.append("IF (:x = 1) THEN EXCEPTION ");
+        sbExpTriggerBody.append(exceptionName).append("; ");
+        sbExpTriggerBody.append("END !! ");
+
+        sbExpectedCode.append("CREATE EXCEPTION ").append(exceptionName);
+        sbExpectedCode.append(" 'One record in B references ");
+        sbExpectedCode.append("more than one record in A'; ");
+
+        sbExpectedCode.append("SET TERM !! ; ");
+
+        sbExpectedCode.append("CREATE TRIGGER trig_bef_ins_A FOR A ");
+        sbExpectedCode.append("BEFORE INSERT AS ");
+
+        sbExpectedCode.append(sbExpTriggerBody);
+
+        sbExpectedCode.append("CREATE TRIGGER trig_bef_upd_A FOR A ");
+        sbExpectedCode.append("BEFORE UPDATE AS ");
+
+        sbExpectedCode.append(sbExpTriggerBody);
+
+        sbExpectedCode.append("SET TERM ; !! ");
+
+        FirebirdSqlCodeCreator c = new FirebirdSqlCodeCreator();
+        String generatedCode = c.createForeignKey(fd);
+        
+        compare(generatedCode, sbExpectedCode.toString());
     }
 
     public void testCreateForeignKeyNull() {
@@ -116,10 +236,11 @@ public class TestFirebirdCodeCreation extends BaseTestCaseSql {
         StringBuffer sbExpectedCode = new StringBuffer();
         sbExpectedCode.append("ALTER TABLE A ADD CONSTRAINT fk_test ");
         sbExpectedCode.append("FOREIGN KEY (b_id) REFERENCES B (id) ");
-        sbExpectedCode.append("ON DELETE SET NULL;");
+        sbExpectedCode.append("ON DELETE SET NULL; ");
         String expectedCode = sbExpectedCode.toString();
 
         compare(generatedCode, expectedCode);
+        compareWhenOneToOne(fd, sbExpectedCode, c);
     }
 
     public void testCreateTable() {
