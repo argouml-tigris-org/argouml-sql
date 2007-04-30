@@ -309,4 +309,39 @@ final class Utils {
         }
         return result;
     }
+
+    /**
+     * Get a short table name that can be used in triggers etc. Shortens the
+     * name by first removing all vowels from the left to the right. If that's
+     * not enough the resulting string is just truncated.
+     * 
+     * @param longName
+     * @param maxLength
+     * @return
+     */
+    public static String getShortName(String longName, int maxLength) {
+        char[] vowels = new char[] { 'a', 'e', 'i', 'o', 'u' };
+        String shortName = longName;
+        while (shortName.length() > maxLength) {
+            int index = -1;
+            for (int i = 0; i < vowels.length; i++) {
+                int lastIndex = shortName.lastIndexOf(vowels[i]);
+                if (lastIndex > index) {
+                    index = lastIndex;
+                }
+            }
+            
+            if (index == -1) {
+                break;
+            }
+            
+            String firstPart = shortName.substring(0, index);
+            String lastPart = shortName.substring(index + 1, shortName.length());
+            shortName = firstPart + lastPart;
+        }
+        if (shortName.length() > maxLength) {
+            shortName = shortName.substring(0, maxLength);
+        }
+        return shortName;
+    }
 }
