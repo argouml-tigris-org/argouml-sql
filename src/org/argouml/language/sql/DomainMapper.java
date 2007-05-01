@@ -154,6 +154,10 @@ public class DomainMapper {
     public void load() {
         File file = getFile();
 
+        if (!file.exists()) {
+            return;
+        }
+        
         DocumentBuilderFactory docFactory = DocumentBuilderFactory
                 .newInstance();
         try {
