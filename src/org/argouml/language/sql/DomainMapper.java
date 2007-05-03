@@ -27,6 +27,8 @@ package org.argouml.language.sql;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -39,7 +41,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
-import org.argouml.application.api.Argo;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NamedNodeMap;
@@ -142,8 +143,15 @@ public class DomainMapper {
 
     private File getFile() {
         File result = null;
-        String dir = Argo.getDirectory() + File.separator + "ext";
-        result = new File(dir, XML_FILE_NAME);
+        result = new File(Utils.getModuleRoot(), XML_FILE_NAME);
+        if (!result.exists()) {
+            try {
+                URI uri = getClass().getResource(XML_FILE_NAME).toURI();
+                result = new File(uri);
+            } catch (URISyntaxException e) {
+                LOG.info("Could not find domainmapping file", e);
+            }            
+        }
         return result;
     }
 

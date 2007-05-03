@@ -342,6 +342,48 @@ final class Utils {
         if (shortName.length() > maxLength) {
             shortName = shortName.substring(0, maxLength);
         }
-        return shortName;
+        return shortName;    
+    }
+    
+    /**
+     * The prefix in URL:s that are files.
+     */
+    private static final String FILE_PREFIX = "file:";
+
+    /**
+     * The prefix in URL:s that are jars.
+     */
+    private static final String JAR_PREFIX = "jar:";
+
+    /**
+     * Class file suffix.
+     */
+    public static final String CLASS_SUFFIX = ".class";
+
+    public static String getModuleRoot() {
+        // Use a little trick to find out where this module is being loaded
+        // from. (Code was "stolen" from ModuleLoader2 and modified)
+        String resName = Utils.class.getName();
+        resName = "/" + resName.replace('.', '/') + CLASS_SUFFIX;
+        String extForm = Utils.class.getResource(resName).toExternalForm();
+
+        String moduleRoot = extForm.substring(0, extForm.length()
+                - resName.length());
+
+        // If it's a jar, clean it up and make it look like a file url
+        if (moduleRoot.startsWith(JAR_PREFIX)) {
+            moduleRoot = moduleRoot.substring(JAR_PREFIX.length());
+            if (moduleRoot.endsWith("!")) {
+                moduleRoot = moduleRoot.substring(0, moduleRoot.length() - 1);
+            }
+            int p = moduleRoot.lastIndexOf('/');
+            moduleRoot = moduleRoot.substring(0, p);
+        }
+
+        if (moduleRoot.startsWith(FILE_PREFIX)) {
+            moduleRoot = moduleRoot.substring(FILE_PREFIX.length());
+        }
+
+        return moduleRoot;
     }
 }

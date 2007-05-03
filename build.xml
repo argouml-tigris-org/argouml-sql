@@ -53,6 +53,11 @@ etc.
 		<path id="run.classpath">
 			<fileset dir="${argo.build.dir}" includes="*.jar" />
 		</path>
+		
+		<mkdir dir="${build.dir}" />
+
+		<copy file="${module.src.dir}/org/argouml/language/sql/domainmapping.xml" 
+				todir="${build.dir}"/>
 	</target>
 
 	<!-- =================================================================== -->
@@ -75,7 +80,6 @@ etc.
 	<!-- =================================================================== -->
 	<target name="compile" depends="init" description="Compile the sources.">
 		<!-- create directories -->
-		<mkdir dir="${build.dir}" />
 		<mkdir dir="${build.classes}" />
 
 		<javac srcdir="src" destdir="${build.classes}" 
@@ -111,6 +115,8 @@ etc.
 		<copy todir="${argo.build.dir}/ext">
 			<fileset dir="${build.dir}" includes="${result.jar}" />
 		</copy>
+		<copy file="${module.src.dir}/org/argouml/language/sql/domainmapping.xml" 
+				todir="${argo.build.dir}/ext"/>
 	</target>
 
 	<!-- =================================================================== -->
