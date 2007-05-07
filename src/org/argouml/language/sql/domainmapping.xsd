@@ -23,7 +23,7 @@
 	<complexType name="databaseType">
 		<sequence>
 			<element name="mapping" type="tns:mappingType"
-				maxOccurs="unbounded">
+				maxOccurs="unbounded" minOccurs="0">
 			</element>
 		</sequence>
 		<attribute name="name" type="string" use="required"></attribute>
