@@ -37,6 +37,7 @@ import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
 import org.argouml.language.sql.GeneratorSql;
 import org.argouml.language.sql.SqlCodeCreator;
+import org.argouml.util.ArgoDialog;
 
 /**
  * Small dialog for selecting a {@link SqlCodeCreator} for creating DDL
