@@ -7,7 +7,7 @@ For this file to work you need to have argouml either checked out alongside
 this directory and built using the 'package' target or downloaded a release
 and unpacked in a directory argouml/build alongside this one. Like this:
 
-argouml-sql/build.xml <- This file.
+argouml-module-sql/build.xml <- This file.
 argouml/build/argouml-model.jar
 argouml/build/log4j.jar
 etc.

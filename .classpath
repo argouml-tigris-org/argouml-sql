@@ -8,5 +8,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/argouml-core-lib"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/argouml-core-tools"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/argouml-core-model-mdr"/>
+	<classpathentry kind="src" path="/argouml-core-tests"/>
 	<classpathentry kind="output" path="build-eclipse"/>
 </classpath>

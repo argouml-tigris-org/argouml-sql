@@ -148,7 +148,7 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
 
         // Names in Firebird need to be shorter than 30 characters
         String shortTableName = Utils.getShortName(tableName, 22);
-        sb.append("CREATE TRIGGER ").append(shortTableName).append("_bef_ins");
+        sb.append("CREATE TRIGGER trig_bef_ins_").append(shortTableName);
         sb.append(" FOR ").append(tableName);
         sb.append(LINE_SEPARATOR);
 
@@ -157,7 +157,7 @@ public class FirebirdSqlCodeCreator implements SqlCodeCreator {
         sb.append(getOneToOneTriggerBody(fkDef, excName1to1violated));
         sb.append(LINE_SEPARATOR).append(LINE_SEPARATOR);
 
-        sb.append("CREATE TRIGGER ").append(shortTableName).append("_bef_upd");
+        sb.append("CREATE TRIGGER trig_bef_upd_").append(shortTableName);
         sb.append(" FOR ").append(tableName);
         sb.append(LINE_SEPARATOR);
 

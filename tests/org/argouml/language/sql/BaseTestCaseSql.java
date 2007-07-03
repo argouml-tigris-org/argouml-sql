@@ -24,9 +24,10 @@
 
 package org.argouml.language.sql;
 
-import org.argouml.model.Model;
-
 import junit.framework.TestCase;
+
+import org.argouml.model.InitializeModel;
+import org.argouml.model.Model;
 
 /**
  * Base test case class for SQL module. Builds an empty model before every test
@@ -59,6 +60,8 @@ public abstract class BaseTestCaseSql extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
 
+        InitializeModel.initializeDefault();
+        
         Object mmodel = Model.getModelManagementFactory().createModel();
         Model.getCoreHelper().setName(mmodel, "untitledModel");
         Model.getModelManagementFactory().setRootModel(mmodel);
