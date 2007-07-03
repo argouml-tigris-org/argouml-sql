@@ -73,7 +73,7 @@ public final class GeneratorSql implements CodeGenerator {
      * Constant representing the attribute stereotype (as <code>String</code>)
      * that will be used to recognize an attribute to be not nullable.
      */
-    static final String NOT_NULL_STEREOTYPE = "NOT NULL";
+    static final String NOT_NULL_STEREOTYPE = "NOT_NULL";
 
     /**
      * Constant representing the attribute stereotype (as <code>String</code>)
@@ -86,14 +86,14 @@ public final class GeneratorSql implements CodeGenerator {
      * that will be used to recognize what column a foreign key attribute is
      * referencing to.
      */
-    static final String SOURCE_COLUMN_TAGGED_VALUE = "source column";
+    static final String SOURCE_COLUMN_TAGGED_VALUE = "source_column";
 
     /**
      * Constant representing the attribute tagged value (as <code>String</code>)
      * that will be used to recognize what association a foreign key attribute
      * is referencing to.
      */
-    static final String ASSOCIATION_NAME_TAGGED_VALUE = "association name";
+    static final String ASSOCIATION_NAME_TAGGED_VALUE = "association_name";
 
     private static final Logger LOG = Logger.getLogger(GeneratorSql.class);
 
