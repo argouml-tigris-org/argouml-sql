@@ -143,7 +143,7 @@ class ModelValidator {
 
         Object association = Utils.getAssociationForName(relation, assocName);
         if (association == null) {
-            problems.add("association named " + assocName + " for relation "
+            problems.add("association named '" + assocName + "' for relation "
                     + Model.getFacade().getName(relation) + " not found");
         } else {
             fkAttrForAssoc.put(association, attribute);
