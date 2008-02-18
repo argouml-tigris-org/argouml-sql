@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: %pluginName
+Bundle-SymbolicName: org.argouml.module.sql
+Bundle-Version: 0.25.5
+Export-Package: org.argouml.i18n,
+ org.argouml.language.sql,
+ org.argouml.ui
+Bundle-Vendor: %pluginProvider
+Require-Bundle: org.argouml.app,
+ org.argouml.core.infra,
+ org.argouml.core.model
