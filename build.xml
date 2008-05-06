@@ -8,8 +8,8 @@ this directory and built using the 'package' target or downloaded a release
 and unpacked in a directory argouml/build alongside this one. Like this:
 
 argouml-module-sql/build.xml <- This file.
-argouml/build/argouml-model.jar
-argouml/build/log4j.jar
+argouml/src/argouml-build/build/argouml-model.jar
+argouml/src/argouml-build/build/log4j.jar
 etc.
   -->
 
@@ -37,9 +37,8 @@ etc.
 		<!-- if it is set in a property file before now, it must be absolute -->
 		<property name="argo.root.dir" value="${basedir}/../argouml" />
 		<property file="${override.build.properties}" />
+		<property name="argo.src.dir" value="${argo.root.dir}/src/argouml-app/src"/>
 		<property file="${argo.src.dir}/default.properties" />
-
-		<property name="argo.build.dir" value="${argo.root.dir}/build" />
 
 		<property name="result.jar" value="argouml-sql.jar" />
 
