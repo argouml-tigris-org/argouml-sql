@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 2007 The Regents of the University of California. All
+// Copyright (c) 2007-2008 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -30,12 +30,16 @@ import org.argouml.i18n.Translator;
 import org.argouml.language.sql.GeneratorSql;
 import org.argouml.language.sql.SqlCodeCreator;
 
+/**
+ * A table model for the SQL code creators with a row per SQL dialect.
+ */
 class TableModelCodeCreators extends AbstractTableModel {
     private String[] columnNames = {
             Translator.localize("argouml-sql.settings.code-creator-name"),
             Translator.localize("argouml-sql.settings.code-creator-classname") };
 
-    public Class getColumnClass(int columnIndex) {
+    @Override
+    public Class<String> getColumnClass(int columnIndex) {
         return String.class;
     }
 
@@ -43,6 +47,7 @@ class TableModelCodeCreators extends AbstractTableModel {
         return columnNames.length;
     }
 
+    @Override
     public String getColumnName(int column) {
         return columnNames[column];
     }
@@ -53,15 +58,17 @@ class TableModelCodeCreators extends AbstractTableModel {
 
     public Object getValueAt(int rowIndex, int columnIndex) {
         Object result = null;
-        SqlCodeCreator scc = (SqlCodeCreator) GeneratorSql.getInstance()
-                .getSqlCodeCreators().get(rowIndex);
-        if (columnIndex == 0) {
-            result = scc.getName();
-        } else if (columnIndex == 1) {
-            result = scc.getClass().getName();
-        } else if (columnIndex == -1) {
-            result = scc;
-        }
+        if (rowIndex >= 0 && rowIndex < getRowCount()) {
+			SqlCodeCreator scc = GeneratorSql.getInstance()
+					.getSqlCodeCreators().get(rowIndex);
+			if (columnIndex == 0) {
+				result = scc.getName();
+			} else if (columnIndex == 1) {
+				result = scc.getClass().getName();
+			} else if (columnIndex == -1) {
+				result = scc;
+			}
+		}
         return result;
     }
 }

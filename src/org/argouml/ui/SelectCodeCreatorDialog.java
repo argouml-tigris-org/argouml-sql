@@ -28,7 +28,6 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -55,7 +54,7 @@ public final class SelectCodeCreatorDialog extends ArgoDialog {
 
     private JTable tblCreators;
 
-    private static boolean executed;
+    private static boolean executed = false;
 
     private static final Logger LOG = Logger.getLogger(SelectCodeCreatorDialog.class);
 
@@ -67,10 +66,15 @@ public final class SelectCodeCreatorDialog extends ArgoDialog {
      *         otherwise.
      */
     public static boolean execute() {
-        executed = false;
 
-        SelectCodeCreatorDialog d = new SelectCodeCreatorDialog();
-        d.setVisible(true);
+    	// TODO: This appears to be a flag to make sure that we only ask the
+    	// user once, but it's not really going to work as expected since the
+    	// method will return before the user has had a chance to make a 
+    	// selection.
+    	if (!executed) {
+			SelectCodeCreatorDialog d = new SelectCodeCreatorDialog();
+			d.setVisible(true);
+		}
 
         return executed;
     }
@@ -96,8 +100,6 @@ public final class SelectCodeCreatorDialog extends ArgoDialog {
                 .localize("argouml-sql.select-dialog.label-select")
                 + ":");
         tblCreators = new JTable(new TableModelCodeCreators());
-        ListSelectionListener myLSL = new MyLSL(getOkButton(), tblCreators);
-        tblCreators.getSelectionModel().addListSelectionListener(myLSL);
         spList = new JScrollPane(tblCreators);
         getOkButton().setEnabled(false);
 
@@ -105,22 +107,32 @@ public final class SelectCodeCreatorDialog extends ArgoDialog {
                 GridBagUtils.LEFT));
         content.add(spList, GridBagUtils.clientAlignConstraints(0, 1));
         setContent(content);
+        tblCreators.getSelectionModel().addListSelectionListener(
+        		new ListSelectionListener() {
+					public void valueChanged(ListSelectionEvent e) {
+						if (tblCreators.getSelectedRowCount() > 0) {
+							getOkButton().setEnabled(true);
+						} else {
+							getOkButton().setEnabled(false);
+						}
+					}
+        		});
     }
 
+    @Override
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == getOkButton()) {
             try {
                 int index = tblCreators.getSelectedRow();
-                if (index >= 0) {
-                    SqlCodeCreator scc = 
-                        (SqlCodeCreator) tblCreators.getModel()
-                            .getValueAt(index, -1);
-                    GeneratorSql.getInstance().setSqlCodeCreator(scc);
-                    executed = true;
-                } else {
-                    executed = false;
-                }
+                if (index >= 0 && index < tblCreators.getRowCount()) {
+					SqlCodeCreator scc = (SqlCodeCreator) tblCreators
+							.getModel().getValueAt(index, -1);
+					GeneratorSql.getInstance().setSqlCodeCreator(scc);
+					executed = true;
+				}
             } catch (Exception exc) {
+            	// TODO: We probably shouldn't be doing any special exception
+            	// handling here.  Let the default error handlers work.
                 LOG.error("Exception", exc);
                 String message = Translator
                         .localize("argouml-sql.exceptions.no_sqlcodecreator");
@@ -128,38 +140,8 @@ public final class SelectCodeCreatorDialog extends ArgoDialog {
                         .getInstance(), message, exc);
                 ed.setModal(true);
                 ed.setVisible(true);
-                executed = false;
             }
-        } else {
-            executed = false;
         }
         dispose();
     }
-
-/**
- * Listener to changes in the selection of the table.
- * Enables/disables the OK button according the selection.
- *
- * @author Michiel
- */
-class MyLSL implements ListSelectionListener {
-
-     private JButton button;
-     private JTable table;
-     
-     public MyLSL(JButton okButton, JTable tableCreators) {
-         button = okButton;
-         table = tableCreators;
-     }
-
-    public void valueChanged(ListSelectionEvent lse) {
-        if (lse.getValueIsAdjusting()) {
-            return;
-        }
-        int row = table.getSelectedRow();
-        button.setEnabled(row >= 0);
-    }
-     
- }
-
 }
