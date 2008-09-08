@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 2007 The Regents of the University of California. All
+// Copyright (c) 2007-2008 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -28,10 +28,13 @@ import java.awt.Dimension;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import org.apache.log4j.Logger;
 import org.argouml.i18n.Translator;
@@ -93,7 +96,10 @@ public final class SelectCodeCreatorDialog extends ArgoDialog {
                 .localize("argouml-sql.select-dialog.label-select")
                 + ":");
         tblCreators = new JTable(new TableModelCodeCreators());
+        ListSelectionListener myLSL = new MyLSL(getOkButton(), tblCreators);
+        tblCreators.getSelectionModel().addListSelectionListener(myLSL);
         spList = new JScrollPane(tblCreators);
+        getOkButton().setEnabled(false);
 
         content.add(lblSelect, GridBagUtils.captionConstraints(0, 0,
                 GridBagUtils.LEFT));
@@ -105,10 +111,15 @@ public final class SelectCodeCreatorDialog extends ArgoDialog {
         if (e.getSource() == getOkButton()) {
             try {
                 int index = tblCreators.getSelectedRow();
-                SqlCodeCreator scc = (SqlCodeCreator) tblCreators.getModel()
-                        .getValueAt(index, -1);
-                GeneratorSql.getInstance().setSqlCodeCreator(scc);
-                executed = true;
+                if (index >= 0) {
+                    SqlCodeCreator scc = 
+                        (SqlCodeCreator) tblCreators.getModel()
+                            .getValueAt(index, -1);
+                    GeneratorSql.getInstance().setSqlCodeCreator(scc);
+                    executed = true;
+                } else {
+                    executed = false;
+                }
             } catch (Exception exc) {
                 LOG.error("Exception", exc);
                 String message = Translator
@@ -124,4 +135,31 @@ public final class SelectCodeCreatorDialog extends ArgoDialog {
         }
         dispose();
     }
+
+/**
+ * Listener to changes in the selection of the table.
+ * Enables/disables the OK button according the selection.
+ *
+ * @author Michiel
+ */
+class MyLSL implements ListSelectionListener {
+
+     private JButton button;
+     private JTable table;
+     
+     public MyLSL(JButton okButton, JTable tableCreators) {
+         button = okButton;
+         table = tableCreators;
+     }
+
+    public void valueChanged(ListSelectionEvent lse) {
+        if (lse.getValueIsAdjusting()) {
+            return;
+        }
+        int row = table.getSelectedRow();
+        button.setEnabled(row >= 0);
+    }
+     
+ }
+
 }
