@@ -31,7 +31,7 @@ import java.net.URLClassLoader;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.zip.ZipEntry;
 
@@ -40,7 +40,15 @@ import org.apache.log4j.Logger;
 /**
  * Class for looking through the argouml extension dir for classes implementing
  * {@link SqlCodeCreator}. Creates an instance of all found classes.
- * 
+ * <p>
+ * TODO: This appears to have been cloned from an earlier version of ArgoUML's
+ * ModuleLoader2, but is missing the robustness improvements that were made to
+ * it. - tfm 20080905
+ * <p>
+ * TODO: This should look for some specific naming pattern 
+ * (e.g. SqlCodeCreator*) instead of attempting to load every single class in
+ * every jar. - tfm
+ * <p>
  * @author drahmann
  */
 public class SqlCreatorLoader {
@@ -56,12 +64,12 @@ public class SqlCreatorLoader {
      *            The {@link JarFile} to scan through.
      * @return A {@link Collection} of {@link Class} objects.
      */
-    private Collection getClassesFromJar(ClassLoader classLoader,
+    private Collection<Class> getClassesFromJar(ClassLoader classLoader,
             JarFile jarFile) {
-        Collection classes = new HashSet();
-        Enumeration e = jarFile.entries();
+        Collection<Class> classes = new HashSet<Class>();
+        Enumeration<JarEntry> e = jarFile.entries();
         while (e.hasMoreElements()) {
-            ZipEntry ze = (ZipEntry) e.nextElement();
+            ZipEntry ze = e.nextElement();
             String name = ze.getName();
             if (name.endsWith(".class")) {
                 name = name.substring(0, name.length() - 6);
@@ -71,6 +79,14 @@ public class SqlCreatorLoader {
                     classes.add(classLoader.loadClass(name));
                 } catch (ClassNotFoundException e1) {
                     LOG.info("Class could not be loaded from jar: " + name);
+                } catch (UnsupportedClassVersionError e1) {
+                    LOG.error("Unsupported Java class version for " + name);
+                } catch (NoClassDefFoundError e1) {
+                    LOG.error("Unable to find required class while loading "
+                            + name + " - may indicate an obsolete"
+                            + " extension module or an unresolved dependency", e1);
+                } catch (Throwable e1) {
+                    LOG.error("Unexpected error while loading " + name, e1);
                 }
             }
         }
@@ -88,16 +104,14 @@ public class SqlCreatorLoader {
      *            The directory to scan through.
      * @return A {@link Collection} of {@link Class} objects.
      */
-    private Collection getClassesFromDir(File dir) {
-        Collection result = new HashSet();
+    private Collection<Class> getClassesFromDir(File dir) {
+        Collection<Class> result = new HashSet<Class>();
 
         if (!dir.exists()) {
             return result;
         }
 
-        File[] files = dir.listFiles();
-        for (int i = 0; i < files.length; i++) {
-            File file = files[i];
+        for (File file : dir.listFiles()) {
             if (file.isDirectory()) {
                 result.addAll(getClassesFromDir(file));
             } else if (file.getName().endsWith(".jar")) {
@@ -139,24 +153,24 @@ public class SqlCreatorLoader {
     /**
      * Scans through the argouml extension dir and looks for classes
      * implementing {@link SqlCodeCreator}. If such a class is found, it is
-     * tried to instanciate it using the standard constructor. If this can be
+     * tried to instantiate it using the standard constructor. If this can be
      * done the instance is added to the <code>Collection</code> that will be
      * returned.
      * 
      * @return A <code>Collection</code> containing all found classes that
      *         implement {@link SqlCodeCreator}.
      */
-    public Collection getCodeCreators() {
-        Collection classes = new HashSet();
+    public Collection<Class<SqlCodeCreator>> getCodeCreators() {
+        Collection<Class> classes = new HashSet<Class>();
         moduleDir = new File(Utils.getModuleRoot());
         classes.addAll(getClassesFromDir(moduleDir));
 
-        Collection result = new HashSet();
-        for (Iterator it = classes.iterator(); it.hasNext();) {
-            Class foundClass = (Class) it.next();
+        Collection<Class<SqlCodeCreator>> result = 
+        	new HashSet<Class<SqlCodeCreator>>();
+        for (Class foundClass : classes) {
             if (foundClass != SqlCodeCreator.class
                     && SqlCodeCreator.class.isAssignableFrom(foundClass)) {
-                result.add(foundClass);
+                result.add((Class<SqlCodeCreator>) foundClass);
             }
         }
 
