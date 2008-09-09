@@ -36,11 +36,11 @@ import java.util.List;
 public class ForeignKeyDefinition {
     private TableDefinition table;
 
-    private List columns;
+    private List<ColumnDefinition> columns;
 
     private TableDefinition referencesTable;
 
-    private List referencesColumns;
+    private List<ColumnDefinition> referencesColumns;
 
     private String foreignKeyName;
 
@@ -56,17 +56,17 @@ public class ForeignKeyDefinition {
      * Creates a new ForeignKeyDefinition.
      */
     public ForeignKeyDefinition() {
-        columns = new ArrayList();
-        referencesColumns = new ArrayList();
+        columns = new ArrayList<ColumnDefinition>();
+        referencesColumns = new ArrayList<ColumnDefinition>();
     }
 
     /**
      * @return A List of all column names.
      */
-    public List getColumnNames() {
-        List columnNames = new ArrayList();
-        for (Iterator it = columns.iterator(); it.hasNext();) {
-            ColumnDefinition cd = (ColumnDefinition) it.next();
+    public List<String> getColumnNames() {
+        List<String> columnNames = new ArrayList<String>();
+        for (Iterator<ColumnDefinition> it = columns.iterator(); it.hasNext();) {
+            ColumnDefinition cd = it.next();
             columnNames.add(cd.getName());
         }
         return columnNames;
@@ -85,10 +85,9 @@ public class ForeignKeyDefinition {
     /**
      * @return A List with all referenced column definitions.
      */
-    public List getReferencesColumnNames() {
-        List referencesColumnNames = new ArrayList();
-        for (Iterator it = referencesColumns.iterator(); it.hasNext();) {
-            ColumnDefinition cd = (ColumnDefinition) it.next();
+    public List<String> getReferencesColumnNames() {
+        List<String> referencesColumnNames = new ArrayList<String>();
+        for (ColumnDefinition cd : referencesColumns) {
             referencesColumnNames.add(cd.getName());
         }
         return referencesColumnNames;
@@ -107,7 +106,7 @@ public class ForeignKeyDefinition {
     /**
      * @return Returns the columns.
      */
-    public List getColumns() {
+    public List<ColumnDefinition> getColumns() {
         return columns;
     }
 
@@ -128,7 +127,7 @@ public class ForeignKeyDefinition {
     /**
      * @return Returns the referencesColumns.
      */
-    public List getReferencesColumns() {
+    public List<ColumnDefinition> getReferencesColumns() {
         return referencesColumns;
     }
 

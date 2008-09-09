@@ -41,11 +41,12 @@ import org.argouml.model.Model;
  * Class that validates an UML model to be a valid relational model.
  */
 class ModelValidator {
-    private Map associationForName = new HashMap();
+    private Map<String, Object> associationForName = 
+    	new HashMap<String, Object>();
 
-    private Map fkAttrForAssoc = new HashMap();
+    private Map<Object, Object> fkAttrForAssoc = new HashMap<Object, Object>();
 
-    private List problems;
+    private List<String> problems;
 
     /**
      * Default constructor.
@@ -61,8 +62,8 @@ class ModelValidator {
      * @return A list of problems found by validation. If there are no problems
      *         the returned list is empty.
      */
-    public List validate(Collection elements) {
-        problems = new ArrayList();
+    public List<String> validate(Collection elements) {
+        problems = new ArrayList<String>();
 
         for (Iterator it = elements.iterator(); it.hasNext();) {
             Object relation = it.next();
@@ -72,9 +73,8 @@ class ModelValidator {
             }
         }
 
-        Set entries = associationForName.entrySet();
-        for (Iterator it = entries.iterator(); it.hasNext();) {
-            Entry entry = (Entry) it.next();
+        Set<Entry<String, Object>> entries = associationForName.entrySet();
+        for (Entry<String, Object> entry : entries) {
             String assocName = (String) entry.getKey();
             Object association = entry.getValue();
             Object fkAttribute = fkAttrForAssoc.get(association);

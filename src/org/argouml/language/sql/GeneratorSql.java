@@ -1,5 +1,5 @@
 // $Id$
-// Copyright (c) 2006 The Regents of the University of California. All
+// Copyright (c) 2006-2008 The Regents of the University of California. All
 // Rights Reserved. Permission to use, copy, modify, and distribute this
 // software and its documentation without fee, and without a written
 // agreement is hereby granted, provided that the above copyright notice
@@ -34,7 +34,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +45,7 @@ import org.argouml.ui.ExceptionDialog;
 import org.argouml.ui.ProjectBrowser;
 import org.argouml.ui.SelectCodeCreatorDialog;
 import org.argouml.uml.generator.CodeGenerator;
+import org.argouml.uml.generator.SourceUnit;
 import org.argouml.uml.generator.TempFileUtils;
 
 /**
@@ -106,15 +106,17 @@ public final class GeneratorSql implements CodeGenerator {
 
     private SqlCodeCreator sqlCodeCreator;
 
-    private List sqlCodeCreators;
+    private List<SqlCodeCreator> sqlCodeCreators;
 
     /**
      * Constructor.
      */
     private GeneratorSql() {
         domainMapper = new DomainMapper();
+    }
 
-        sqlCodeCreators = new ArrayList();
+	private List<SqlCodeCreator> loadSqlCodeCreators() {
+		List<SqlCodeCreator> result = new ArrayList<SqlCodeCreator>();
 
         // URL url = getClass().getResource("GeneratorSql.class");
         // String extForm = url.toExternalForm();
@@ -127,25 +129,27 @@ public final class GeneratorSql implements CodeGenerator {
         // }
 
         SqlCreatorLoader el = new SqlCreatorLoader();
-        try {
-            // URI uri = new URI(extForm);
-            // Collection classes = el.getLoadableClassesFromUri(uri,
-            // SqlCodeCreator.class);
-            Collection classes = el.getCodeCreators();
-            for (Iterator it = classes.iterator(); it.hasNext();) {
-                Class c = (Class) it.next();
-                SqlCodeCreator scc = (SqlCodeCreator) c.newInstance();
-                sqlCodeCreators.add(scc);
-            }
-            // } catch (URISyntaxException e) {
-            // LOG.error("Exception", e);
-        } catch (InstantiationException e) {
-            LOG.error("Exception while instantiating a SqlCodeCreator", e);
-        } catch (IllegalAccessException e) {
-            LOG.error("Exception while accessing the constructor of a "
-                    + "SqlCodeCreator", e);
-        }
-    }
+
+		// URI uri = new URI(extForm);
+		// Collection classes = el.getLoadableClassesFromUri(uri,
+		// SqlCodeCreator.class);
+		Collection<Class<SqlCodeCreator>> classes = el.getCodeCreators();
+		for (Class<SqlCodeCreator> c : classes) {
+			try {
+				SqlCodeCreator scc = c.newInstance();
+				result.add(scc);
+				// } catch (URISyntaxException e) {
+				// LOG.error("Exception", e);
+			} catch (InstantiationException e) {
+				LOG.error("Exception while instantiating a SqlCodeCreator "
+						+ c.getName(), e);
+			} catch (IllegalAccessException e) {
+				LOG.error("Exception while accessing the constructor of a "
+						+ "SqlCodeCreator " + c.getName(), e);
+			}
+		}
+        return result;
+	}
 
     /**
      * @return the singleton instance.
@@ -169,7 +173,7 @@ public final class GeneratorSql implements CodeGenerator {
      * @see org.argouml.uml.generator.CodeGenerator#generate( Collection,
      *      boolean)
      */
-    public Collection generate(Collection elements, boolean deps) {
+    public Collection<SourceUnit> generate(Collection elements, boolean deps) {
         LOG.debug("generate() called");
         File tmpdir = null;
         try {
@@ -178,7 +182,7 @@ public final class GeneratorSql implements CodeGenerator {
                 generateFiles(elements, tmpdir.getPath(), deps);
                 return TempFileUtils.readAllFiles(tmpdir);
             }
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         } finally {
             if (tmpdir != null) {
                 TempFileUtils.deleteDir(tmpdir);
@@ -191,11 +195,7 @@ public final class GeneratorSql implements CodeGenerator {
         TableDefinition tableDefinition = new TableDefinition();
         tableDefinition.setName(Model.getFacade().getName(element));
 
-        Iterator itAttributes = Model.getFacade().getAttributes(element)
-                .iterator();
-        while (itAttributes.hasNext()) {
-            Object attribute = itAttributes.next();
-
+        for (Object attribute : Model.getFacade().getAttributes(element)) {
             String name = Model.getFacade().getName(attribute);
 
             ColumnDefinition cd = new ColumnDefinition();
@@ -226,21 +226,19 @@ public final class GeneratorSql implements CodeGenerator {
         return tableDefinition;
     }
 
-    private void setNullable(TableDefinition tableDef, List columnNames,
+    private void setNullable(TableDefinition tableDef, List<String> columnNames,
             boolean nullable) {
-        for (Iterator it = columnNames.iterator(); it.hasNext();) {
-            String name = (String) it.next();
+        for (String name : columnNames) {
             tableDef.getColumnDefinition(name).setNullable(
                     Boolean.valueOf(nullable));
         }
     }
 
     private String generateCode(Collection elements) {
-        tableDefinitions = new HashMap();
-        foreignKeyDefinitions = new ArrayList();
+        tableDefinitions = new HashMap<Object, TableDefinition>();
+        foreignKeyDefinitions = new ArrayList<ForeignKeyDefinition>();
 
-        for (Iterator it = elements.iterator(); it.hasNext();) {
-            Object element = it.next();
+        for (Object element : elements) {
             if (Model.getFacade().isAClass(element)) {
                 TableDefinition tableDef = getTableDefinition(element);
                 tableDefinitions.put(element, tableDef);
@@ -248,15 +246,11 @@ public final class GeneratorSql implements CodeGenerator {
         }
 
         if (elements.size() > 1) {
-            for (Iterator it = elements.iterator(); it.hasNext();) {
-                Object element = it.next();
-                Collection fkDefs = getForeignKeyDefinitions(element);
-                TableDefinition tableDef = (TableDefinition) tableDefinitions
-                        .get(element);
-                for (Iterator it2 = fkDefs.iterator(); it2.hasNext();) {
-                    ForeignKeyDefinition fkDef = (ForeignKeyDefinition) it2
-                            .next();
-
+            for (Object element : elements) {
+                Collection<ForeignKeyDefinition> fkDefs = 
+                	getForeignKeyDefinitions(element);
+                TableDefinition tableDef = tableDefinitions.get(element);
+                for (ForeignKeyDefinition fkDef : fkDefs) {
                     if (fkDef.getReferencesLower() == 0) {
                         setNullable(tableDef, fkDef.getColumnNames(), true);
                     } else {
@@ -269,15 +263,13 @@ public final class GeneratorSql implements CodeGenerator {
 
         StringBuffer sb = new StringBuffer();
         sb.append("-- Table definitions").append(LINE_SEPARATOR);
-        for (Iterator it = tableDefinitions.values().iterator(); it.hasNext();) {
-            TableDefinition tableDef = (TableDefinition) it.next();
+        for (TableDefinition tableDef : tableDefinitions.values()) {
             sb.append(sqlCodeCreator.createTable(tableDef));
         }
 
         if (elements.size() > 1) {
             sb.append("-- Foreign key definitions").append(LINE_SEPARATOR);
-            for (Iterator it = foreignKeyDefinitions.iterator(); it.hasNext();) {
-                ForeignKeyDefinition fkDef = (ForeignKeyDefinition) it.next();
+            for (ForeignKeyDefinition fkDef : foreignKeyDefinitions) {
                 sb.append(sqlCodeCreator.createForeignKey(fkDef));
             }
         }
@@ -287,9 +279,9 @@ public final class GeneratorSql implements CodeGenerator {
 
     private static final String SCRIPT_FILENAME = "script.sql";
 
-    private Map tableDefinitions;
+    private Map<Object, TableDefinition> tableDefinitions;
 
-    private List foreignKeyDefinitions;
+    private List<ForeignKeyDefinition> foreignKeyDefinitions;
 
     /**
      * Generate files for the specified classifiers.
@@ -306,19 +298,19 @@ public final class GeneratorSql implements CodeGenerator {
      * @see org.argouml.uml.generator.CodeGenerator#generateFiles( Collection,
      *      String, boolean)
      */
-    public Collection generateFiles(Collection elements, String path,
+    public Collection<String> generateFiles(Collection elements, String path,
             boolean deps) {
         String filename = SCRIPT_FILENAME;
         if (!path.endsWith(FILE_SEPARATOR)) {
             path += FILE_SEPARATOR;
         }
 
-        Collection result = new ArrayList();
+        Collection<String> result = new ArrayList<String>();
         String fullFilename = path + filename;
 
         LOG.debug("validating model");
         ModelValidator validator = new ModelValidator();
-        List problems = validator.validate(elements);
+        List<String> problems = validator.validate(elements);
         if (problems.size() > 0 && elements.size() > 1) {
             LOG.debug("model not valid, exiting code generation");
             String error = Utils.stringsToString(problems, LINE_SEPARATOR);
@@ -359,12 +351,11 @@ public final class GeneratorSql implements CodeGenerator {
         }
     }
 
-    private Collection getForeignKeyDefinitions(Object relation) {
-        Collection fkDefs = new HashSet();
-        Collection assocEnds = Model.getFacade().getAssociationEnds(relation);
+    private Collection<ForeignKeyDefinition> getForeignKeyDefinitions(Object relation) {
+        Collection<ForeignKeyDefinition> fkDefs = 
+        	new HashSet<ForeignKeyDefinition>();
 
-        for (Iterator it = assocEnds.iterator(); it.hasNext();) {
-            Object assocEnd = it.next();
+        for (Object assocEnd : Model.getFacade().getAssociationEnds(relation)) {
 
             Collection otherAssocEnds = Model.getFacade()
                     .getOtherAssociationEnds(assocEnd);
@@ -390,21 +381,19 @@ public final class GeneratorSql implements CodeGenerator {
         }
         ForeignKeyDefinition fkDef = new ForeignKeyDefinition();
 
-        List srcAttributes = new ArrayList();
+        List<Object> srcAttributes = new ArrayList<Object>();
 
         Object srcRelation = Model.getFacade().getClassifier(otherAssocEnd);
-        for (Iterator it2 = fkAttributes.iterator(); it2.hasNext();) {
-            Object fkAttr = it2.next();
+        for (Object fkAttr : fkAttributes) {
             Object srcAttr = Utils.getSourceAttribute(fkAttr, srcRelation);
             srcAttributes.add(srcAttr);
         }
 
         // List colNames = new ArrayList();
-        TableDefinition tableDef = (TableDefinition) tableDefinitions
+        TableDefinition tableDef = tableDefinitions
                 .get(relation);
         fkDef.setTable(tableDef);
-        for (Iterator it = fkAttributes.iterator(); it.hasNext();) {
-            Object fkAttr = it.next();
+        for (Object fkAttr : fkAttributes) {
             // colNames.add(Model.getFacade().getName(fkAttr));
 
             ColumnDefinition colDef = tableDef.getColumnDefinition(Model
@@ -413,10 +402,9 @@ public final class GeneratorSql implements CodeGenerator {
         }
 
         // List refColNames = new ArrayList();
-        tableDef = (TableDefinition) tableDefinitions.get(srcRelation);
+        tableDef = tableDefinitions.get(srcRelation);
         fkDef.setReferencesTable(tableDef);
-        for (Iterator it = srcAttributes.iterator(); it.hasNext();) {
-            Object srcAttr = it.next();
+        for (Object srcAttr : srcAttributes) {
             // refColNames.add(Model.getFacade().getName(srcAttr));
 
             ColumnDefinition colDef = tableDef.getColumnDefinition(Model
@@ -459,16 +447,20 @@ public final class GeneratorSql implements CodeGenerator {
      * @see org.argouml.uml.generator.CodeGenerator#generateFileList(
      *      Collection, boolean)
      */
-    public Collection generateFileList(Collection elements, boolean deps) {
-        Collection c = new HashSet();
-        c.add(SCRIPT_FILENAME);
-        return c;
-    }
+    public Collection<String> generateFileList(Collection elements, 
+    		boolean deps) {
+		Collection<String> c = new HashSet<String>();
+		c.add(SCRIPT_FILENAME);
+		return c;
+	}
 
     /**
      * @return A <code>List</code> of all code creators known to this class.
      */
-    public List getSqlCodeCreators() {
+    public synchronized List<SqlCodeCreator> getSqlCodeCreators() {
+    	if (sqlCodeCreators == null) {
+    		sqlCodeCreators = loadSqlCodeCreators();
+    	}
         return sqlCodeCreators;
     }
 
