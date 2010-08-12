@@ -58,6 +58,9 @@ etc.
 
 		<copy file="${module.src.dir}/org/argouml/language/sql/domainmapping.xml" 
 				todir="${build.dir}"/>
+		<copy todir="${build.classes}">
+                  <fileset dir="${module.src.dir}" includes="**/*.xml **/*.xsd"/> 
+                </copy>
 	</target>
 
 	<!-- =================================================================== -->
