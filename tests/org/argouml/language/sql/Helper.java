@@ -178,13 +178,9 @@ final class Helper {
         Iterator it = conns.iterator();
         Object relation1End = it.next();
         Object relation2End = it.next();
-        Object mult1 = Model.getDataTypesFactory().createMultiplicity(lower1,
-                upper1);
-        Object mult2 = Model.getDataTypesFactory().createMultiplicity(lower2,
-                upper2);
 
-        Model.getCoreHelper().setMultiplicity(relation1End, mult1);
-        Model.getCoreHelper().setMultiplicity(relation2End, mult2);
+        Model.getCoreHelper().setMultiplicity(relation1End, lower1, upper1);
+        Model.getCoreHelper().setMultiplicity(relation2End, lower2, upper2);
 
         return association;
     }
