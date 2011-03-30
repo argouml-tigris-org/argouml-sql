@@ -322,21 +322,23 @@ public final class GeneratorSql implements CodeGenerator {
         Collection<String> result = new ArrayList<String>();
         String fullFilename = path + filename;
 
-        LOG.debug("validating model");
-        ModelValidator validator = new ModelValidator();
-        List<String> problems = validator.validate(elements);
-        if (problems.size() > 0 && elements.size() > 1) {
-            LOG.debug("model not valid, exiting code generation");
-            String error = Utils.stringsToString(problems, LINE_SEPARATOR);
+        if (!elements.isEmpty()) {
+            LOG.debug("validating model");
+            ModelValidator validator = new ModelValidator();
+            List<String> problems = validator.validate(elements);
+            if (problems.size() > 0) {
+                LOG.debug("model not valid, exiting code generation");
+                String error = Utils.stringsToString(problems, LINE_SEPARATOR);
 
-            ExceptionDialog ed = new ExceptionDialog(ProjectBrowser
-                    .getInstance(), "Error in model", "Model not valid", error);
-            ed.setModal(true);
-            ed.setVisible(true);
-        } else if (SelectCodeCreatorDialog.execute()) {
-            String code = generateCode(elements);
-            writeFile(fullFilename, code);
-            result.add(fullFilename);
+                ExceptionDialog ed = new ExceptionDialog(ProjectBrowser
+                        .getInstance(), "Error in model", "Model not valid", error);
+                ed.setModal(true);
+                ed.setVisible(true);
+            } else if (SelectCodeCreatorDialog.execute()) {
+                String code = generateCode(elements);
+                writeFile(fullFilename, code);
+                result.add(fullFilename);
+            }
         }
         return result;
     }
