@@ -8,6 +8,7 @@
  *
  * Contributors:
  *    drahmann
+ *    Laurent BRAUD
  *****************************************************************************
  *
  * Some portions of this file was previously release using the BSD License:
@@ -46,12 +47,26 @@ package org.argouml.language.sql;
 public class ColumnDefinition {
     private String datatype;
 
-    private Object defaultValue;
+    private String defaultValue;
 
     private String name;
 
     private Boolean nullable;
 
+    private Integer length;
+    
+    private Integer nbDecimal;
+    
+    /**
+     * Comment, label,...
+     */
+    private String comment;
+    
+    /**
+     * Table where is the column.
+     */
+    private TableDefinition table;
+    
     /**
      * Creates a new column definition.
      * 
@@ -60,6 +75,13 @@ public class ColumnDefinition {
         super();
     }
 
+    public ColumnDefinition(TableDefinition table, String name) {
+        this();
+        this.name = name;
+        this.table = table;
+        table.addColumnDefinition(this);
+    }
+    
     /**
      * Creates a new column definition with the given attributes.
      * 
@@ -75,6 +97,27 @@ public class ColumnDefinition {
     }
 
     /**
+     * return the column in the table.
+     * If doesn't exist, create it.
+     * 
+     * Use this because if 2 (or a third) classes references each other, we need to be able to import a FK 
+     * with a REFERENCES table which doesn't exist.(mysql: FOREIGN_KEY_CHECKS=0 )
+     *  
+     * @param table
+     * @param columnName
+     * @return
+     */
+	public static ColumnDefinition findOrCreateColumnDefinition(TableDefinition table,
+			String columnName) {
+    	ColumnDefinition ret = table.getColumnDefinition(columnName);
+    	if(ret == null) {
+    		ret = new ColumnDefinition(table, columnName);
+    	}
+    	
+    	return ret;
+    }
+    
+    /**
      * 
      * @return The datatype of the column definition.
      */
@@ -86,7 +129,7 @@ public class ColumnDefinition {
      * 
      * @return The default Value of the column definition.
      */
-    public Object getDefaultValue() {
+    public String getDefaultValue() {
         return defaultValue;
     }
 
@@ -120,7 +163,7 @@ public class ColumnDefinition {
      * 
      * @param defaultValue
      */
-    public void setDefaultValue(Object defaultValue) {
+    public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
     }
 
@@ -141,4 +184,36 @@ public class ColumnDefinition {
     public void setNullable(Boolean nullable) {
         this.nullable = nullable;
     }
+    
+    public Integer getLength() {
+		return length;
+	}
+    
+    public void setLength(Integer length) {
+		this.length = length;
+	}
+    
+    public Integer getNbDecimal() {
+		return nbDecimal;
+	}
+    
+    public void setNbDecimal(Integer nbDecimal) {
+		this.nbDecimal = nbDecimal;
+	}
+    
+    public TableDefinition getTable() {
+		return table;
+	}
+    
+    public void setTable(TableDefinition table) {
+		this.table = table;
+	}
+
+    public String getComment() {
+		return comment;
+	}
+    
+    public void setComment(String comment) {
+		this.comment = comment;
+	}
 }

@@ -73,6 +73,12 @@ public class ForeignKeyDefinition {
         columns = new ArrayList<ColumnDefinition>();
         referencesColumns = new ArrayList<ColumnDefinition>();
     }
+    
+    public ForeignKeyDefinition(TableDefinition table) {
+        this();
+        this.table = table;
+        this.table.addFkDefinition(this);
+    }
 
     /**
      * @return A List of all column names.
@@ -97,6 +103,19 @@ public class ForeignKeyDefinition {
     }
 
     /**
+     * Add a column definition (from its name )
+     * @param nameColDef
+     */
+    public void addColumnDefinition(String nameColDef) {
+    	ColumnDefinition colDef = table.getColumnDefinition(nameColDef);
+    	
+		if (colDef == null) {
+			colDef = new ColumnDefinition(table, nameColDef);
+    	}
+        columns.add(colDef);
+    }
+    
+    /**
      * @return A List with all referenced column definitions.
      */
     public List<String> getReferencesColumnNames() {
@@ -117,6 +136,21 @@ public class ForeignKeyDefinition {
         referencesColumns.add(colDef);
     }
 
+    /**
+     * Add a referenced column definition (from its name )
+     * @param nameColDef
+     * 
+     * pre : referencesTable contains nameColDef
+     */
+    public void addReferencesColumn(String nameColDef) {
+    	ColumnDefinition colDef = referencesTable.getColumnDefinition(nameColDef);
+    	
+		if (colDef == null) {
+			colDef = new ColumnDefinition(referencesTable, nameColDef);
+    	}
+		referencesColumns.add(colDef);
+    }
+    
     /**
      * @return Returns the columns.
      */
@@ -145,6 +179,24 @@ public class ForeignKeyDefinition {
         return referencesColumns;
     }
 
+    /**
+     * Return true if the columnName is in the table.
+     * @param columnName
+     * @return
+     */
+    public boolean hasColumnInTable(String columnName) {
+    	boolean ret = false;
+    	
+    	for(ColumnDefinition col : columns) {
+			if (columnName.equals(col.getName())) {
+				ret = true;
+    			break;
+    		}
+    	}
+    	
+    	return ret;
+    }
+    
     /**
      * @return Returns the referencesLower.
      */

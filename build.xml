@@ -20,6 +20,7 @@ etc.
 	<target name="init">
 		<property name="build.dir" value="build" />
 		<property name="build.classes" value="${build.dir}/classes" />
+		<property name="module.root" location="."/>
 		<property name="module.src.dir" value="src" />
 		<property name="module.tests.src" value="tests" />
 		<property name="module.tests.reports" value="${build.dir}/tests" />
@@ -27,6 +28,14 @@ etc.
 				value="${module.tests.reports}/html" />
 		<property name="module.javadocs.dir" value="${build.dir}/javadocs" />
 
+		<property name="module.src_generated.dir" value="${module.root}/src_generated"/>
+		
+		<property name="module.lib.dir" value="${module.root}/lib"/>
+    
+    	<property name="antlr-rt.jar" value="antlr-runtime-3.1.1.jar"/>
+    	<property name="antlrall.jar.path" value="${module.lib.dir}/antlrworks-1.2.2.jar"/>
+    	<property name="antlr-rt.jar.path" value="${module.lib.dir}/${antlr-rt.jar}"/>
+		
 		<property name="debug" value="yes" />
 		<property name="deprecation" value="yes" />
 		<property name="optimize" value="yes" />
@@ -55,7 +64,8 @@ etc.
 		</path>
 		
 		<mkdir dir="${build.dir}" />
-
+		<mkdir dir="${module.src_generated.dir}"/>
+		
 		<copy file="${module.src.dir}/org/argouml/language/sql/domainmapping.xml" 
 				todir="${build.dir}"/>
 		<copy todir="${build.classes}">
@@ -77,18 +87,49 @@ etc.
 			</classpath>
 		</java>
 	</target>
-
+	<!-- =================================================================== -->
+  	<!-- Generates the parser and lexer classes                              -->
+  	<!-- =================================================================== -->
+  	<target name="generateparser" depends="init"  description="Generates the parser and lexer classes">
+      <uptodate property="parser.is.current"
+     	 targetfile="${module.src_generated.dir}/org/argouml/language/sql/reveng/MySql.tokens">
+      	
+      	<srcfiles dir="${module.src.dir}/org/argouml/language/sql/reveng">
+        	<include name="MySql.g"/>
+        	<include name="SqlServer.g"/>
+      	</srcfiles>
+      </uptodate>
+      <antcall target="generateparser_internal"/>
+      
+    </target>  
+    
+    
+    <target name="generateparser_internal" unless="parser.is.current" 
+          depends="init">
+    	<echo message="Running antlr3 from ${antlrall.jar.path}"/>
+    	<java classname="org.antlr.Tool" fork="yes" maxmemory="128M" classpath="${antlrall.jar.path}">
+      		<arg value="-o"/>
+      		<arg file="${module.src_generated.dir}/org/argouml/language/sql/reveng"/>
+      		<arg file="${module.src.dir}/org/argouml/language/sql/reveng/MySql.g"/>
+    	</java>
+    	<java classname="org.antlr.Tool" fork="yes" maxmemory="128M" classpath="${antlrall.jar.path}">
+      		<arg value="-o"/>
+      		<arg file="${module.src_generated.dir}/org/argouml/language/sql/reveng"/>
+      		<arg file="${module.src.dir}/org/argouml/language/sql/reveng/SqlServer.g"/>
+    	</java>
+  	</target>
+  
 	<!-- =================================================================== -->
 	<!-- Compiles the source directory                                       -->
 	<!-- =================================================================== -->
-	<target name="compile" depends="init" description="Compile the sources.">
+	<target name="compile" depends="generateparser" description="Compile the sources.">
 		<!-- create directories -->
 		<mkdir dir="${build.classes}" />
 
 		<javac srcdir="src" destdir="${build.classes}" 
 				includes="org/argouml/**/*.java" debug="${debug}" 
 				deprecation="${deprecation}" optimize="${optimize}" 
-				source="1.5" target="1.5">
+				source="1.6" target="1.6">
 			<classpath>
 				<path refid="compile.classpath" />
 			</classpath>
@@ -140,7 +181,7 @@ etc.
 		<javac srcdir="${module.tests.src}" destdir="${build.classes}" 
 				includes="org/argouml/**/*.java" debug="${debug}" 
 				deprecation="${deprecation}" optimize="${optimize}" 
-				source="1.5" target="1.5">
+				source="1.6" target="1.6">
 			<classpath>
 				<path refid="compile.classpath" />
 				<pathelement location="${junit.jar.path}" />
@@ -216,7 +257,7 @@ etc.
 	             destdir="${module.javadocs.dir}"
 	             maxmemory="128M"
 	             packagenames="org.argouml.*"
-	             source="1.5"
+	             source="1.6"
 	             use="true"
 	             windowtitle="ArgoUML-SQL Javadoc for internal use">
 			<sourcepath>

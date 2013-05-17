@@ -1,6 +1,6 @@
 /* $Id$
  *****************************************************************************
- * Copyright (c) 2009 Contributors - see below
+ * Copyright (c) 2009-2013 Contributors - see below
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
  * which accompanies this distribution, and is available at
@@ -8,6 +8,7 @@
  *
  * Contributors:
  *    drahmann
+ *    Laurent BRAUD
  *****************************************************************************
  *
  * Some portions of this file was previously release using the BSD License:
@@ -51,25 +52,32 @@ import java.util.Map;
 public class TableDefinition {
     private String name;
 
-    private List columnDefinitions;
+    private List<ColumnDefinition> columnDefinitions;
 
-    private List primaryKeyFields;
+    private List<String> primaryKeyFields;
 
-    private Map columnDefNames;
+    private Map<String, ColumnDefinition> columnDefNames;
 
+    private List<ForeignKeyDefinition> fkDefinitions;
+    
+    /**
+     * Comment (mysql), label (iSeries/DB2)
+     */
+    private String comment;
     /**
      * Creates a new TableDefinition.
      */
     public TableDefinition() {
-        columnDefinitions = new ArrayList();
-        primaryKeyFields = new ArrayList();
-        columnDefNames = new HashMap();
+        columnDefinitions = new ArrayList<ColumnDefinition>();
+        primaryKeyFields = new ArrayList<String>();
+        columnDefNames = new HashMap<String, ColumnDefinition>();
+        fkDefinitions = new ArrayList<ForeignKeyDefinition>();
     }
 
     /**
      * @return Returns the columnDefinitions.
      */
-    public List getColumnDefinitions() {
+    public List<ColumnDefinition> getColumnDefinitions() {
         return columnDefinitions;
     }
 
@@ -109,10 +117,18 @@ public class TableDefinition {
         this.name = name;
     }
 
+    public String getComment() {
+		return comment;
+	}
+    
+    public void setComment(String comment) {
+		this.comment = comment;
+	}
+    
     /**
      * @return Returns the primaryKeyFields.
      */
-    public List getPrimaryKeyFields() {
+    public List<String> getPrimaryKeyFields() {
         return primaryKeyFields;
     }
 
@@ -128,4 +144,14 @@ public class TableDefinition {
     public ColumnDefinition getColumnDefinition(String name) {
         return (ColumnDefinition) columnDefNames.get(name);
     }
+    
+    
+    public List<ForeignKeyDefinition> getFkDefinitions() {
+		return fkDefinitions;
+	}
+    
+    public void addFkDefinition(ForeignKeyDefinition fkDefinition) {
+		this.fkDefinitions.add(fkDefinition);
+	}
+    
 }
