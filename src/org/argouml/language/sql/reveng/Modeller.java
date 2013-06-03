@@ -83,7 +83,7 @@ public class Modeller {
         
     }
     
-    public String getMappingDataTypeSQLToUML(String typeSQL) {
+    public String getMappingDataTypeSQLToUML(final String typeSQL) {
     	String typeUML = "String";
 		if (typeSQL.toLowerCase().indexOf("char") > 0) {
 			// char, varchar, nvarchar [oracle], ...
@@ -178,11 +178,11 @@ public class Modeller {
 	 * Call by the SqlParser
 	 * Must be call before the end of pasring a table (so, only when then name is known), because a FK can reference himself.
 	 */
-	public void addTable(TableDefinition table) {
+	public void addTable(final TableDefinition table) {
 		tablesByName.put(table.getName(), table);
 	}
    
-	public TableDefinition getTableFromName(String nameTable) {
+	public TableDefinition getTableFromName(final String nameTable) {
 		TableDefinition ret = tablesByName.get(nameTable);
 		if (ret == null) {
 			ret = new TableDefinition();
@@ -197,7 +197,7 @@ public class Modeller {
 		return tablesByName;
 	}
 	
-    public Object addClass(TableDefinition table) {
+    public Object addClass(final TableDefinition table) {
         
         Object mClass = addClassifier(Model.getCoreFactory().createClass(),
         		table.getName(), table.getComment(), null);
@@ -388,7 +388,7 @@ public class Modeller {
         return mAttribute;
     }
 
-	public void setLevel(String level) {
+	public void setLevel(final String level) {
 		this.settingLevel = level;
 	}
     

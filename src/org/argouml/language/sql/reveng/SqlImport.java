@@ -246,7 +246,7 @@ public class SqlImport implements ImportInterface {
      * TODO : like in java module.
      */
     @Override
-    public String getInfo(int type) {
+    public String getInfo(final int type) {
     	switch (type) {
         case DESCRIPTION:
             return "SQL import from dump files.";

@@ -40,7 +40,10 @@ public class ModellerC implements ModellerLevel{
 		for(TableDefinition table : modellerSource.getTablesByName().values()) {
 			//
 			boolean writeClass = true;
-			
+
+			// Set to false if all attribute in PK are keys.
+			//
+
 			if (writeClass) {
 				Object curClass = modellerSource.addClass(table);
 				classes.put(table.getName(), curClass);

@@ -62,6 +62,7 @@ dump_read [Modeller modeller, Lexer lexer]
  (  dumpComment
 	| drop_table_statement
 	| create_table_statement
+	| set_statement
 	)*  
 	{
 		getModeller().generateModele();
@@ -73,7 +74,11 @@ dumpComment:
 	SL_COMMENT
 	| ML_COMMENT (';')?
 ;
-	
+
+set_statement:
+	'SET' (VAR_MYSQL | ID) '=' (VAR_MYSQL | ID)
+;
+
 drop_table_statement :
 	'DROP' 'TABLE' 'IF' 'EXISTS' (PROTECT_CHAR)? table_name (PROTECT_CHAR)? SEMICOLON ;
 	
@@ -192,12 +197,13 @@ reference_definition [ForeignKeyDefinition fk] :
 		}
 	}
 	
-	('MATCH' ('FULL' | 'PARTIAL'))?
-	('ON' ('DELETE' | 'UPDATE') reference_option )?
+	('MATCH' ('FULL' | 'PARTIAL') )?
+	('ON' ('DELETE' | 'UPDATE') reference_option )*
+	
 ;
 
 reference_option :
-	'RESTRICT' | 'CASCADE' | 'SET NULL' | 'NO ACTION' | 'SET DEFAULT'
+	'RESTRICT' | 'CASCADE' | 'SET' 'NULL' | 'NO ACTION' | 'SET DEFAULT'
 ;
 
 columns_list_name returns [List<String> listColumn]:
@@ -228,6 +234,9 @@ data_type_def [ColumnDefinition col] :
     		$col.setLength($data_length.len);
     		$col.setNbDecimal($data_length.decimal);//can be null
     	}
+   	 ( 'UNSIGNED' {})? 
+   	 
+   	 ( 'ZEROFILL' {} )? 
    	 ( 'NOT' 'NULL' {
    	 	$col.setNullable(false);
    	 	} 
@@ -289,6 +298,8 @@ DOT :    '.';
 
 NUMBER  :   (DIGIT)+;
 ID  : (( LETTER | '_') ((DIGIT)*))+ ;
+
+VAR_MYSQL : '@' ('@')? ID;
 
 PROTECT_CHAR : '`';
 
