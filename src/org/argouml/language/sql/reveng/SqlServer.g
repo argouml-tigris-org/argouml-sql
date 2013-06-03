@@ -269,7 +269,7 @@ table_name returns [String name] :
 ;
 
 data_type_def [ColumnDefinition col] :
-    data_type {$col.setDatatype($data_type.text);} 
+    data_type {$col.setDatatype($data_type.name);} 
     	(data_length)? {
     		$col.setLength($data_length.len);
     		$col.setNbDecimal($data_length.decimal);//can be null

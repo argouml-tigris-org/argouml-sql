@@ -14,7 +14,6 @@
 package org.argouml.language.sql.reveng;
 
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -26,8 +25,6 @@ import java.util.StringTokenizer;
 import org.argouml.application.api.Argo;
 
 import org.argouml.kernel.ProjectManager;
-import org.argouml.language.sql.ColumnDefinition;
-import org.argouml.language.sql.ForeignKeyDefinition;
 import org.argouml.language.sql.TableDefinition;
 import org.argouml.model.Model;
 
@@ -35,13 +32,12 @@ import org.argouml.model.Model;
 import org.argouml.profile.Profile;
 
 public class Modeller {
-	private static final int ASSOCIATION = 1;
-	private static final int GENERALIZATION = 2;
+	public static final int ASSOCIATION = 1;
+	public static final int GENERALIZATION = 2;
 	
 	// these next const need to be in a generic class
-	private static final String ASSOCIATION_1 = "1";
-	private static final String ASSOCIATION_01 = "0..1";
-	
+	public static final String ASSOCIATION_1 = "1";
+	public static final String ASSOCIATION_01 = "0..1";
 	
 	/**
      * Current working model.
@@ -87,7 +83,7 @@ public class Modeller {
         
     }
     
-    private String getMappingDataTypeSQLToMCD(String typeSQL) {
+    public String getMappingDataTypeSQLToUML(String typeSQL) {
     	String typeUML = "String";
 		if (typeSQL.toLowerCase().indexOf("char") > 0) {
 			// char, varchar, nvarchar [oracle], ...
@@ -120,139 +116,16 @@ public class Modeller {
 	*/
 	public void generateModele() {
 		
-		Map<String, Object> classes = new HashMap<String, Object>();
-		
-		List<ForeignKeyDefinition> foreign_keys = new ArrayList<ForeignKeyDefinition>();
-		// build the classes.
-		for(TableDefinition table : tablesByName.values()) {
-			Object curClass = addClass(table);
-			classes.put(table.getName(), curClass);
-			for(ColumnDefinition c : table.getColumnDefinitions()) {
-				String attributeName = c.getName();
-				String typeSpec = c.getDatatype();
-	    		
-				if (this.settingLevel.equals(SqlImportSettings.LEVEL_MCD)) {
-	    			// Set a UML type instead of a type SQL (or with a tagValue)
-					// getMappingDataTypeSQLToMCD(typeSpec);
-					
-					// Don't create attribute if a FK exists.
-					// => reset attributeName to null
-					for (ForeignKeyDefinition fk : table.getFkDefinitions()){
-						if(fk.hasColumnInTable(attributeName)){
-							attributeName = null;
-							break;
-						}
-					}
-	    		} else {
-	    			// Stereotype,...	
-	    		}
-				
-				// TODO : profile(SQL, or match with UML standard for conception) 
-				Object packageOfType = this.model;
-				Object mClassifierType = null;
-				if (typeSpec != null) {
-					mClassifierType = Model.getFacade().lookupIn(packageOfType, typeSpec);
-					if (mClassifierType == null) {
-						mClassifierType = Model.getCoreFactory().buildDataType(typeSpec, packageOfType);
-						newElements.add(mClassifierType);
-					}
-				}
-	    		//Object mClassifier = null;
-				if (attributeName != null) {
-					Object mAttribute = buildAttribute(curClass, mClassifierType, attributeName);
-					String multiplicity = ASSOCIATION_1;
-					if (c.getNullable() == null || c.getNullable()) {
-						multiplicity = ASSOCIATION_01;
-					}
-					Model.getCoreHelper().setMultiplicity(mAttribute,
-							multiplicity);
-					
-					if (c.getDefaultValue() != null) {
-						Object newInitialValue = Model.getDataTypesFactory()
-								.createExpression("Sql", c.getDefaultValue());
-						Model.getCoreHelper().setInitialValue(mAttribute,
-								newInitialValue);	
-					}
-					
-				}
-	    	}
-			foreign_keys.addAll(table.getFkDefinitions());
+		ModellerLevel generation = null;
+		if (this.settingLevel.equals(SqlImportSettings.LEVEL_MCD)) {
+			generation =new ModellerC(this);
+		} else {
+			// default : this.settingLevel.equals(SqlImportSettings.LEVEL_MPD)
+			generation =new ModellerP(this);
 		}
 		
-		for(ForeignKeyDefinition fk : foreign_keys) {
-			String name = fk.getForeignKeyName();
-			
-			
-			
-			int typeAsso = ASSOCIATION;
-			if (fk.getReferencesTable() != fk.getTable()) {
-				List<String> fkTable = fk.getColumnNames();
-				
-				List<String> pkTable = fk.getTable().getPrimaryKeyFields();
-				List<String> pkRef = fk.getReferencesTable().getPrimaryKeyFields();
-				
-				if (fkTable.size()>0 && pkTable.size()>0 && fkTable.containsAll(pkTable) && pkTable.containsAll(fkTable)) {
-					
-					if (pkRef.size()>0 && fkTable.containsAll(pkTable) && pkTable.containsAll(fkTable)) {
-						typeAsso = GENERALIZATION;	
-					}
-				}
-				
-			}
-			
-			
-			// if at least one is column of the FK, in the Table is nullable: "0..1", otherwise "1".
-			String multiplicity = ASSOCIATION_1;
-			for (ColumnDefinition columnDefinition : fk.getColumns()) {
-				if (columnDefinition.getNullable() == null
-						|| columnDefinition.getNullable()) {
-					multiplicity = ASSOCIATION_01;
-					break;
-				}
-			}
-			
-			
-			
-			// Build the good association type (association ?, composition ?, agregation ?, generalisation ?)
-			Object mClassifier = classes.get(fk.getReferencesTable().getName());
-			Object mClassifierEnd = classes.get(fk.getTable().getName());
-			
-			String nameAssociationEnd = name;
-			
-			if (typeAsso == GENERALIZATION) {
-				Object mGeneralization = getGeneralization(this.model, mClassifier, mClassifierEnd);
-				Model.getCoreHelper().setName(mGeneralization, nameAssociationEnd);
-				
-			} else if (typeAsso == ASSOCIATION) {
-				Object mAssociationEnd = getAssociationEnd(name, mClassifier, mClassifierEnd);
-				//setVisibility(mAssociationEnd, modifiers);
-				Model.getCoreHelper().setMultiplicity(
-	                  mAssociationEnd,
-	                  multiplicity);
-				Model.getCoreHelper().setType(mAssociationEnd, mClassifier);
-				
-				// String nameAssociationEnd = name;
-				if (fk.getColumns().size() == 1) {
-					nameAssociationEnd = fk.getColumns().get(0).getName();
-				}
-				
-				Model.getCoreHelper().setName(mAssociationEnd, nameAssociationEnd);
-				if (!mClassifier.equals(mClassifierEnd)) {
-					// Because if they are equal,
-					// then getAssociationEnd(name, mClassifier) could return
-					// the wrong assoc end, on the other hand the navigability
-					// is already set correctly (at least in this case), so the
-					// next line is not necessary. (maybe never necessary?) - thn
-					Model.getCoreHelper().setNavigable(mAssociationEnd, true);
-				}
-				//addDocumentationTag(mAssociationEnd, javadoc);*
-				// else if (typeAsso == GENERALIZATION) {
-				//}
-			}
-				
-			
-			
-		}
+		generation.genereInModele();
+		
 		
 	}
 	
@@ -263,7 +136,7 @@ public class Modeller {
 	 * @param mClassifierEnd
 	 * @return
 	 */
-	private Object getAssociationEnd(String name, Object mClassifier, Object mClassifierEnd) {
+	public Object getAssociationEnd(String name, Object mClassifier, Object mClassifierEnd) {
         Object mAssociationEnd = null;
         for (Iterator<Object> i = Model.getFacade().getAssociationEnds(mClassifier)
                 .iterator(); i.hasNext();) {
@@ -320,7 +193,11 @@ public class Modeller {
 	}
 
     
-    private Object addClass(TableDefinition table) {
+	public Map<String, TableDefinition> getTablesByName() {
+		return tablesByName;
+	}
+	
+    public Object addClass(TableDefinition table) {
         
         Object mClass = addClassifier(Model.getCoreFactory().createClass(),
         		table.getName(), table.getComment(), null);
@@ -335,6 +212,16 @@ public class Modeller {
         }
         newElements.add(mClass);
         return mClass;
+    }
+    
+    
+    public Object getOrAddDatatype(Object packageOfType, String typeSpec) {
+    	Object mClassifierType = Model.getFacade().lookupIn(packageOfType, typeSpec);
+		if (mClassifierType == null) {
+			mClassifierType = Model.getCoreFactory().buildDataType(typeSpec, packageOfType);
+			newElements.add(mClassifierType);
+		}
+		return mClassifierType;
     }
     
     private Object addClassifier(Object newClassifier, String name,
@@ -491,7 +378,7 @@ public class Modeller {
         return stereotype;
     }
     
-    private Object buildAttribute(Object classifier, Object type, String name) {
+    public Object buildAttribute(Object classifier, Object type, String name) {
         Object mAttribute = Model.getCoreFactory().buildAttribute2(classifier,
                 type);
         
@@ -505,7 +392,7 @@ public class Modeller {
 		this.settingLevel = level;
 	}
     
-	private Object getGeneralization(Object mPackage,
+	public Object getGeneralization(Object mPackage,
             Object parent,
             Object child) {
 		Object mGeneralization = Model.getFacade().getGeneralization(child,
@@ -519,5 +406,10 @@ public class Modeller {
 			Model.getCoreHelper().setNamespace(mGeneralization, mPackage);
 		}
 		return mGeneralization;
+	}
+	
+	
+	public Object getModel() {
+		return this.model;
 	}
 }
