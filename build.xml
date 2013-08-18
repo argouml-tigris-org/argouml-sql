@@ -57,6 +57,8 @@ etc.
 			<pathelement location="${argo.build.dir}/argouml-model.jar" />
 			<pathelement location="${argo.build.dir}/argouml.jar" />
 			<pathelement location="${argo.build.dir}/ocl-argo.jar" />
+			<pathelement location="${antlrall.jar.path}"/>
+			<pathelement location="${antlr2.jar.path}"/>
 		</path>
 
 		<path id="run.classpath">
