@@ -96,7 +96,7 @@ public class ModellerP implements ModellerLevel {
 						}
 					}
 					
-		    	}
+				}
 				foreign_keys.addAll(table.getFkDefinitions());
 			} // end write class
 			
@@ -114,7 +114,14 @@ public class ModellerP implements ModellerLevel {
 			
 			String nameAssociationEnd = name;
 			
-			
+			// if at least one column of the FK in the Table is nullable : "0..1", otherwise "1".
+			for (ColumnDefinition columnDefinition : fk.getColumns()) {
+            			if (columnDefinition.getNullable() == null || columnDefinition.getNullable()) {
+            			    multiplicity = Modeller.ASSOCIATION_01;
+            			    break;
+            			}
+            	    	}
+
 			Object mAssociationEnd = modellerSource.getAssociationEnd(name, mClassifier, mClassifierEnd);
 			//setVisibility(mAssociationEnd, modifiers);
 			Model.getCoreHelper().setMultiplicity(
