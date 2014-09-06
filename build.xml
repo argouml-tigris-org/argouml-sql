@@ -128,10 +128,11 @@ etc.
 		<!-- create directories -->
 		<mkdir dir="${build.classes}" />
 
-		<javac srcdir="src" destdir="${build.classes}" 
-				includes="org/argouml/**/*.java" debug="${debug}" 
-				deprecation="${deprecation}" optimize="${optimize}" 
-				source="1.6" target="1.6">
+		<javac srcdir="src" destdir="${build.classes}"
+				includes="org/argouml/**/*.java" debug="${debug}"
+				deprecation="${deprecation}" optimize="${optimize}"
+				source="1.5"
+				target="1.5">
 			<classpath>
 				<path refid="compile.classpath" />
 			</classpath>
@@ -148,15 +149,15 @@ etc.
 	<!-- =================================================================== -->
 	<target name="jar" depends="compile" 
 			description="Build the ${result.jar} file.">
-		<jar basedir="${build.classes}" includes="org/argouml/**" 
-				jarfile="${build.dir}/${result.jar}" 
+		<jar basedir="${build.classes}" includes="org/argouml/**"
+				jarfile="${build.dir}/${result.jar}"
 				manifest="${build.classes}/manifest.mf" />
 	</target>
 
 	<!-- =================================================================== -->
 	<!-- Install the jar file                                                -->
 	<!-- =================================================================== -->
-	<target name="install" depends="jar" 
+	<target name="install" depends="jar"
 			description="Copy the ${result.jar} file to the ArgoUML directory.">
 		<copy todir="${argo.build.dir}/ext">
 			<fileset dir="${build.dir}" includes="${result.jar}" />
