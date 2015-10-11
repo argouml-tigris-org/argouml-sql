@@ -85,6 +85,12 @@ public final class GeneratorSql implements CodeGenerator {
 
     /**
      * Constant representing the attribute stereotype (as <code>String</code>)
+     * that will be used to recognize a foreign key attribute.
+     */
+    static final String AUTOINC_KEY_STEREOTYPE = "AUTOINC";
+
+    /**
+     * Constant representing the attribute stereotype (as <code>String</code>)
      * that will be used to recognize an attribute to be not nullable.
      */
     static final String NOT_NULL_STEREOTYPE = "NOT_NULL";
@@ -211,7 +217,6 @@ public final class GeneratorSql implements CodeGenerator {
 
         for (Object attribute : Model.getFacade().getAttributes(element)) {
             String name = Model.getFacade().getName(attribute);
-
             ColumnDefinition cd = new ColumnDefinition();
             cd.setName(name);
 
@@ -227,6 +232,11 @@ public final class GeneratorSql implements CodeGenerator {
                 cd.setNullable(Boolean.FALSE);
             } else {
                 cd.setNullable(null);
+            }
+            if (Utils.isAutoIncrement(attribute)) {
+                cd.setAutoInc(Boolean.TRUE);
+            } else {
+                cd.setAutoInc(Boolean.FALSE);
             }
 
             tableDefinition.addColumnDefinition(cd);

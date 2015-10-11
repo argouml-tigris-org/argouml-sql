@@ -53,6 +53,8 @@ public class ColumnDefinition {
 
     private Boolean nullable;
 
+    private Boolean autoinc;
+
     private Integer length;
     
     private Integer nbDecimal;
@@ -150,6 +152,14 @@ public class ColumnDefinition {
     }
 
     /**
+     *
+     * @return Whether this column's values shall be AUTO INCREMENTed
+     */
+    public Boolean getAutoInc() {
+        return autoinc;
+    }
+
+    /**
      * Set the datatype of the column.
      * 
      * @param datatype
@@ -184,7 +194,17 @@ public class ColumnDefinition {
     public void setNullable(Boolean nullable) {
         this.nullable = nullable;
     }
-    
+
+    /**
+     *
+     * Set whether this column's values shall be AUTO INCREMENTed.
+     *
+     * @param autoinc
+     */
+    public void setAutoInc(Boolean autoinc) {
+        this.autoinc = autoinc;
+    }
+ 
     public Integer getLength() {
 		return length;
 	}

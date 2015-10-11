@@ -187,6 +187,22 @@ final class Utils {
     }
 
     /**
+     * Returns if an attribute is an attribute that should be auto incremented.
+     * Effectively checks if the attribute is of stereotype
+     * {@link GeneratorSql#AUTOINC_KEY_STEREOTYPE}.
+     *
+     * @param attribute
+     *            The attribute to check.
+     * @return <code>true</code> if it is a auto increment attribute,
+     *         <code>false</code> else.
+     * @see Facade#isStereotype(Object, String)
+     */
+    public static boolean isAutoIncrement(Object attribute) {
+            return Model.getFacade().isStereotype(attribute,
+                            GeneratorSql.AUTOINC_KEY_STEREOTYPE);
+    }
+
+    /**
      * Returns if an attribute is not nullable. Effectively checks if the
      * attribute is of stereotype {@link GeneratorSql#NOT_NULL_STEREOTYPE}.
      * 

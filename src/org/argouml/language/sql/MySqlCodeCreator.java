@@ -44,7 +44,7 @@ public class MySqlCodeCreator implements SqlCodeCreator {
         sb.append(Utils.stringsToCommaString(columnNames));
         sb.append(") REFERENCES ").append(referencesTableName).append(" (");
         sb.append(Utils.stringsToCommaString(referencesColumnNames));
-        sb.append(");");
+        sb.append(");").append(LINE_SEPARATOR);
 
         return sb.toString();
     }
@@ -68,7 +68,7 @@ public class MySqlCodeCreator implements SqlCodeCreator {
         Iterator it = tableDefinition.getColumnDefinitions().iterator();
         while (it.hasNext()) {
             ColumnDefinition colDef = (ColumnDefinition) it.next();
-            sb.append(colDef.getName()).append(" ");
+            sb.append("  ").append(colDef.getName()).append(" ");
             sb.append(colDef.getDatatype());
             Boolean nullable = colDef.getNullable();
             if (nullable != null) {
@@ -78,7 +78,16 @@ public class MySqlCodeCreator implements SqlCodeCreator {
                     sb.append(" ").append("NOT NULL");
                 }
             }
+            Boolean autoinc = colDef.getAutoInc();
+            if (autoinc != null) {
+                if (autoinc.equals(Boolean.TRUE)) {
+                    sb.append(" AUTO INCREMENT");
+                }
+            }
             sb.append(",").append(LINE_SEPARATOR);
+            if (colDef.getComment() != null) {
+                sb.append("/* ").append(colDef.getComment()).append(" */");
+            }
         }
 
         StringBuffer sbPk = new StringBuffer();
@@ -91,11 +100,11 @@ public class MySqlCodeCreator implements SqlCodeCreator {
             sbPk.append(primaryKeyField);
         }
 
-        sb.append("PRIMARY KEY (");
+        sb.append("  PRIMARY KEY (");
         sb.append(sbPk);
         sb.append(")").append(LINE_SEPARATOR);
 
-        sb.append(");");
+        sb.append(");").append(LINE_SEPARATOR);
 
         primaryKeyCounter++;
 
