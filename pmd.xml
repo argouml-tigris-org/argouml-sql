@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd version="4.3" timestamp="2019-11-02T22:06:43.075">
+<file name="/var/jenkins_home/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/FirebirdSqlCodeCreator.java">
+<violation beginline="199" endline="201" begincolumn="17" endcolumn="17" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.argouml.language.sql" class="FirebirdSqlCodeCreator" method="createTable" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+<file name="/var/jenkins_home/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/MySqlCodeCreator.java">
+<violation beginline="6" endline="6" begincolumn="1" endcolumn="49" rule="ImportFromSamePackage" ruleset="Import Statement Rules" package="org.argouml.language.sql" externalInfoUrl="http://pmd.sourceforge.net/rules/imports.html#ImportFromSamePackage" priority="3">
+No need to import a type that lives in the same package
+</violation>
+<violation beginline="7" endline="7" begincolumn="1" endcolumn="53" rule="ImportFromSamePackage" ruleset="Import Statement Rules" package="org.argouml.language.sql" externalInfoUrl="http://pmd.sourceforge.net/rules/imports.html#ImportFromSamePackage" priority="3">
+No need to import a type that lives in the same package
+</violation>
+<violation beginline="8" endline="8" begincolumn="1" endcolumn="47" rule="ImportFromSamePackage" ruleset="Import Statement Rules" package="org.argouml.language.sql" externalInfoUrl="http://pmd.sourceforge.net/rules/imports.html#ImportFromSamePackage" priority="3">
+No need to import a type that lives in the same package
+</violation>
+<violation beginline="9" endline="9" begincolumn="1" endcolumn="48" rule="ImportFromSamePackage" ruleset="Import Statement Rules" package="org.argouml.language.sql" externalInfoUrl="http://pmd.sourceforge.net/rules/imports.html#ImportFromSamePackage" priority="3">
+No need to import a type that lives in the same package
+</violation>
+<violation beginline="10" endline="10" begincolumn="1" endcolumn="38" rule="ImportFromSamePackage" ruleset="Import Statement Rules" package="org.argouml.language.sql" externalInfoUrl="http://pmd.sourceforge.net/rules/imports.html#ImportFromSamePackage" priority="3">
+No need to import a type that lives in the same package
+</violation>
+<violation beginline="21" endline="21" begincolumn="17" endcolumn="33" rule="UnusedPrivateField" ruleset="Unused Code Rules" package="org.argouml.language.sql" class="MySqlCodeCreator" variable="primaryKeyCounter" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedPrivateField" priority="3">
+Avoid unused private fields such as 'primaryKeyCounter'.
+</violation>
+<violation beginline="83" endline="85" begincolumn="17" endcolumn="17" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.argouml.language.sql" class="MySqlCodeCreator" method="createTable" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+<file name="/var/jenkins_home/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/Modeller.java">
+<violation beginline="55" endline="55" begincolumn="20" endcolumn="27" rule="UnusedPrivateField" ruleset="Unused Code Rules" package="org.argouml.language.sql.reveng" class="Modeller" variable="fileName" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedPrivateField" priority="3">
+Avoid unused private fields such as 'fileName'.
+</violation>
+<violation beginline="73" endline="84" begincolumn="12" endcolumn="5" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.argouml.language.sql.reveng" class="Modeller" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused constructor parameters such as 'theSqlProfile'.
+</violation>
+<violation beginline="227" endline="299" begincolumn="13" endcolumn="5" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.argouml.language.sql.reveng" class="Modeller" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused method parameters such as 'typeParameters'.
+</violation>
+</file>
+<file name="/var/jenkins_home/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerC.java">
+<violation beginline="112" endline="114" begincolumn="41" endcolumn="41" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.argouml.language.sql.reveng" class="ModellerC" method="genereInModele" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
+These nested if statements could be combined
+</violation>
+</file>
+<file name="/var/jenkins_home/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerP.java">
+<violation beginline="53" endline="53" begincolumn="40" endcolumn="50" rule="UnusedLocalVariable" ruleset="Unused Code Rules" package="org.argouml.language.sql.reveng" class="ModellerP" method="genereInModele" variable="stereoTable" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedLocalVariable" priority="3">
+Avoid unused local variables such as 'stereoTable'.
+</violation>
+<violation beginline="87" endline="87" begincolumn="56" endcolumn="63" rule="UnusedLocalVariable" ruleset="Unused Code Rules" package="org.argouml.language.sql.reveng" class="ModellerP" method="genereInModele" variable="stereoPk" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedLocalVariable" priority="3">
+Avoid unused local variables such as 'stereoPk'.
+</violation>
+<violation beginline="94" endline="94" begincolumn="64" endcolumn="71" rule="UnusedLocalVariable" ruleset="Unused Code Rules" package="org.argouml.language.sql.reveng" class="ModellerP" method="genereInModele" variable="stereoFk" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedLocalVariable" priority="3">
+Avoid unused local variables such as 'stereoFk'.
+</violation>
+<violation beginline="151" endline="151" begincolumn="32" endcolumn="39" rule="UnusedLocalVariable" ruleset="Unused Code Rules" package="org.argouml.language.sql.reveng" class="ModellerP" method="genereInModele" variable="stereoFK" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedLocalVariable" priority="3">
+Avoid unused local variables such as 'stereoFK'.
+</violation>
+</file>
+<file name="/var/jenkins_home/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/SqlImport.java">
+<violation beginline="91" endline="93" begincolumn="19" endcolumn="17" rule="EmptyFinallyBlock" ruleset="Basic Rules" package="org.argouml.language.sql.reveng" class="SqlImport" method="parseFiles" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyFinallyBlock" priority="3">
+Avoid empty finally blocks
+</violation>
+<violation beginline="113" endline="113" begincolumn="38" endcolumn="56" rule="AvoidThreadGroup" ruleset="Basic Rules" package="org.argouml.language.sql.reveng" class="SqlImport" method="doImportPass" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#AvoidThreadGroup" priority="3">
+Avoid using java.lang.ThreadGroup; it is not thread safe
+</violation>
+<violation beginline="133" endline="133" begincolumn="9" endcolumn="15" rule="UnnecessaryReturn" ruleset="Basic Rules" package="org.argouml.language.sql.reveng" class="SqlImport" method="doImportPass" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#UnnecessaryReturn" priority="3">
+Avoid unnecessary return statements
+</violation>
+<violation beginline="146" endline="207" begincolumn="17" endcolumn="5" rule="UnusedFormalParameter" ruleset="Unused Code Rules" package="org.argouml.language.sql.reveng" class="SqlImport" externalInfoUrl="http://pmd.sourceforge.net/rules/unusedcode.html#UnusedFormalParameter" priority="3">
+Avoid unused method parameters such as 'pass'.
+</violation>
+<violation beginline="214" endline="216" begincolumn="19" endcolumn="17" rule="EmptyCatchBlock" ruleset="Basic Rules" package="org.argouml.language.sql.reveng" class="SqlImport" method="buildErrorString" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#EmptyCatchBlock" priority="3">
+Avoid empty catch blocks
+</violation>
+</file>
+</pmd>

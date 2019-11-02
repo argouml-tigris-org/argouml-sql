@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<pmd-cpd>
+<duplication lines="20" tokens="121">
+<file line="69" path="/var/jenkins_home/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerC.java"/>
+<file line="57" path="/var/jenkins_home/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerP.java"/>
+<codefragment>
+<![CDATA[
+						Object packageOfType = modellerSource.getModel();
+						Object mClassifierType = null;
+						if (typeSpec != null) {
+							mClassifierType = modellerSource.getOrAddDatatype(packageOfType, typeSpec);
+						}
+			    		//Object mClassifier = null;
+						Object mAttribute =  modellerSource.buildAttribute(curClass, mClassifierType, attributeName);
+						String multiplicity = Modeller.ASSOCIATION_1;
+						if (c.getNullable() == null || c.getNullable()) {
+							multiplicity = Modeller.ASSOCIATION_01;
+						}
+						Model.getCoreHelper().setMultiplicity(mAttribute,
+								multiplicity);
+						
+						if (c.getDefaultValue() != null) {
+							Object newInitialValue = Model.getDataTypesFactory()
+									.createExpression("Sql", c.getDefaultValue());
+							Model.getCoreHelper().setInitialValue(mAttribute,
+									newInitialValue);	
+						}
+]]>
+</codefragment>
+</duplication>
+<duplication lines="21" tokens="105">
+<file line="141" path="/var/jenkins_home/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerC.java"/>
+<file line="125" path="/var/jenkins_home/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerP.java"/>
+<codefragment>
+<![CDATA[
+				Object mAssociationEnd = modellerSource.getAssociationEnd(name, mClassifier, mClassifierEnd);
+				//setVisibility(mAssociationEnd, modifiers);
+				Model.getCoreHelper().setMultiplicity(
+	                  mAssociationEnd,
+	                  multiplicity);
+				Model.getCoreHelper().setType(mAssociationEnd, mClassifier);
+				
+				// String nameAssociationEnd = name;
+				if (fk.getColumns().size() == 1) {
+					nameAssociationEnd = fk.getColumns().get(0).getName();
+				}
+				
+				Model.getCoreHelper().setName(mAssociationEnd, nameAssociationEnd);
+				if (!mClassifier.equals(mClassifierEnd)) {
+					// Because if they are equal,
+					// then getAssociationEnd(name, mClassifier) could return
+					// the wrong assoc end, on the other hand the navigability
+					// is already set correctly (at least in this case), so the
+					// next line is not necessary. (maybe never necessary?) - thn
+					Model.getCoreHelper().setNavigable(mAssociationEnd, true);
+				}
+]]>
+</codefragment>
+</duplication>
+</pmd-cpd>

@@ -1,0 +1,373 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<rss version="0.91">
+  <channel>
+    <title>argouml-sql - Checkstyle report</title>
+    <link>http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql</link>
+    <description>argouml-sql - Checkstyle report</description>
+    <language>en-us</language>
+    <copyright>&#169;2019</copyright>
+    <item>
+      <title>File: 24,
+             Errors: 0,
+             Warnings: 727,
+             Infos: 0
+      </title>
+            <link>http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html</link>
+      <description>
+        <p>Click <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html">here</a> for the full Checkstyle report.</p>
+
+        <table summary="Files" boder="1">
+          <thead>
+            <tr>
+              <th>Files</th>
+              <th style="width:30px;"><abbr title="Info">I</abbr></th>
+              <th style="width:30px;"><abbr title="Warning">W</abbr></th>
+              <th style="width:30px;"><abbr title="Error">E</abbr></th>
+            </tr>
+          </thead>
+          <tbody>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.reveng.Modeller.java">org/argouml/language/sql/reveng/Modeller.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  95
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.ui.GridBagUtils.java">org/argouml/ui/GridBagUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.SqlCodeCreator.java">org/argouml/language/sql/SqlCodeCreator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.reveng.ModellerP.java">org/argouml/language/sql/reveng/ModellerP.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  119
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.ui.SettingsTabSql.java">org/argouml/ui/SettingsTabSql.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  3
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.TableDefinition.java">org/argouml/language/sql/TableDefinition.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  12
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.MySqlCodeCreator.java">org/argouml/language/sql/MySqlCodeCreator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.reveng.ModellerLevel.java">org/argouml/language/sql/reveng/ModellerLevel.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.ForeignKeyDefinition.java">org/argouml/language/sql/ForeignKeyDefinition.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  24
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.ui.SelectCodeCreatorDialog.java">org/argouml/ui/SelectCodeCreatorDialog.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  25
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.DomainMapper.java">org/argouml/language/sql/DomainMapper.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  20
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.GeneratorSql.java">org/argouml/language/sql/GeneratorSql.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  26
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.reveng.ANTLRNoCaseInputStreamReader.java">org/argouml/language/sql/reveng/ANTLRNoCaseInputStreamReader.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  17
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.IndexDefinition.java">org/argouml/language/sql/IndexDefinition.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  4
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.reveng.ModellerC.java">org/argouml/language/sql/reveng/ModellerC.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  145
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.FirebirdSqlCodeCreator.java">org/argouml/language/sql/FirebirdSqlCodeCreator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.reveng.SqlImportSettings.java">org/argouml/language/sql/reveng/SqlImportSettings.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  111
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.SqlCreatorLoader.java">org/argouml/language/sql/SqlCreatorLoader.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  2
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.ColumnDefinition.java">org/argouml/language/sql/ColumnDefinition.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  47
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.SqlInit.java">org/argouml/language/sql/SqlInit.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.ModelValidator.java">org/argouml/language/sql/ModelValidator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.ui.TableModelCodeCreators.java">org/argouml/ui/TableModelCodeCreators.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  10
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.reveng.SqlImport.java">org/argouml/language/sql/reveng/SqlImport.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  52
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="http://nexus.sonatype.org/oss-repository-hosting.html/parentpom/argouml-sql/checkstyle.html#org.argouml.language.sql.Utils.java">org/argouml/language/sql/Utils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  5
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                      </tbody>
+        </table>
+        
+      </description>
+    </item>
+  </channel>
+</rss>
+
