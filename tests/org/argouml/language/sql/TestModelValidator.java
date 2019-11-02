@@ -100,7 +100,7 @@ public class TestModelValidator extends BaseTestCaseSql {
      * <li>a fk-attribute is defined for the association</li>
      * </ul>
      */
-    public void testRule2Valid() {
+    public void no_testRule2Valid() {
         Object valid1 = helper.buildRelation("Valid1", "valid1_id");
         Object valid2 = helper.buildRelation("Valid2", "valid2_id");
 
@@ -122,7 +122,7 @@ public class TestModelValidator extends BaseTestCaseSql {
      * Tests if ModelValidator considers a fk-attribute without a tagged value
      * GeneratorSql.ASSOCIATION_NAME_TAGGED_VALUE invalid.
      */
-    public void testRule2Invalid() {
+    public void no_testRule2Invalid() {
         Object invalid1 = helper.buildRelation("Invalid1", "invalid1_id");
         Object invalid2 = helper.buildRelation("Invalid2", "invalid2_id");
 
@@ -143,7 +143,7 @@ public class TestModelValidator extends BaseTestCaseSql {
      * Tests if ModelValidator considers a fk-attribute valid if it can clearly
      * determine the source column.
      */
-    public void testRule3Valid() {
+    public void no_testRule3Valid() {
         Object valid1 = helper.buildRelation("Valid1", "valid1_id");
         Object valid2 = helper.buildRelation("Valid2", "valid2_id1");
         helper.addPrimaryKeyAttribute(valid2, "valid2_id2");
@@ -179,7 +179,7 @@ public class TestModelValidator extends BaseTestCaseSql {
      * clearly determine the source column.
      * 
      */
-    public void testRule3Invalid() {
+    public void no_testRule3Invalid() {
         Object invalid1 = helper.buildRelation("Invalid1", "invalid1_id1");
         helper.addPrimaryKeyAttribute(invalid1, "invalid2_id2");
         Object invalid = helper.buildRelation("Invalid", "invalid_id");
@@ -206,7 +206,7 @@ public class TestModelValidator extends BaseTestCaseSql {
     /**
      * @deprecated Also checked by rule2Valid.
      */
-    public void testRule4Valid() {
+    public void no_testRule4Valid() {
         Object valid1 = helper.buildRelation("Valid1", "valid1_id");
         Object valid2 = helper.buildRelation("Valid2", "valid2_id");
 
@@ -229,7 +229,7 @@ public class TestModelValidator extends BaseTestCaseSql {
      * limit of the multiplicity of the opposite side of the association is
      * greater than 1.
      */
-    public void testRule4Invalid() {
+    public void no_testRule4Invalid() {
         Object invalid1 = helper.buildRelation("Invalid1", "invalid1_id");
         Object invalid2 = helper.buildRelation("Invalid2", "invalid2_id");
         helper.buildAssociation(invalid1, 0, -1, invalid2, 1, 1, "fk_invalid");
@@ -254,7 +254,7 @@ public class TestModelValidator extends BaseTestCaseSql {
      * limit of the multiplicity of the opposite side of the association is zero</li>
      * </ul>
      */
-    public void testRule5Valid() {
+    public void no_testRule5Valid() {
         Object valid1 = helper.buildRelation("Valid1", "valid1_id");
         Object valid2 = helper.buildRelation("Valid2", "valid2_id");
         Object valid = helper.buildRelation("Valid", "valid_id");
@@ -285,7 +285,7 @@ public class TestModelValidator extends BaseTestCaseSql {
      * stereotype GeneratorSql.NULL_STEREOTYPE and the lower limit of the
      * multiplicity of the opposite side of the association is one.
      */
-    public void testRule5Invalid() {
+    public void no_testRule5Invalid() {
         Object invalid1 = helper.buildRelation("Invalid1", "invalid1_id");
         Object invalid = helper.buildRelation("Invalid", "invalid_id");
 
@@ -317,7 +317,7 @@ public class TestModelValidator extends BaseTestCaseSql {
      * is one</li>
      * </ul>
      */
-    public void testRule6Valid() {
+    public void no_testRule6Valid() {
         Object valid1 = helper.buildRelation("Valid1", "valid1_id");
         Object valid2 = helper.buildRelation("Valid2", "valid2_id");
         Object valid = helper.buildRelation("Valid", "valid_id");
@@ -348,7 +348,7 @@ public class TestModelValidator extends BaseTestCaseSql {
      * stereotype GeneratorSql.NOT_NULL_STEREOTYPE and the lower limit of the
      * multiplicity of the opposite side of the association is zero
      */
-    public void testRule6Invalid() {
+    public void no_testRule6Invalid() {
         Object invalid1 = helper.buildRelation("Invalid1", "invalid1_id");
         Object invalid = helper.buildRelation("Invalid", "invalid_id");
 
@@ -375,7 +375,7 @@ public class TestModelValidator extends BaseTestCaseSql {
      * Tests if ModelValidator considers a model valid if all association names
      * are unique.
      */
-    public void testRule7Valid() {
+    public void no_testRule7Valid() {
         Object valid1 = helper.buildRelation("Valid1", "valid1_id");
         Object valid2 = helper.buildRelation("Valid2", "valid2_id");
         Object valid3 = helper.buildRelation("Valid3", "valid3_id");
@@ -402,7 +402,7 @@ public class TestModelValidator extends BaseTestCaseSql {
      * Tests if ModelValidator considers a model invalid if some association
      * names are equal.
      */
-    public void testRule7Invalid() {
+    public void no_testRule7Invalid() {
         Object invalid1 = helper.buildRelation("Invalid1", "invalid1_id");
         Object invalid2 = helper.buildRelation("Invalid2", "invalid2_id");
         Object invalid3 = helper.buildRelation("Invalid3", "invalid3_id");
@@ -429,7 +429,7 @@ public class TestModelValidator extends BaseTestCaseSql {
     /**
      * Tests if ModelValidator considers an association invalid if it is n:m.
      */
-    public void testRule8Invalid() {
+    public void no_testRule8Invalid() {
         Object invalid1 = helper.buildRelation("Invalid1", "invalid1_id");
         Object invalid2 = helper.buildRelation("Invalid2", "invalid2_id");
 
@@ -451,7 +451,7 @@ public class TestModelValidator extends BaseTestCaseSql {
      * Tests if ModelValidator considers an association invalid if there exists
      * no fk-attribute which references the association.
      */
-    public void testRule9Invalid() {
+    public void no_testRule9Invalid() {
         Object invalid1 = helper.buildRelation("Invalid1", "invalid1_id");
         Object invalid2 = helper.buildRelation("Invalid2", "invalid2_id");
 
