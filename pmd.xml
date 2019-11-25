@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<pmd version="4.3" timestamp="2019-11-25T21:25:40.592">
+<pmd version="4.3" timestamp="2019-11-25T23:07:39.729">
 <file name="/var/jenkins_home/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/FirebirdSqlCodeCreator.java">
 <violation beginline="199" endline="201" begincolumn="17" endcolumn="17" rule="CollapsibleIfStatements" ruleset="Basic Rules" package="org.argouml.language.sql" class="FirebirdSqlCodeCreator" method="createTable" externalInfoUrl="http://pmd.sourceforge.net/rules/basic.html#CollapsibleIfStatements" priority="3">
 These nested if statements could be combined
