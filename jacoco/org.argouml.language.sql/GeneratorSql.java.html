@@ -1,0 +1,512 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GeneratorSql.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql</a> &gt; <span class="el_source">GeneratorSql.java</span></div><h1>GeneratorSql.java</h1><pre class="source lang-java linenums">/* $Id$
+ *****************************************************************************
+ * Copyright (c) 2009 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    tfmorris
+ *****************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ */
+
+// Copyright (c) 2006-2008 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies.  This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied &quot;AS
+// IS&quot;, without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason.  IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN &quot;AS IS&quot; BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+package org.argouml.language.sql;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.log4j.Logger;
+import org.argouml.application.api.Argo;
+import org.argouml.configuration.Configuration;
+import org.argouml.model.Model;
+import org.argouml.ui.ExceptionDialog;
+import org.argouml.ui.ProjectBrowser;
+import org.argouml.ui.SelectCodeCreatorDialog;
+import org.argouml.uml.generator.CodeGenerator;
+import org.argouml.uml.generator.SourceUnit;
+import org.argouml.uml.generator.TempFileUtils;
+
+/**
+ * SQL generator.
+ */
+public final class GeneratorSql implements CodeGenerator {
+    /**
+     * Constant representing the system dependent line separator.
+     */
+<span class="nc" id="L72">    static final String LINE_SEPARATOR = System.getProperty(&quot;line.separator&quot;);</span>
+
+    /**
+     * Constant representing the attribute stereotype (as &lt;code&gt;String&lt;/code&gt;)
+     * that will be used to recognize a primary key attribute.
+     */
+    static final String PRIMARY_KEY_STEREOTYPE = &quot;PK&quot;;
+
+    /**
+     * Constant representing the attribute stereotype (as &lt;code&gt;String&lt;/code&gt;)
+     * that will be used to recognize a foreign key attribute.
+     */
+    static final String FOREIGN_KEY_STEREOTYPE = &quot;FK&quot;;
+
+    /**
+     * Constant representing the attribute stereotype (as &lt;code&gt;String&lt;/code&gt;)
+     * that will be used to recognize a foreign key attribute.
+     */
+    static final String AUTOINC_KEY_STEREOTYPE = &quot;AUTOINC&quot;;
+
+    /**
+     * Constant representing the attribute stereotype (as &lt;code&gt;String&lt;/code&gt;)
+     * that will be used to recognize an attribute to be not nullable.
+     */
+    static final String NOT_NULL_STEREOTYPE = &quot;NOT_NULL&quot;;
+
+    /**
+     * Constant representing the attribute stereotype (as &lt;code&gt;String&lt;/code&gt;)
+     * that will be used to recognize an attribute to be nullable.
+     */
+    static final String NULL_STEREOTYPE = &quot;NULL&quot;;
+
+    /**
+     * Constant representing the attribute tagged value (as &lt;code&gt;String&lt;/code&gt;)
+     * that will be used to recognize what column a foreign key attribute is
+     * referencing to.
+     */
+    static final String SOURCE_COLUMN_TAGGED_VALUE = &quot;source_column&quot;;
+
+    /**
+     * Constant representing the attribute tagged value (as &lt;code&gt;String&lt;/code&gt;)
+     * that will be used to recognize what association a foreign key attribute
+     * is referencing to.
+     */
+    static final String ASSOCIATION_NAME_TAGGED_VALUE = &quot;association_name&quot;;
+
+<span class="nc" id="L118">    private static final Logger LOG = Logger.getLogger(GeneratorSql.class);</span>
+
+    /**
+     * The instances.
+     */
+<span class="nc" id="L123">    private static final GeneratorSql INSTANCE = new GeneratorSql();</span>
+
+    private DomainMapper domainMapper;
+
+    private SqlCodeCreator sqlCodeCreator;
+
+    private List&lt;SqlCodeCreator&gt; sqlCodeCreators;
+
+    /**
+     * Constructor.
+     */
+<span class="nc" id="L134">    private GeneratorSql() {</span>
+<span class="nc" id="L135">        domainMapper = new DomainMapper();</span>
+<span class="nc" id="L136">    }</span>
+
+	private List&lt;SqlCodeCreator&gt; loadSqlCodeCreators() {
+<span class="nc" id="L139">		List&lt;SqlCodeCreator&gt; result = new ArrayList&lt;SqlCodeCreator&gt;();</span>
+
+        // URL url = getClass().getResource(&quot;GeneratorSql.class&quot;);
+        // String extForm = url.toExternalForm();
+        //
+        // if (extForm.startsWith(&quot;file:&quot;)) {
+        // String className = getClass().getName();
+        // ... minus 7 because of length of &quot;.class&quot; and the trailing &quot;/&quot;
+        // extForm = extForm.substring(0, extForm.length()
+        // - className.length() - 7);
+        // }
+
+<span class="nc" id="L151">        SqlCreatorLoader el = new SqlCreatorLoader();</span>
+
+		// URI uri = new URI(extForm);
+		// Collection classes = el.getLoadableClassesFromUri(uri,
+		// SqlCodeCreator.class);
+<span class="nc" id="L156">		Collection&lt;Class&lt;SqlCodeCreator&gt;&gt; classes = el.getCodeCreators();</span>
+<span class="nc bnc" id="L157" title="All 2 branches missed.">		for (Class&lt;SqlCodeCreator&gt; c : classes) {</span>
+			try {
+<span class="nc" id="L159">				SqlCodeCreator scc = c.newInstance();</span>
+<span class="nc" id="L160">				result.add(scc);</span>
+				// } catch (URISyntaxException e) {
+				// LOG.error(&quot;Exception&quot;, e);
+<span class="nc" id="L163">			} catch (InstantiationException e) {</span>
+<span class="nc" id="L164">				LOG.error(&quot;Exception while instantiating a SqlCodeCreator &quot;</span>
+<span class="nc" id="L165">						+ c.getName(), e);</span>
+<span class="nc" id="L166">			} catch (IllegalAccessException e) {</span>
+<span class="nc" id="L167">				LOG.error(&quot;Exception while accessing the constructor of a &quot;</span>
+<span class="nc" id="L168">						+ &quot;SqlCodeCreator &quot; + c.getName(), e);</span>
+<span class="nc" id="L169">			}</span>
+<span class="nc" id="L170">		}</span>
+<span class="nc" id="L171">        return result;</span>
+	}
+
+    /**
+     * @return the singleton instance.
+     */
+    public static GeneratorSql getInstance() {
+<span class="nc" id="L178">        return INSTANCE;</span>
+    }
+
+    /**
+     * Generate code for the specified classifiers. If generation of
+     * dependencies is requested, then every file the specified elements depends
+     * on is generated too (e.g. if the class MyClass has an attribute of type
+     * OtherClass, then files for OtherClass are generated too).
+     * 
+     * @param elements
+     *            the UML model elements to generate code for.
+     * @param deps
+     *            Recursively generate dependency files too.
+     * @return A collection of {@link org.argouml.uml.generator.SourceUnit}
+     *         objects. The collection may be empty if no file is generated.
+     * @see org.argouml.uml.generator.CodeGenerator#generate( Collection,
+     *      boolean)
+     */
+    public Collection&lt;SourceUnit&gt; generate(Collection elements, boolean deps) {
+<span class="nc" id="L197">        LOG.debug(&quot;generate() called&quot;);</span>
+<span class="nc" id="L198">        File tmpdir = null;</span>
+        try {
+<span class="nc" id="L200">            tmpdir = TempFileUtils.createTempDir();</span>
+<span class="nc bnc" id="L201" title="All 2 branches missed.">            if (tmpdir != null) {</span>
+<span class="nc" id="L202">                generateFiles(elements, tmpdir.getPath(), deps);</span>
+<span class="nc" id="L203">                return TempFileUtils.readAllFiles(tmpdir);</span>
+            }
+<span class="nc" id="L205">            return Collections.emptyList();</span>
+        } finally {
+<span class="nc bnc" id="L207" title="All 2 branches missed.">            if (tmpdir != null) {</span>
+<span class="nc" id="L208">                TempFileUtils.deleteDir(tmpdir);</span>
+            }
+<span class="nc" id="L210">            LOG.debug(&quot;generate() terminated&quot;);</span>
+        }
+    }
+
+    private TableDefinition getTableDefinition(Object element) {
+<span class="nc" id="L215">        TableDefinition tableDefinition = new TableDefinition();</span>
+<span class="nc" id="L216">        tableDefinition.setName(Model.getFacade().getName(element));</span>
+
+<span class="nc bnc" id="L218" title="All 2 branches missed.">        for (Object attribute : Model.getFacade().getAttributes(element)) {</span>
+<span class="nc" id="L219">            String name = Model.getFacade().getName(attribute);</span>
+<span class="nc" id="L220">            ColumnDefinition cd = new ColumnDefinition();</span>
+<span class="nc" id="L221">            cd.setName(name);</span>
+
+<span class="nc" id="L223">            Object domain = Model.getFacade().getType(attribute);</span>
+<span class="nc" id="L224">            String domainName = Model.getFacade().getName(domain);</span>
+<span class="nc" id="L225">            String datatype = domainMapper.getDatatype(sqlCodeCreator</span>
+<span class="nc" id="L226">                    .getClass(), domainName);</span>
+<span class="nc" id="L227">            cd.setDatatype(datatype);</span>
+
+<span class="nc bnc" id="L229" title="All 2 branches missed.">            if (Utils.isNull(attribute)) {</span>
+<span class="nc" id="L230">                cd.setNullable(Boolean.TRUE);</span>
+<span class="nc bnc" id="L231" title="All 2 branches missed.">            } else if (Utils.isNotNull(attribute)) {</span>
+<span class="nc" id="L232">                cd.setNullable(Boolean.FALSE);</span>
+            } else {
+<span class="nc" id="L234">                cd.setNullable(null);</span>
+            }
+<span class="nc bnc" id="L236" title="All 2 branches missed.">            if (Utils.isAutoIncrement(attribute)) {</span>
+<span class="nc" id="L237">                cd.setAutoInc(Boolean.TRUE);</span>
+            } else {
+<span class="nc" id="L239">                cd.setAutoInc(Boolean.FALSE);</span>
+            }
+
+<span class="nc" id="L242">            tableDefinition.addColumnDefinition(cd);</span>
+
+<span class="nc bnc" id="L244" title="All 2 branches missed.">            if (Utils.isPk(attribute)) {</span>
+<span class="nc" id="L245">                cd.setNullable(Boolean.FALSE);</span>
+<span class="nc" id="L246">                tableDefinition.addPrimaryKeyField(name);</span>
+            }
+<span class="nc" id="L248">        }</span>
+
+<span class="nc" id="L250">        return tableDefinition;</span>
+    }
+
+    private void setNullable(TableDefinition tableDef, List&lt;String&gt; columnNames,
+            boolean nullable) {
+<span class="nc bnc" id="L255" title="All 2 branches missed.">        for (String name : columnNames) {</span>
+<span class="nc" id="L256">            tableDef.getColumnDefinition(name).setNullable(</span>
+<span class="nc" id="L257">                    Boolean.valueOf(nullable));</span>
+<span class="nc" id="L258">        }</span>
+<span class="nc" id="L259">    }</span>
+
+    private String generateCode(Collection elements) {
+<span class="nc" id="L262">        tableDefinitions = new HashMap&lt;Object, TableDefinition&gt;();</span>
+<span class="nc" id="L263">        foreignKeyDefinitions = new ArrayList&lt;ForeignKeyDefinition&gt;();</span>
+
+<span class="nc bnc" id="L265" title="All 2 branches missed.">        for (Object element : elements) {</span>
+<span class="nc bnc" id="L266" title="All 2 branches missed.">            if (Model.getFacade().isAClass(element)) {</span>
+<span class="nc" id="L267">                TableDefinition tableDef = getTableDefinition(element);</span>
+<span class="nc" id="L268">                tableDefinitions.put(element, tableDef);</span>
+            }
+<span class="nc" id="L270">        }</span>
+
+<span class="nc bnc" id="L272" title="All 2 branches missed.">        if (elements.size() &gt; 1) {</span>
+<span class="nc bnc" id="L273" title="All 2 branches missed.">            for (Object element : elements) {</span>
+<span class="nc" id="L274">                Collection&lt;ForeignKeyDefinition&gt; fkDefs = </span>
+<span class="nc" id="L275">                	getForeignKeyDefinitions(element);</span>
+<span class="nc" id="L276">                TableDefinition tableDef = tableDefinitions.get(element);</span>
+<span class="nc bnc" id="L277" title="All 2 branches missed.">                for (ForeignKeyDefinition fkDef : fkDefs) {</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">                    if (fkDef.getReferencesLower() == 0) {</span>
+<span class="nc" id="L279">                        setNullable(tableDef, fkDef.getColumnNames(), true);</span>
+                    } else {
+<span class="nc" id="L281">                        setNullable(tableDef, fkDef.getColumnNames(), false);</span>
+                    }
+<span class="nc" id="L283">                }</span>
+<span class="nc" id="L284">                foreignKeyDefinitions.addAll(fkDefs);</span>
+<span class="nc" id="L285">            }</span>
+        }
+
+<span class="nc" id="L288">        StringBuffer sb = new StringBuffer();</span>
+<span class="nc" id="L289">        sb.append(&quot;-- Table definitions&quot;).append(LINE_SEPARATOR);</span>
+<span class="nc bnc" id="L290" title="All 2 branches missed.">        for (TableDefinition tableDef : tableDefinitions.values()) {</span>
+<span class="nc" id="L291">            sb.append(sqlCodeCreator.createTable(tableDef));</span>
+<span class="nc" id="L292">        }</span>
+
+<span class="nc bnc" id="L294" title="All 2 branches missed.">        if (elements.size() &gt; 1) {</span>
+<span class="nc" id="L295">            sb.append(&quot;-- Foreign key definitions&quot;).append(LINE_SEPARATOR);</span>
+<span class="nc bnc" id="L296" title="All 2 branches missed.">            for (ForeignKeyDefinition fkDef : foreignKeyDefinitions) {</span>
+<span class="nc" id="L297">                sb.append(sqlCodeCreator.createForeignKey(fkDef));</span>
+<span class="nc" id="L298">            }</span>
+        }
+
+<span class="nc" id="L301">        return sb.toString();</span>
+    }
+
+    private static final String SCRIPT_FILENAME = &quot;script.sql&quot;;
+
+    private Map&lt;Object, TableDefinition&gt; tableDefinitions;
+
+    private List&lt;ForeignKeyDefinition&gt; foreignKeyDefinitions;
+
+    /**
+     * Generate files for the specified classifiers.
+     * 
+     * @see #generate(Collection, boolean)
+     * @param elements
+     *            the UML model elements to generate code for.
+     * @param path
+     *            The source base path.
+     * @param deps
+     *            Recursively generate dependency files too.
+     * @return The filenames (with relative path) as a collection of Strings.
+     *         The collection may be empty if no file will be generated.
+     * @see org.argouml.uml.generator.CodeGenerator#generateFiles( Collection,
+     *      String, boolean)
+     */
+    public Collection&lt;String&gt; generateFiles(Collection elements, String path,
+            boolean deps) {
+<span class="nc" id="L327">        String filename = SCRIPT_FILENAME;</span>
+<span class="nc bnc" id="L328" title="All 2 branches missed.">        if (!path.endsWith(FILE_SEPARATOR)) {</span>
+<span class="nc" id="L329">            path += FILE_SEPARATOR;</span>
+        }
+
+<span class="nc" id="L332">        Collection&lt;String&gt; result = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L333">        String fullFilename = path + filename;</span>
+
+<span class="nc bnc" id="L335" title="All 2 branches missed.">        if (!elements.isEmpty()) {</span>
+<span class="nc" id="L336">            LOG.debug(&quot;validating model&quot;);</span>
+<span class="nc" id="L337">            ModelValidator validator = new ModelValidator();</span>
+<span class="nc" id="L338">            List&lt;String&gt; problems = validator.validate(elements);</span>
+<span class="nc bnc" id="L339" title="All 2 branches missed.">            if (problems.size() &gt; 0) {</span>
+<span class="nc" id="L340">                LOG.debug(&quot;model not valid, exiting code generation&quot;);</span>
+<span class="nc" id="L341">                String error = Utils.stringsToString(problems, LINE_SEPARATOR);</span>
+
+<span class="nc" id="L343">                ExceptionDialog ed = new ExceptionDialog(ProjectBrowser</span>
+<span class="nc" id="L344">                        .getInstance(), &quot;Error in model&quot;, &quot;Model not valid&quot;, error);</span>
+<span class="nc" id="L345">                ed.setModal(true);</span>
+<span class="nc" id="L346">                ed.setVisible(true);</span>
+<span class="nc bnc" id="L347" title="All 2 branches missed.">            } else if (SelectCodeCreatorDialog.execute()) {</span>
+<span class="nc" id="L348">                String code = generateCode(elements);</span>
+<span class="nc" id="L349">                writeFile(fullFilename, code);</span>
+<span class="nc" id="L350">                result.add(fullFilename);</span>
+            }
+        }
+<span class="nc" id="L353">        return result;</span>
+    }
+
+    private void writeFile(String filename, String content) {
+<span class="nc" id="L357">        BufferedWriter fos = null;</span>
+        try {
+<span class="nc" id="L359">            String inputSrcEnc = Configuration</span>
+<span class="nc" id="L360">                    .getString(Argo.KEY_INPUT_SOURCE_ENCODING);</span>
+<span class="nc bnc" id="L361" title="All 4 branches missed.">            if (inputSrcEnc == null || inputSrcEnc.trim().equals(&quot;&quot;)) {</span>
+<span class="nc" id="L362">                inputSrcEnc = System.getProperty(&quot;file.encoding&quot;);</span>
+            }
+<span class="nc" id="L364">            fos = new BufferedWriter(new OutputStreamWriter(</span>
+                    new FileOutputStream(filename), inputSrcEnc));
+<span class="nc" id="L366">            fos.write(content);</span>
+<span class="nc" id="L367">        } catch (IOException e) {</span>
+<span class="nc" id="L368">            LOG.error(&quot;IO Exception: &quot; + e);</span>
+        } finally {
+            try {
+<span class="nc bnc" id="L371" title="All 2 branches missed.">                if (fos != null) {</span>
+<span class="nc" id="L372">                    fos.close();</span>
+                }
+<span class="nc" id="L374">            } catch (IOException e) {</span>
+<span class="nc" id="L375">                LOG.error(&quot;FAILED: &quot; + filename);</span>
+<span class="nc" id="L376">            }</span>
+        }
+<span class="nc" id="L378">    }</span>
+
+    private Collection&lt;ForeignKeyDefinition&gt; getForeignKeyDefinitions(Object relation) {
+<span class="nc" id="L381">        Collection&lt;ForeignKeyDefinition&gt; fkDefs = </span>
+        	new HashSet&lt;ForeignKeyDefinition&gt;();
+
+<span class="nc bnc" id="L384" title="All 2 branches missed.">        for (Object assocEnd : Model.getFacade().getAssociationEnds(relation)) {</span>
+
+<span class="nc" id="L386">            Collection otherAssocEnds = Model.getFacade()</span>
+<span class="nc" id="L387">                    .getOtherAssociationEnds(assocEnd);</span>
+<span class="nc" id="L388">            Object otherAssocEnd = otherAssocEnds.iterator().next();</span>
+
+<span class="nc" id="L390">            ForeignKeyDefinition fkDef = getFkDef(relation, assocEnd,</span>
+                    otherAssocEnd);
+<span class="nc bnc" id="L392" title="All 2 branches missed.">            if (fkDef != null) {</span>
+<span class="nc" id="L393">                fkDefs.add(fkDef);</span>
+            }
+<span class="nc" id="L395">        }</span>
+
+<span class="nc" id="L397">        return fkDefs;</span>
+    }
+
+    private ForeignKeyDefinition getFkDef(Object relation, Object assocEnd,
+            Object otherAssocEnd) {
+<span class="nc" id="L402">        Object assoc = Model.getFacade().getAssociation(assocEnd);</span>
+<span class="nc" id="L403">        List fkAttributes = Utils.getFkAttributes(relation, assoc);</span>
+<span class="nc" id="L404">        int otherUpper = Model.getFacade().getUpper(otherAssocEnd);</span>
+<span class="nc bnc" id="L405" title="All 4 branches missed.">        if (otherUpper != 1 || fkAttributes.size() == 0) {</span>
+<span class="nc" id="L406">            return null;</span>
+        }
+<span class="nc" id="L408">        ForeignKeyDefinition fkDef = new ForeignKeyDefinition();</span>
+
+<span class="nc" id="L410">        List&lt;Object&gt; srcAttributes = new ArrayList&lt;Object&gt;();</span>
+
+<span class="nc" id="L412">        Object srcRelation = Model.getFacade().getClassifier(otherAssocEnd);</span>
+<span class="nc bnc" id="L413" title="All 2 branches missed.">        for (Object fkAttr : fkAttributes) {</span>
+<span class="nc" id="L414">            Object srcAttr = Utils.getSourceAttribute(fkAttr, srcRelation);</span>
+<span class="nc" id="L415">            srcAttributes.add(srcAttr);</span>
+<span class="nc" id="L416">        }</span>
+
+        // List colNames = new ArrayList();
+<span class="nc" id="L419">        TableDefinition tableDef = tableDefinitions</span>
+<span class="nc" id="L420">                .get(relation);</span>
+<span class="nc" id="L421">        fkDef.setTable(tableDef);</span>
+<span class="nc bnc" id="L422" title="All 2 branches missed.">        for (Object fkAttr : fkAttributes) {</span>
+            // colNames.add(Model.getFacade().getName(fkAttr));
+
+<span class="nc" id="L425">            ColumnDefinition colDef = tableDef.getColumnDefinition(Model</span>
+<span class="nc" id="L426">                    .getFacade().getName(fkAttr));</span>
+<span class="nc" id="L427">            fkDef.addColumnDefinition(colDef);</span>
+<span class="nc" id="L428">        }</span>
+
+        // List refColNames = new ArrayList();
+<span class="nc" id="L431">        tableDef = tableDefinitions.get(srcRelation);</span>
+<span class="nc" id="L432">        fkDef.setReferencesTable(tableDef);</span>
+<span class="nc bnc" id="L433" title="All 2 branches missed.">        for (Object srcAttr : srcAttributes) {</span>
+            // refColNames.add(Model.getFacade().getName(srcAttr));
+
+<span class="nc" id="L436">            ColumnDefinition colDef = tableDef.getColumnDefinition(Model</span>
+<span class="nc" id="L437">                    .getFacade().getName(srcAttr));</span>
+<span class="nc" id="L438">            fkDef.addReferencesColumn(colDef);</span>
+<span class="nc" id="L439">        }</span>
+
+<span class="nc" id="L441">        int lower = Model.getFacade().getLower(assocEnd);</span>
+<span class="nc" id="L442">        int upper = Model.getFacade().getUpper(assocEnd);</span>
+<span class="nc" id="L443">        int refLower = Model.getFacade().getLower(otherAssocEnd);</span>
+<span class="nc" id="L444">        int refUpper = Model.getFacade().getUpper(otherAssocEnd);</span>
+
+<span class="nc" id="L446">        fkDef.setForeignKeyName(Model.getFacade().getName(assoc));</span>
+
+        // fkDef.setTableName(Model.getFacade().getName(relation));
+        // fkDef.setColumnNames(colNames);
+
+        // fkDef.setReferencesTableName(Model.getFacade().getName(srcRelation));
+        // fkDef.setReferencesColumnNames(refColNames);
+
+<span class="nc" id="L454">        fkDef.setLower(lower);</span>
+<span class="nc" id="L455">        fkDef.setUpper(upper);</span>
+<span class="nc" id="L456">        fkDef.setReferencesLower(refLower);</span>
+<span class="nc" id="L457">        fkDef.setReferencesUpper(refUpper);</span>
+
+<span class="nc" id="L459">        return fkDef;</span>
+    }
+
+    /**
+     * Returns a list of files that will be generated from the specified
+     * modelelements.
+     * 
+     * @see #generate(Collection, boolean)
+     * @param elements
+     *            the UML model elements to generate code for.
+     * @param deps
+     *            Recursively generate dependency files too.
+     * @return The filenames (with relative path) as a collection of Strings.
+     *         The collection may be empty if no file will be generated.
+     * @see org.argouml.uml.generator.CodeGenerator#generateFileList(
+     *      Collection, boolean)
+     */
+    public Collection&lt;String&gt; generateFileList(Collection elements, 
+    		boolean deps) {
+<span class="nc" id="L478">		Collection&lt;String&gt; c = new HashSet&lt;String&gt;();</span>
+<span class="nc" id="L479">		c.add(SCRIPT_FILENAME);</span>
+<span class="nc" id="L480">		return c;</span>
+	}
+
+    /**
+     * @return A &lt;code&gt;List&lt;/code&gt; of all code creators known to this class.
+     */
+    public synchronized List&lt;SqlCodeCreator&gt; getSqlCodeCreators() {
+<span class="nc bnc" id="L487" title="All 2 branches missed.">    	if (sqlCodeCreators == null) {</span>
+<span class="nc" id="L488">    		sqlCodeCreators = loadSqlCodeCreators();</span>
+    	}
+<span class="nc" id="L490">        return sqlCodeCreators;</span>
+    }
+
+    /**
+     * @return The {@link DomainMapper} class responsible for mappings of
+     *         domains to datatypes.
+     */
+    public DomainMapper getDomainMapper() {
+<span class="nc" id="L498">        return domainMapper;</span>
+    }
+
+    /**
+     * Set a {@link SqlCodeCreator} to be the one to generate code.
+     * 
+     * @param sqlCodeCreator
+     *            The {@link SqlCodeCreator} that should be used to generate DDL
+     *            statements.
+     */
+    public void setSqlCodeCreator(SqlCodeCreator sqlCodeCreator) {
+<span class="nc" id="L509">        this.sqlCodeCreator = sqlCodeCreator;</span>
+<span class="nc" id="L510">    }</span>
+} /* end class GeneratorSql */
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

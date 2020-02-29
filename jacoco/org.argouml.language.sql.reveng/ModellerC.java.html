@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ModellerC.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql.reveng</a> &gt; <span class="el_source">ModellerC.java</span></div><h1>ModellerC.java</h1><pre class="source lang-java linenums">/* $Id$
+ *******************************************************************************
+ * Copyright (c) 2013 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Laurent BRAUD
+ *******************************************************************************
+ */
+
+package org.argouml.language.sql.reveng;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.argouml.language.sql.ColumnDefinition;
+import org.argouml.language.sql.ForeignKeyDefinition;
+import org.argouml.language.sql.TableDefinition;
+import org.argouml.model.Model;
+
+public class ModellerC implements ModellerLevel{
+	
+	private Modeller modellerSource;
+	
+<span class="nc" id="L30">	public ModellerC(Modeller modeller) {</span>
+<span class="nc" id="L31">		this.modellerSource = modeller;</span>
+<span class="nc" id="L32">	}</span>
+	
+	
+	public void genereInModele() {
+<span class="nc" id="L36">		Map&lt;String, Object&gt; classes = new HashMap&lt;String, Object&gt;();</span>
+		
+<span class="nc" id="L38">		List&lt;ForeignKeyDefinition&gt; foreign_keys = new ArrayList&lt;ForeignKeyDefinition&gt;();</span>
+		// build the classes.
+<span class="nc bnc" id="L40" title="All 2 branches missed.">		for(TableDefinition table : modellerSource.getTablesByName().values()) {</span>
+			//
+<span class="nc" id="L42">			boolean writeClass = true;</span>
+
+			// Set to false if all attribute in PK are keys.
+			//
+
+<span class="nc bnc" id="L47" title="All 2 branches missed.">			if (writeClass) {</span>
+<span class="nc" id="L48">				Object curClass = modellerSource.addClass(table);</span>
+<span class="nc" id="L49">				classes.put(table.getName(), curClass);</span>
+<span class="nc bnc" id="L50" title="All 2 branches missed.">				for(ColumnDefinition c : table.getColumnDefinitions()) {</span>
+<span class="nc" id="L51">					String attributeName = c.getName();</span>
+					// TODO Set a UML type instead of a type SQL (or with a tagValue)
+					// How to have the YML Datatype.
+<span class="nc" id="L54">					String typeSpec = modellerSource.getMappingDataTypeSQLToUML(c.getDatatype());</span>
+					
+					
+					// Don't create attribute if a FK exists.
+					// =&gt; reset attributeName to null
+<span class="nc bnc" id="L59" title="All 2 branches missed.">					for (ForeignKeyDefinition fk : table.getFkDefinitions()){</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">						if(fk.hasColumnInTable(attributeName)){</span>
+<span class="nc" id="L61">							attributeName = null;</span>
+<span class="nc" id="L62">							break;</span>
+						}
+<span class="nc" id="L64">					}</span>
+	    		
+<span class="nc bnc" id="L66" title="All 2 branches missed.">					if(attributeName!=null) {</span>
+						
+						// TODO : profile(SQL, or match with UML standard for conception) 
+<span class="nc" id="L69">						Object packageOfType = modellerSource.getModel();</span>
+<span class="nc" id="L70">						Object mClassifierType = null;</span>
+<span class="nc bnc" id="L71" title="All 2 branches missed.">						if (typeSpec != null) {</span>
+<span class="nc" id="L72">							mClassifierType = modellerSource.getOrAddDatatype(packageOfType, typeSpec);</span>
+						}
+			    		//Object mClassifier = null;
+<span class="nc" id="L75">						Object mAttribute =  modellerSource.buildAttribute(curClass, mClassifierType, attributeName);</span>
+<span class="nc" id="L76">						String multiplicity = Modeller.ASSOCIATION_1;</span>
+<span class="nc bnc" id="L77" title="All 4 branches missed.">						if (c.getNullable() == null || c.getNullable()) {</span>
+<span class="nc" id="L78">							multiplicity = Modeller.ASSOCIATION_01;</span>
+						}
+<span class="nc" id="L80">						Model.getCoreHelper().setMultiplicity(mAttribute,</span>
+								multiplicity);
+						
+<span class="nc bnc" id="L83" title="All 2 branches missed.">						if (c.getDefaultValue() != null) {</span>
+<span class="nc" id="L84">							Object newInitialValue = Model.getDataTypesFactory()</span>
+<span class="nc" id="L85">									.createExpression(&quot;Sql&quot;, c.getDefaultValue());</span>
+<span class="nc" id="L86">							Model.getCoreHelper().setInitialValue(mAttribute,</span>
+									newInitialValue);	
+						}
+						
+					
+					}
+<span class="nc" id="L92">		    	}</span>
+<span class="nc" id="L93">				foreign_keys.addAll(table.getFkDefinitions());</span>
+			} // end write class
+			
+<span class="nc" id="L96">		}</span>
+		
+<span class="nc bnc" id="L98" title="All 2 branches missed.">		for(ForeignKeyDefinition fk : foreign_keys) {</span>
+<span class="nc" id="L99">			String name = fk.getForeignKeyName();</span>
+			
+<span class="nc" id="L101">			int typeAsso = Modeller.ASSOCIATION;</span>
+<span class="nc" id="L102">			String multiplicity = Modeller.ASSOCIATION_1;</span>
+			
+<span class="nc bnc" id="L104" title="All 2 branches missed.">			if (fk.getReferencesTable() != fk.getTable()) {</span>
+<span class="nc" id="L105">				List&lt;String&gt; fkTable = fk.getColumnNames();</span>
+				
+<span class="nc" id="L107">				List&lt;String&gt; pkTable = fk.getTable().getPrimaryKeyFields();</span>
+<span class="nc" id="L108">				List&lt;String&gt; pkRef = fk.getReferencesTable().getPrimaryKeyFields();</span>
+				
+<span class="nc bnc" id="L110" title="All 8 branches missed.">				if (fkTable.size()&gt;0 &amp;&amp; pkTable.size()&gt;0 &amp;&amp; fkTable.containsAll(pkTable) &amp;&amp; pkTable.containsAll(fkTable)) {</span>
+					
+<span class="nc bnc" id="L112" title="All 6 branches missed.">					if (pkRef.size()&gt;0 &amp;&amp; fkTable.containsAll(pkTable) &amp;&amp; pkTable.containsAll(fkTable)) {</span>
+<span class="nc" id="L113">						typeAsso = Modeller.GENERALIZATION;	</span>
+					}
+				}
+				
+			}
+			
+			// if at least one is column of the FK, in the Table is nullable: &quot;0..1&quot;, otherwise &quot;1&quot;.
+<span class="nc bnc" id="L120" title="All 2 branches missed.">			for (ColumnDefinition columnDefinition : fk.getColumns()) {</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">				if (columnDefinition.getNullable() == null</span>
+<span class="nc bnc" id="L122" title="All 2 branches missed.">						|| columnDefinition.getNullable()) {</span>
+<span class="nc" id="L123">					multiplicity = Modeller.ASSOCIATION_01;</span>
+<span class="nc" id="L124">					break;</span>
+				}
+<span class="nc" id="L126">			}</span>
+			
+			
+			
+			// Build the good association type (association ?, composition ?, agregation ?, generalisation ?)
+<span class="nc" id="L131">			Object mClassifier = classes.get(fk.getReferencesTable().getName());</span>
+<span class="nc" id="L132">			Object mClassifierEnd = classes.get(fk.getTable().getName());</span>
+			
+<span class="nc" id="L134">			String nameAssociationEnd = name;</span>
+			
+<span class="nc bnc" id="L136" title="All 2 branches missed.">			if (typeAsso == Modeller.GENERALIZATION) {</span>
+<span class="nc" id="L137">				Object mGeneralization = modellerSource.getGeneralization(modellerSource.getModel(), mClassifier, mClassifierEnd);</span>
+<span class="nc" id="L138">				Model.getCoreHelper().setName(mGeneralization, nameAssociationEnd);</span>
+				
+<span class="nc bnc" id="L140" title="All 2 branches missed.">			} else if (typeAsso == Modeller.ASSOCIATION) {</span>
+<span class="nc" id="L141">				Object mAssociationEnd = modellerSource.getAssociationEnd(name, mClassifier, mClassifierEnd);</span>
+				//setVisibility(mAssociationEnd, modifiers);
+<span class="nc" id="L143">				Model.getCoreHelper().setMultiplicity(</span>
+	                  mAssociationEnd,
+	                  multiplicity);
+<span class="nc" id="L146">				Model.getCoreHelper().setType(mAssociationEnd, mClassifier);</span>
+				
+				// String nameAssociationEnd = name;
+<span class="nc bnc" id="L149" title="All 2 branches missed.">				if (fk.getColumns().size() == 1) {</span>
+<span class="nc" id="L150">					nameAssociationEnd = fk.getColumns().get(0).getName();</span>
+				}
+				
+<span class="nc" id="L153">				Model.getCoreHelper().setName(mAssociationEnd, nameAssociationEnd);</span>
+<span class="nc bnc" id="L154" title="All 2 branches missed.">				if (!mClassifier.equals(mClassifierEnd)) {</span>
+					// Because if they are equal,
+					// then getAssociationEnd(name, mClassifier) could return
+					// the wrong assoc end, on the other hand the navigability
+					// is already set correctly (at least in this case), so the
+					// next line is not necessary. (maybe never necessary?) - thn
+<span class="nc" id="L160">					Model.getCoreHelper().setNavigable(mAssociationEnd, true);</span>
+				}
+				//addDocumentationTag(mAssociationEnd, javadoc);*
+				// else if (typeAsso == GENERALIZATION) {
+				//}
+			}
+				
+			
+			
+<span class="nc" id="L169">		}</span>
+		
+<span class="nc" id="L171">	}</span>
+	
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

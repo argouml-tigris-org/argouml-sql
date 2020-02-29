@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ModelValidator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql</a> &gt; <span class="el_source">ModelValidator.java</span></div><h1>ModelValidator.java</h1><pre class="source lang-java linenums">/* $Id$
+ *****************************************************************************
+ * Copyright (c) 2009 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    tfmorris
+ *****************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ */
+
+// Copyright (c) 2007 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies. This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied &quot;AS
+// IS&quot;, without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN &quot;AS IS&quot; BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+package org.argouml.language.sql;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import org.argouml.model.Model;
+
+// TODO Use Translator for error messages
+/**
+ * Class that validates an UML model to be a valid relational model.
+ */
+class ModelValidator {
+<span class="fc" id="L58">    private Map&lt;String, Object&gt; associationForName = </span>
+    	new HashMap&lt;String, Object&gt;();
+
+<span class="fc" id="L61">    private Map&lt;Object, Object&gt; fkAttrForAssoc = new HashMap&lt;Object, Object&gt;();</span>
+
+    private List&lt;String&gt; problems;
+
+    /**
+     * Default constructor.
+     */
+<span class="fc" id="L68">    public ModelValidator() {</span>
+<span class="fc" id="L69">    }</span>
+
+    /**
+     * Validate the specified elements.
+     * 
+     * @param elements
+     *            The elements to validate.
+     * @return A list of problems found by validation. If there are no problems
+     *         the returned list is empty.
+     */
+    public List&lt;String&gt; validate(Collection elements) {
+<span class="fc" id="L80">        problems = new ArrayList&lt;String&gt;();</span>
+
+<span class="fc bfc" id="L82" title="All 2 branches covered.">        for (Iterator it = elements.iterator(); it.hasNext();) {</span>
+<span class="fc" id="L83">            Object relation = it.next();</span>
+<span class="pc bpc" id="L84" title="1 of 2 branches missed.">            if (Model.getFacade().isAClass(relation)</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">                    &amp;&amp; !Model.getFacade().isAAssociationClass(relation)) {</span>
+<span class="fc" id="L86">                validateRelation(relation);</span>
+            }
+<span class="fc" id="L88">        }</span>
+
+<span class="fc" id="L90">        Set&lt;Entry&lt;String, Object&gt;&gt; entries = associationForName.entrySet();</span>
+<span class="pc bpc" id="L91" title="1 of 2 branches missed.">        for (Entry&lt;String, Object&gt; entry : entries) {</span>
+<span class="nc" id="L92">            String assocName = (String) entry.getKey();</span>
+<span class="nc" id="L93">            Object association = entry.getValue();</span>
+<span class="nc" id="L94">            Object fkAttribute = fkAttrForAssoc.get(association);</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">            if (fkAttribute == null) {</span>
+<span class="nc" id="L96">                problems.add(&quot;Foreign key attribute missing for association &quot;</span>
+                        + assocName);
+            }
+<span class="nc" id="L99">        }</span>
+
+<span class="fc" id="L101">        return problems;</span>
+    }
+
+    private void validateRelation(Object relation) {
+<span class="fc" id="L105">        validatePrimaryKey(relation);</span>
+<span class="fc" id="L106">        validateFkAttributes(relation);</span>
+<span class="fc" id="L107">        validateAssociations(relation);</span>
+<span class="fc" id="L108">    }</span>
+
+    private void validateFkAttributes(Object relation) {
+<span class="fc" id="L111">        Collection attributes = Model.getFacade().getAttributes(relation);</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        for (Iterator it = attributes.iterator(); it.hasNext();) {</span>
+<span class="fc" id="L113">            Object attribute = it.next();</span>
+<span class="pc bpc" id="L114" title="1 of 2 branches missed.">            if (Utils.isFk(attribute)) {</span>
+<span class="nc" id="L115">                validateFkAttribute(relation, attribute);</span>
+            }
+<span class="fc" id="L117">        }</span>
+<span class="fc" id="L118">    }</span>
+
+    /**
+     * Checks if every relation has a primary key. (rule 1)
+     * 
+     * @param relation
+     *            The relation to validate.
+     */
+    private void validatePrimaryKey(Object relation) {
+<span class="fc" id="L127">        List attributes = Model.getFacade().getAttributes(relation);</span>
+<span class="fc" id="L128">        Iterator it = attributes.iterator();</span>
+<span class="fc" id="L129">        boolean valid = false;</span>
+<span class="fc bfc" id="L130" title="All 2 branches covered.">        while (it.hasNext()) {</span>
+<span class="fc" id="L131">            Object attribute = it.next();</span>
+<span class="fc bfc" id="L132" title="All 2 branches covered.">            if (Utils.isPk(attribute)) {</span>
+<span class="fc" id="L133">                valid = true;</span>
+<span class="fc" id="L134">                break;</span>
+            }
+<span class="fc" id="L136">        }</span>
+
+<span class="fc bfc" id="L138" title="All 2 branches covered.">        if (!valid) {</span>
+<span class="fc" id="L139">            problems.add(&quot;Primary key missing for &quot;</span>
+<span class="fc" id="L140">                    + Model.getFacade().getName(relation));</span>
+        }
+<span class="fc" id="L142">    }</span>
+
+    /**
+     * Checks if a foreign key attribute is referencing an association. Further
+     * checks if this foreign key attribute is referencing an attribute in
+     * another relation. Checks rules 2 to 6.
+     * 
+     * @param relation
+     * @param attribute
+     */
+    private void validateFkAttribute(Object relation, Object attribute) {
+<span class="nc" id="L153">        String relName = Model.getFacade().getName(relation);</span>
+<span class="nc" id="L154">        String attrName = Model.getFacade().getName(attribute);</span>
+<span class="nc" id="L155">        String assocName = Model.getFacade().getTaggedValueValue(attribute,</span>
+                GeneratorSql.ASSOCIATION_NAME_TAGGED_VALUE);
+
+<span class="nc" id="L158">        Object association = Utils.getAssociationForName(relation, assocName);</span>
+<span class="nc bnc" id="L159" title="All 2 branches missed.">        if (association == null) {</span>
+<span class="nc" id="L160">            problems.add(&quot;association named '&quot; + assocName + &quot;' for relation &quot;</span>
+<span class="nc" id="L161">                    + Model.getFacade().getName(relation) + &quot; not found&quot;);</span>
+        } else {
+<span class="nc" id="L163">            fkAttrForAssoc.put(association, attribute);</span>
+
+<span class="nc" id="L165">            Object relationAssocEnd = Model.getFacade().getAssociationEnd(</span>
+                    relation, association);
+<span class="nc" id="L167">            Collection otherAssocEnds = Model.getFacade()</span>
+<span class="nc" id="L168">                    .getOtherAssociationEnds(relationAssocEnd);</span>
+
+<span class="nc bnc" id="L170" title="All 2 branches missed.">            if (otherAssocEnds.size() == 1) {</span>
+<span class="nc" id="L171">                Object otherAssocEnd = otherAssocEnds.iterator().next();</span>
+<span class="nc" id="L172">                Object otherRelation = Model.getFacade().getClassifier(</span>
+                        otherAssocEnd);
+
+<span class="nc" id="L175">                Object srcAttr = Utils.getSourceAttribute(attribute,</span>
+                        otherRelation);
+<span class="nc bnc" id="L177" title="All 2 branches missed.">                if (srcAttr == null) {</span>
+<span class="nc" id="L178">                    problems.add(&quot;fk attribute &quot; + relName + &quot;.&quot; + attrName</span>
+                            + &quot; does not reference &quot; + &quot; an attribute in &quot;
+<span class="nc" id="L180">                            + Model.getFacade().getName(otherRelation));</span>
+                }
+
+<span class="nc" id="L183">                int otherUpper = Model.getFacade().getUpper(otherAssocEnd);</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">                if (otherUpper != 1) {</span>
+<span class="nc" id="L185">                    problems.add(&quot;foreign key attribute &quot; + relName + &quot;.&quot;</span>
+                            + attrName
+                            + &quot; cannot be used to reference multiple &quot;
+<span class="nc" id="L188">                            + Model.getFacade().getName(otherRelation));</span>
+                }
+
+<span class="nc" id="L191">                int otherLower = Model.getFacade().getLower(otherAssocEnd);</span>
+<span class="nc" id="L192">                validateFkConsistence(relation, attribute, otherLower);</span>
+            }
+        }
+<span class="nc" id="L195">    }</span>
+
+    /**
+     * &lt;p&gt;
+     * Checks if the &lt;code&gt;foreignKey&lt;/code&gt; is of a stereotype NULL/NOT NULL
+     * and if it conflicts with the multiplicity of the association end. A
+     * conflict results from one of these constellations:
+     * &lt;ol&gt;
+     * &lt;li&gt;attribute is of stereotype NOT NULL, the corresponding association
+     * end multiplicity is 0..1
+     * &lt;li&gt;attribute is of stereotype NULL, the corresponding association end
+     * multiplicity is 1
+     * &lt;/ol&gt;
+     * &lt;p&gt;
+     * If attribute is none of these two stereotypes there is no conflict.
+     * &lt;p&gt;
+     * Checks rules 5 and 6.
+     * 
+     * @param fkAttribute
+     *            The foreign key attribute to check
+     * @param relation
+     *            The relatoin the foreign key should refer to
+     * @param lowerBound
+     *            The lower multiplicity of the corresponding association end
+     */
+    private void validateFkConsistence(Object relation, Object fkAttribute,
+            int lowerBound) {
+<span class="nc" id="L222">        String entName = Model.getFacade().getName(relation);</span>
+<span class="nc" id="L223">        String attrName = Model.getFacade().getName(fkAttribute);</span>
+
+<span class="nc bnc" id="L225" title="All 4 branches missed.">        if (Utils.isNull(fkAttribute) &amp;&amp; lowerBound == 1) {</span>
+<span class="nc" id="L226">            problems.add(&quot;conflict in &quot; + entName + &quot;.&quot; + attrName + &quot;: &quot;</span>
+                    + &quot;attribute is nullable and association lower bound &quot;
+                    + &quot;is one&quot;);
+<span class="nc bnc" id="L229" title="All 4 branches missed.">        } else if (Utils.isNotNull(fkAttribute) &amp;&amp; lowerBound == 0) {</span>
+<span class="nc" id="L230">            problems.add(&quot;conflict in &quot; + entName + &quot;.&quot; + attrName + &quot;: &quot;</span>
+                    + &quot;attribute is not nullable and association lower &quot;
+                    + &quot;bound is zero&quot;);
+        }
+<span class="nc" id="L234">    }</span>
+
+    /**
+     * Validate every association for the given relation.
+     * 
+     * @param relation
+     */
+    private void validateAssociations(Object relation) {
+<span class="fc" id="L242">        Collection associationEnds = Model.getFacade().getAssociationEnds(</span>
+                relation);
+<span class="fc" id="L244">        Iterator it = associationEnds.iterator();</span>
+<span class="pc bpc" id="L245" title="1 of 2 branches missed.">        while (it.hasNext()) {</span>
+<span class="nc" id="L246">            Object relationAssocEnd = it.next();</span>
+<span class="nc" id="L247">            Object association = Model.getFacade().getAssociation(</span>
+                    relationAssocEnd);
+<span class="nc" id="L249">            validateAssociation(association);</span>
+<span class="nc" id="L250">        }</span>
+<span class="fc" id="L251">    }</span>
+
+<span class="fc" id="L253">    private Set validatedAssociations = new HashSet();</span>
+
+    /**
+     * Validate the specified association. The association needs to have a
+     * unique name, must be binary and at most 1:n. And there must exist a
+     * foreign key attribute for an association.
+     * 
+     * @param association
+     */
+    private void validateAssociation(Object association) {
+<span class="nc bnc" id="L263" title="All 2 branches missed.">        if (validatedAssociations.contains(association)) {</span>
+<span class="nc" id="L264">            return;</span>
+        }
+
+<span class="nc" id="L267">        validatedAssociations.add(association);</span>
+
+<span class="nc" id="L269">        String assocName = Model.getFacade().getName(association);</span>
+<span class="nc bnc" id="L270" title="All 2 branches missed.">        if (associationForName.containsKey(assocName)) {</span>
+<span class="nc" id="L271">            problems.add(&quot;Association name &quot; + assocName</span>
+                    + &quot; found more than once&quot;);
+        } else {
+<span class="nc" id="L274">            associationForName.put(assocName, association);</span>
+
+<span class="nc" id="L276">            Collection assocEnds = Model.getFacade()</span>
+<span class="nc" id="L277">                    .getConnections(association);</span>
+<span class="nc bnc" id="L278" title="All 2 branches missed.">            if (assocEnds.size() != 2) {</span>
+<span class="nc" id="L279">                problems.add(&quot;Association &quot; + assocName + &quot; is not binary&quot;);</span>
+            } else {
+<span class="nc" id="L281">                Iterator it = assocEnds.iterator();</span>
+
+<span class="nc" id="L283">                Object assocEnd1 = it.next();</span>
+<span class="nc" id="L284">                Object assocEnd2 = it.next();</span>
+
+<span class="nc" id="L286">                int end1Upper = Model.getFacade().getUpper(assocEnd1);</span>
+<span class="nc" id="L287">                int end2Upper = Model.getFacade().getUpper(assocEnd2);</span>
+
+<span class="nc bnc" id="L289" title="All 4 branches missed.">                if (end1Upper != 1 &amp;&amp; end2Upper != 1) {</span>
+<span class="nc" id="L290">                    problems.add(&quot;Association &quot; + assocName + &quot; is n:m (not &quot;</span>
+                            + &quot;allowed in a relational data model)&quot;);
+                }
+            }
+        }
+<span class="nc" id="L295">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

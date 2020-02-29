@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlImportSettings.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql.reveng</a> &gt; <span class="el_source">SqlImportSettings.java</span></div><h1>SqlImportSettings.java</h1><pre class="source lang-java linenums">/* $Id$
+ *******************************************************************************
+ * Copyright (c) 2013 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Laurent BRAUD
+ *******************************************************************************
+ */
+
+package org.argouml.language.sql.reveng;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.argouml.configuration.Configuration;
+import org.argouml.configuration.ConfigurationKey;
+import org.argouml.i18n.Translator;
+import org.argouml.uml.reveng.Setting;
+import org.argouml.uml.reveng.SettingsTypes;
+
+/**
+ * @author BRAUD
+ */
+public class SqlImportSettings {
+	
+<span class="nc" id="L32">	private static final ConfigurationKey KEY_IMPORT_EXTENDED_SGBD_NAME = Configuration</span>
+<span class="nc" id="L33">			.makeKey(&quot;import&quot;, &quot;extended&quot;, &quot;sql&quot;, &quot;sgbd&quot;, &quot;name&quot;);</span>
+	
+<span class="nc" id="L35">	private static final ConfigurationKey KEY_IMPORT_EXTENDED_MODELE_LEVEL = Configuration</span>
+<span class="nc" id="L36">			.makeKey(&quot;import&quot;, &quot;extended&quot;, &quot;sql&quot;, &quot;model&quot;, &quot;level&quot;);</span>
+	
+	private static final String DEFAULT_SGBD = &quot;MySql&quot;;
+	
+	public static final String LEVEL_MCD = &quot;MCD&quot;;
+	
+	public static final String LEVEL_MPD = &quot;MPD&quot;;
+	
+    private static SqlImportSettings theInstance;
+    
+    private List&lt;SettingsTypes.Setting&gt; settingsList;
+
+    /**
+     * SGBD Source of the dump
+     */
+    private SettingsTypes.UniqueSelection sgbdSetting;
+
+    /**
+     * Level (Conception, Physique)
+     */
+    private SettingsTypes.UniqueSelection levelSetting;
+    /**
+     * Gets the singleton instance.
+     * 
+     * @return the instance
+     */
+    public static synchronized SqlImportSettings getInstance() {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (theInstance == null) {</span>
+<span class="nc" id="L64">            theInstance = new SqlImportSettings();</span>
+        }
+<span class="nc" id="L66">        return theInstance;</span>
+    }
+
+    /**
+     * Constructor
+     * private for Singleton
+     */
+	private SqlImportSettings() {
+		
+	}
+	
+	private Map&lt;String, String&gt; createListSupportedDump() {
+<span class="nc" id="L78">		Map&lt;String,String&gt; listSupportedDump = new HashMap&lt;String, String&gt;();</span>
+<span class="nc" id="L79">		addLabelFromParserName(listSupportedDump, DEFAULT_SGBD);</span>
+<span class="nc" id="L80">		addLabelFromParserName(listSupportedDump, &quot;SqlServer&quot;);</span>
+		
+<span class="nc" id="L82">		return listSupportedDump;</span>
+	}
+	private void addLabelFromParserName(Map&lt;String,String&gt; lst,String parserName) {
+<span class="nc" id="L85">		String label = Translator.localize(&quot;argouml-sql.import.database.&quot; + parserName);</span>
+<span class="nc" id="L86">		lst.put(parserName, label);</span>
+<span class="nc" id="L87">	}</span>
+
+    /*
+     * Provides the implementation of
+     * org.argouml.uml.reveng.ImportInterface#getImportSettings() for
+     * implementors of ImportInterface.
+     * 
+     * @return the list of import settings
+     */
+    public List&lt;SettingsTypes.Setting&gt; getImportSettings() {
+
+    	// TODO : is it ok with that.
+    	// if yes, see javaImport code and change it
+<span class="nc bnc" id="L100" title="All 2 branches missed.">		if (settingsList == null) {</span>
+<span class="nc" id="L101">    		settingsList = new ArrayList&lt;SettingsTypes.Setting&gt;();</span>
+<span class="nc" id="L102">            createSgbdSetting();</span>
+<span class="nc" id="L103">            settingsList.add(sgbdSetting);</span>
+<span class="nc" id="L104">    		createLevelSetting();</span>
+<span class="nc" id="L105">    		settingsList.add(levelSetting);</span>
+    	}
+        
+<span class="nc" id="L108">        return settingsList;</span>
+    }
+
+	private void createSgbdSetting() {
+<span class="nc" id="L112">		Map&lt;String, String&gt; listSupportedDump = createListSupportedDump();</span>
+<span class="nc" id="L113">        List&lt;String&gt; lstCle = new ArrayList&lt;String&gt;(listSupportedDump.keySet());</span>
+<span class="nc" id="L114">		List&lt;String&gt; lstVal = new ArrayList&lt;String&gt;(listSupportedDump.values());</span>
+<span class="nc" id="L115">		String val = Configuration.getString(KEY_IMPORT_EXTENDED_SGBD_NAME);</span>
+		int indexSelectedSgbd;
+<span class="nc bnc" id="L117" title="All 2 branches missed.">		if (val.length() == 0) {</span>
+<span class="nc" id="L118">			indexSelectedSgbd = lstCle.indexOf(DEFAULT_SGBD);	</span>
+		} else {
+<span class="nc" id="L120">			indexSelectedSgbd = new Integer(val);</span>
+		}
+		
+<span class="nc" id="L123">		String label = Translator.localize(&quot;argouml-sql.import.listdatabase&quot;);</span>
+<span class="nc" id="L124">		sgbdSetting = new Setting.UniqueSelection(label, lstVal, indexSelectedSgbd);</span>
+<span class="nc" id="L125">	}</span>
+	
+	public String getCodeSgbd() {
+<span class="nc" id="L128">		String ret = null;</span>
+		
+<span class="nc" id="L130">		Map&lt;String, String&gt; listSupportedDump = createListSupportedDump();</span>
+<span class="nc" id="L131">		List&lt;String&gt; lstCle = new ArrayList&lt;String&gt;(listSupportedDump.keySet());</span>
+		
+<span class="nc" id="L133">		String val = Configuration.getString(KEY_IMPORT_EXTENDED_SGBD_NAME);</span>
+		
+		Integer indexSelectedSgbd;
+<span class="nc bnc" id="L136" title="All 2 branches missed.">		if (val.length() == 0) {</span>
+<span class="nc" id="L137">			indexSelectedSgbd = lstCle.indexOf(DEFAULT_SGBD);	</span>
+		} else {
+<span class="nc" id="L139">			indexSelectedSgbd = new Integer(val);</span>
+		}
+		
+<span class="nc" id="L142">		ret = lstCle.get(indexSelectedSgbd);</span>
+		
+<span class="nc" id="L144">		return ret;</span>
+	}
+	
+	public SettingsTypes.UniqueSelection getSgbdSetting() {
+<span class="nc" id="L148">		return sgbdSetting;</span>
+	}
+    
+	private void createLevelSetting() {
+<span class="nc" id="L152">		String val = Configuration.getString(KEY_IMPORT_EXTENDED_MODELE_LEVEL, &quot;0&quot;);</span>
+<span class="nc" id="L153">		int indexSelectedLevel = new Integer(val);</span>
+		
+<span class="nc" id="L155">		String label = Translator.localize(&quot;argouml-sql.import.level&quot;);</span>
+<span class="nc" id="L156">		levelSetting = new Setting.UniqueSelection(label, getLstLevel(), indexSelectedLevel);</span>
+<span class="nc" id="L157">	}</span>
+	
+	public SettingsTypes.UniqueSelection getLevelSetting() {
+<span class="nc" id="L160">		return levelSetting;</span>
+	}
+	
+	private List&lt;String&gt; getLstLevel() {
+<span class="nc" id="L164">		List&lt;String&gt; listLevel = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L165">		addLabelFromModele(listLevel, LEVEL_MPD);</span>
+<span class="nc" id="L166">		addLabelFromModele(listLevel, LEVEL_MCD);</span>
+		
+<span class="nc" id="L168">		return listLevel;</span>
+	}
+	
+	public String getCodeLevel() {
+<span class="nc" id="L172">		String ret = LEVEL_MPD;</span>
+		
+<span class="nc" id="L174">		String val = Configuration.getString(KEY_IMPORT_EXTENDED_MODELE_LEVEL, &quot;0&quot;);</span>
+<span class="nc bnc" id="L175" title="All 2 branches missed.">		if (val.equals(&quot;0&quot;)) {</span>
+<span class="nc" id="L176">			ret = LEVEL_MPD;</span>
+<span class="nc bnc" id="L177" title="All 2 branches missed.">		} else if (val.equals(&quot;1&quot;)) {</span>
+<span class="nc" id="L178">			ret = LEVEL_MCD;</span>
+		}
+		
+<span class="nc" id="L181">		return ret;</span>
+	}
+	
+	private void addLabelFromModele(List&lt;String&gt; lst,String parserName) {
+<span class="nc" id="L185">		String label = Translator.localize(&quot;argouml-sql.import.level.&quot; + parserName);</span>
+<span class="nc" id="L186">		lst.add(label);</span>
+<span class="nc" id="L187">	}</span>
+    /**
+     * Saves the settings in the configuration.
+     */
+    public void saveSettings() {
+<span class="nc bnc" id="L192" title="All 2 branches missed.">		if (sgbdSetting != null) {</span>
+<span class="nc" id="L193">			Configuration.setString(KEY_IMPORT_EXTENDED_SGBD_NAME, String.valueOf(sgbdSetting.getSelection()));</span>
+		}
+		
+<span class="nc bnc" id="L196" title="All 2 branches missed.">		if (levelSetting != null) {</span>
+<span class="nc" id="L197">			Configuration.setString(KEY_IMPORT_EXTENDED_MODELE_LEVEL, String.valueOf(levelSetting.getSelection()));</span>
+		}
+<span class="nc" id="L199">    }</span>
+
+    
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

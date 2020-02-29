@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SelectCodeCreatorDialog.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.ui</a> &gt; <span class="el_source">SelectCodeCreatorDialog.java</span></div><h1>SelectCodeCreatorDialog.java</h1><pre class="source lang-java linenums">/* $Id$
+ *****************************************************************************
+ * Copyright (c) 2009 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    tfmorris
+ *****************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ */
+
+// Copyright (c) 2007-2008 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies. This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied &quot;AS
+// IS&quot;, without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN &quot;AS IS&quot; BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+package org.argouml.ui;
+
+import java.awt.Dimension;
+import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
+import org.apache.log4j.Logger;
+import org.argouml.i18n.Translator;
+import org.argouml.language.sql.GeneratorSql;
+import org.argouml.language.sql.SqlCodeCreator;
+import org.argouml.util.ArgoDialog;
+
+/**
+ * Small dialog for selecting a {@link SqlCodeCreator} for creating DDL
+ * statements.
+ * 
+ * @author drahmann
+ */
+public final class SelectCodeCreatorDialog extends ArgoDialog {
+    private JLabel lblSelect;
+
+    private JScrollPane spList;
+
+    private JTable tblCreators;
+
+<span class="nc" id="L71">    private static boolean executed = false;</span>
+
+<span class="nc" id="L73">    private static final Logger LOG = Logger.getLogger(SelectCodeCreatorDialog.class);</span>
+
+    /**
+     * Shows the dialog for selecting a code creator for generating proper DDL
+     * statements.
+     * 
+     * @return &lt;code&gt;true&lt;/code&gt;, if the user selected OK, &lt;code&gt;false&lt;/code&gt;
+     *         otherwise.
+     */
+    public static boolean execute() {
+
+    	// TODO: This appears to be a flag to make sure that we only ask the
+    	// user once, but it's not really going to work as expected since the
+    	// method will return before the user has had a chance to make a 
+    	// selection.
+<span class="nc bnc" id="L88" title="All 2 branches missed.">    	if (!executed) {</span>
+<span class="nc" id="L89">			SelectCodeCreatorDialog d = new SelectCodeCreatorDialog();</span>
+<span class="nc" id="L90">			d.setVisible(true);</span>
+		}
+
+<span class="nc" id="L93">        return executed;</span>
+    }
+
+    /**
+     * Creates a new dialog for selecting a code creator.
+     * 
+     */
+    private SelectCodeCreatorDialog() {
+<span class="nc" id="L101">        super(Translator.localize(&quot;argouml-sql.select-dialog.title&quot;),</span>
+                OK_CANCEL_OPTION, true);
+
+<span class="nc" id="L104">        setPreferredSize(new Dimension(400, 300));</span>
+
+<span class="nc" id="L106">        GridBagLayout l = new GridBagLayout();</span>
+<span class="nc" id="L107">        l.rowWeights = new double[] { 0, 1 };</span>
+<span class="nc" id="L108">        l.columnWeights = new double[] { 1 };</span>
+
+<span class="nc" id="L110">        JPanel content = new JPanel();</span>
+<span class="nc" id="L111">        content.setLayout(l);</span>
+
+<span class="nc" id="L113">        lblSelect = new JLabel(Translator</span>
+<span class="nc" id="L114">                .localize(&quot;argouml-sql.select-dialog.label-select&quot;)</span>
+                + &quot;:&quot;);
+<span class="nc" id="L116">        tblCreators = new JTable(new TableModelCodeCreators());</span>
+<span class="nc" id="L117">        spList = new JScrollPane(tblCreators);</span>
+<span class="nc" id="L118">        getOkButton().setEnabled(false);</span>
+
+<span class="nc" id="L120">        content.add(lblSelect, GridBagUtils.captionConstraints(0, 0,</span>
+                GridBagUtils.LEFT));
+<span class="nc" id="L122">        content.add(spList, GridBagUtils.clientAlignConstraints(0, 1));</span>
+<span class="nc" id="L123">        setContent(content);</span>
+<span class="nc" id="L124">        tblCreators.getSelectionModel().addListSelectionListener(</span>
+<span class="nc" id="L125">        		new ListSelectionListener() {</span>
+					public void valueChanged(ListSelectionEvent e) {
+<span class="nc bnc" id="L127" title="All 2 branches missed.">						if (tblCreators.getSelectedRowCount() &gt; 0) {</span>
+<span class="nc" id="L128">							getOkButton().setEnabled(true);</span>
+						} else {
+<span class="nc" id="L130">							getOkButton().setEnabled(false);</span>
+						}
+<span class="nc" id="L132">					}</span>
+        		});
+<span class="nc" id="L134">    }</span>
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (e.getSource() == getOkButton()) {</span>
+            try {
+<span class="nc" id="L140">                int index = tblCreators.getSelectedRow();</span>
+<span class="nc bnc" id="L141" title="All 4 branches missed.">                if (index &gt;= 0 &amp;&amp; index &lt; tblCreators.getRowCount()) {</span>
+<span class="nc" id="L142">					SqlCodeCreator scc = (SqlCodeCreator) tblCreators</span>
+<span class="nc" id="L143">							.getModel().getValueAt(index, -1);</span>
+<span class="nc" id="L144">					GeneratorSql.getInstance().setSqlCodeCreator(scc);</span>
+<span class="nc" id="L145">					executed = true;</span>
+				}
+<span class="nc" id="L147">            } catch (Exception exc) {</span>
+            	// TODO: We probably shouldn't be doing any special exception
+            	// handling here.  Let the default error handlers work.
+<span class="nc" id="L150">                LOG.error(&quot;Exception&quot;, exc);</span>
+<span class="nc" id="L151">                String message = Translator</span>
+<span class="nc" id="L152">                        .localize(&quot;argouml-sql.exceptions.no_sqlcodecreator&quot;);</span>
+<span class="nc" id="L153">                ExceptionDialog ed = new ExceptionDialog(ProjectBrowser</span>
+<span class="nc" id="L154">                        .getInstance(), message, exc);</span>
+<span class="nc" id="L155">                ed.setModal(true);</span>
+<span class="nc" id="L156">                ed.setVisible(true);</span>
+<span class="nc" id="L157">            }</span>
+        }
+<span class="nc" id="L159">        dispose();</span>
+<span class="nc" id="L160">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

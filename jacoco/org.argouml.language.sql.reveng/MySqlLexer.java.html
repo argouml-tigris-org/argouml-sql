@@ -1,0 +1,2152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MySqlLexer.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql.reveng</a> &gt; <span class="el_source">MySqlLexer.java</span></div><h1>MySqlLexer.java</h1><pre class="source lang-java linenums">// $ANTLR 3.5.2 org/argouml/language/sql/reveng/MySql.g 2020-02-29 13:39:51
+
+package org.argouml.language.sql.reveng;
+
+
+
+import org.antlr.runtime.*;
+import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
+
+@SuppressWarnings(&quot;all&quot;)
+public class MySqlLexer extends Lexer {
+	public static final int EOF=-1;
+	public static final int T__19=19;
+	public static final int T__20=20;
+	public static final int T__21=21;
+	public static final int T__22=22;
+	public static final int T__23=23;
+	public static final int T__24=24;
+	public static final int T__25=25;
+	public static final int T__26=26;
+	public static final int T__27=27;
+	public static final int T__28=28;
+	public static final int T__29=29;
+	public static final int T__30=30;
+	public static final int T__31=31;
+	public static final int T__32=32;
+	public static final int T__33=33;
+	public static final int T__34=34;
+	public static final int T__35=35;
+	public static final int T__36=36;
+	public static final int T__37=37;
+	public static final int T__38=38;
+	public static final int T__39=39;
+	public static final int T__40=40;
+	public static final int T__41=41;
+	public static final int T__42=42;
+	public static final int T__43=43;
+	public static final int T__44=44;
+	public static final int T__45=45;
+	public static final int T__46=46;
+	public static final int T__47=47;
+	public static final int T__48=48;
+	public static final int T__49=49;
+	public static final int T__50=50;
+	public static final int T__51=51;
+	public static final int T__52=52;
+	public static final int T__53=53;
+	public static final int T__54=54;
+	public static final int COMMA=4;
+	public static final int DIGIT=5;
+	public static final int DOT=6;
+	public static final int ID=7;
+	public static final int LEFT_PAREN=8;
+	public static final int LETTER=9;
+	public static final int ML_COMMENT=10;
+	public static final int NUMBER=11;
+	public static final int PROTECT_CHAR=12;
+	public static final int QUOTED_TEXT=13;
+	public static final int RIGHT_PAREN=14;
+	public static final int SEMICOLON=15;
+	public static final int SL_COMMENT=16;
+	public static final int VAR_MYSQL=17;
+	public static final int WS=18;
+
+	// delegates
+	// delegators
+	public Lexer[] getDelegates() {
+<span class="nc" id="L70">		return new Lexer[] {};</span>
+	}
+
+<span class="nc" id="L73">	public MySqlLexer() {} </span>
+	public MySqlLexer(CharStream input) {
+<span class="nc" id="L75">		this(input, new RecognizerSharedState());</span>
+<span class="nc" id="L76">	}</span>
+	public MySqlLexer(CharStream input, RecognizerSharedState state) {
+<span class="nc" id="L78">		super(input,state);</span>
+<span class="nc" id="L79">	}</span>
+<span class="nc" id="L80">	@Override public String getGrammarFileName() { return &quot;org/argouml/language/sql/reveng/MySql.g&quot;; }</span>
+
+	// $ANTLR start &quot;T__19&quot;
+	public final void mT__19() throws RecognitionException {
+		try {
+<span class="nc" id="L85">			int _type = T__19;</span>
+<span class="nc" id="L86">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:7:7: ( '=' )
+			// org/argouml/language/sql/reveng/MySql.g:7:9: '='
+			{
+<span class="nc" id="L90">			match('='); </span>
+			}
+
+<span class="nc" id="L93">			state.type = _type;</span>
+<span class="nc" id="L94">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L99">	}</span>
+	// $ANTLR end &quot;T__19&quot;
+
+	// $ANTLR start &quot;T__20&quot;
+	public final void mT__20() throws RecognitionException {
+		try {
+<span class="nc" id="L105">			int _type = T__20;</span>
+<span class="nc" id="L106">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:8:7: ( 'AUTO_INCREMENT' )
+			// org/argouml/language/sql/reveng/MySql.g:8:9: 'AUTO_INCREMENT'
+			{
+<span class="nc" id="L110">			match(&quot;AUTO_INCREMENT&quot;); </span>
+
+			}
+
+<span class="nc" id="L114">			state.type = _type;</span>
+<span class="nc" id="L115">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L120">	}</span>
+	// $ANTLR end &quot;T__20&quot;
+
+	// $ANTLR start &quot;T__21&quot;
+	public final void mT__21() throws RecognitionException {
+		try {
+<span class="nc" id="L126">			int _type = T__21;</span>
+<span class="nc" id="L127">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:9:7: ( 'BTREE' )
+			// org/argouml/language/sql/reveng/MySql.g:9:9: 'BTREE'
+			{
+<span class="nc" id="L131">			match(&quot;BTREE&quot;); </span>
+
+			}
+
+<span class="nc" id="L135">			state.type = _type;</span>
+<span class="nc" id="L136">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L141">	}</span>
+	// $ANTLR end &quot;T__21&quot;
+
+	// $ANTLR start &quot;T__22&quot;
+	public final void mT__22() throws RecognitionException {
+		try {
+<span class="nc" id="L147">			int _type = T__22;</span>
+<span class="nc" id="L148">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:10:7: ( 'CASCADE' )
+			// org/argouml/language/sql/reveng/MySql.g:10:9: 'CASCADE'
+			{
+<span class="nc" id="L152">			match(&quot;CASCADE&quot;); </span>
+
+			}
+
+<span class="nc" id="L156">			state.type = _type;</span>
+<span class="nc" id="L157">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L162">	}</span>
+	// $ANTLR end &quot;T__22&quot;
+
+	// $ANTLR start &quot;T__23&quot;
+	public final void mT__23() throws RecognitionException {
+		try {
+<span class="nc" id="L168">			int _type = T__23;</span>
+<span class="nc" id="L169">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:11:7: ( 'CHARSET' )
+			// org/argouml/language/sql/reveng/MySql.g:11:9: 'CHARSET'
+			{
+<span class="nc" id="L173">			match(&quot;CHARSET&quot;); </span>
+
+			}
+
+<span class="nc" id="L177">			state.type = _type;</span>
+<span class="nc" id="L178">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L183">	}</span>
+	// $ANTLR end &quot;T__23&quot;
+
+	// $ANTLR start &quot;T__24&quot;
+	public final void mT__24() throws RecognitionException {
+		try {
+<span class="nc" id="L189">			int _type = T__24;</span>
+<span class="nc" id="L190">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:12:7: ( 'COMMENT' )
+			// org/argouml/language/sql/reveng/MySql.g:12:9: 'COMMENT'
+			{
+<span class="nc" id="L194">			match(&quot;COMMENT&quot;); </span>
+
+			}
+
+<span class="nc" id="L198">			state.type = _type;</span>
+<span class="nc" id="L199">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L204">	}</span>
+	// $ANTLR end &quot;T__24&quot;
+
+	// $ANTLR start &quot;T__25&quot;
+	public final void mT__25() throws RecognitionException {
+		try {
+<span class="nc" id="L210">			int _type = T__25;</span>
+<span class="nc" id="L211">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:13:7: ( 'CONSTRAINT' )
+			// org/argouml/language/sql/reveng/MySql.g:13:9: 'CONSTRAINT'
+			{
+<span class="nc" id="L215">			match(&quot;CONSTRAINT&quot;); </span>
+
+			}
+
+<span class="nc" id="L219">			state.type = _type;</span>
+<span class="nc" id="L220">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L225">	}</span>
+	// $ANTLR end &quot;T__25&quot;
+
+	// $ANTLR start &quot;T__26&quot;
+	public final void mT__26() throws RecognitionException {
+		try {
+<span class="nc" id="L231">			int _type = T__26;</span>
+<span class="nc" id="L232">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:14:7: ( 'CREATE' )
+			// org/argouml/language/sql/reveng/MySql.g:14:9: 'CREATE'
+			{
+<span class="nc" id="L236">			match(&quot;CREATE&quot;); </span>
+
+			}
+
+<span class="nc" id="L240">			state.type = _type;</span>
+<span class="nc" id="L241">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L246">	}</span>
+	// $ANTLR end &quot;T__26&quot;
+
+	// $ANTLR start &quot;T__27&quot;
+	public final void mT__27() throws RecognitionException {
+		try {
+<span class="nc" id="L252">			int _type = T__27;</span>
+<span class="nc" id="L253">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:15:7: ( 'CURRENT_TIMESTAMP' )
+			// org/argouml/language/sql/reveng/MySql.g:15:9: 'CURRENT_TIMESTAMP'
+			{
+<span class="nc" id="L257">			match(&quot;CURRENT_TIMESTAMP&quot;); </span>
+
+			}
+
+<span class="nc" id="L261">			state.type = _type;</span>
+<span class="nc" id="L262">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L267">	}</span>
+	// $ANTLR end &quot;T__27&quot;
+
+	// $ANTLR start &quot;T__28&quot;
+	public final void mT__28() throws RecognitionException {
+		try {
+<span class="nc" id="L273">			int _type = T__28;</span>
+<span class="nc" id="L274">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:16:7: ( 'DEFAULT' )
+			// org/argouml/language/sql/reveng/MySql.g:16:9: 'DEFAULT'
+			{
+<span class="nc" id="L278">			match(&quot;DEFAULT&quot;); </span>
+
+			}
+
+<span class="nc" id="L282">			state.type = _type;</span>
+<span class="nc" id="L283">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L288">	}</span>
+	// $ANTLR end &quot;T__28&quot;
+
+	// $ANTLR start &quot;T__29&quot;
+	public final void mT__29() throws RecognitionException {
+		try {
+<span class="nc" id="L294">			int _type = T__29;</span>
+<span class="nc" id="L295">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:17:7: ( 'DELETE' )
+			// org/argouml/language/sql/reveng/MySql.g:17:9: 'DELETE'
+			{
+<span class="nc" id="L299">			match(&quot;DELETE&quot;); </span>
+
+			}
+
+<span class="nc" id="L303">			state.type = _type;</span>
+<span class="nc" id="L304">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L309">	}</span>
+	// $ANTLR end &quot;T__29&quot;
+
+	// $ANTLR start &quot;T__30&quot;
+	public final void mT__30() throws RecognitionException {
+		try {
+<span class="nc" id="L315">			int _type = T__30;</span>
+<span class="nc" id="L316">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:18:7: ( 'DROP' )
+			// org/argouml/language/sql/reveng/MySql.g:18:9: 'DROP'
+			{
+<span class="nc" id="L320">			match(&quot;DROP&quot;); </span>
+
+			}
+
+<span class="nc" id="L324">			state.type = _type;</span>
+<span class="nc" id="L325">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L330">	}</span>
+	// $ANTLR end &quot;T__30&quot;
+
+	// $ANTLR start &quot;T__31&quot;
+	public final void mT__31() throws RecognitionException {
+		try {
+<span class="nc" id="L336">			int _type = T__31;</span>
+<span class="nc" id="L337">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:19:7: ( 'ENGINE' )
+			// org/argouml/language/sql/reveng/MySql.g:19:9: 'ENGINE'
+			{
+<span class="nc" id="L341">			match(&quot;ENGINE&quot;); </span>
+
+			}
+
+<span class="nc" id="L345">			state.type = _type;</span>
+<span class="nc" id="L346">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L351">	}</span>
+	// $ANTLR end &quot;T__31&quot;
+
+	// $ANTLR start &quot;T__32&quot;
+	public final void mT__32() throws RecognitionException {
+		try {
+<span class="nc" id="L357">			int _type = T__32;</span>
+<span class="nc" id="L358">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:20:7: ( 'EXISTS' )
+			// org/argouml/language/sql/reveng/MySql.g:20:9: 'EXISTS'
+			{
+<span class="nc" id="L362">			match(&quot;EXISTS&quot;); </span>
+
+			}
+
+<span class="nc" id="L366">			state.type = _type;</span>
+<span class="nc" id="L367">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L372">	}</span>
+	// $ANTLR end &quot;T__32&quot;
+
+	// $ANTLR start &quot;T__33&quot;
+	public final void mT__33() throws RecognitionException {
+		try {
+<span class="nc" id="L378">			int _type = T__33;</span>
+<span class="nc" id="L379">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:21:7: ( 'FOREIGN' )
+			// org/argouml/language/sql/reveng/MySql.g:21:9: 'FOREIGN'
+			{
+<span class="nc" id="L383">			match(&quot;FOREIGN&quot;); </span>
+
+			}
+
+<span class="nc" id="L387">			state.type = _type;</span>
+<span class="nc" id="L388">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L393">	}</span>
+	// $ANTLR end &quot;T__33&quot;
+
+	// $ANTLR start &quot;T__34&quot;
+	public final void mT__34() throws RecognitionException {
+		try {
+<span class="nc" id="L399">			int _type = T__34;</span>
+<span class="nc" id="L400">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:22:7: ( 'FULL' )
+			// org/argouml/language/sql/reveng/MySql.g:22:9: 'FULL'
+			{
+<span class="nc" id="L404">			match(&quot;FULL&quot;); </span>
+
+			}
+
+<span class="nc" id="L408">			state.type = _type;</span>
+<span class="nc" id="L409">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L414">	}</span>
+	// $ANTLR end &quot;T__34&quot;
+
+	// $ANTLR start &quot;T__35&quot;
+	public final void mT__35() throws RecognitionException {
+		try {
+<span class="nc" id="L420">			int _type = T__35;</span>
+<span class="nc" id="L421">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:23:7: ( 'HASH' )
+			// org/argouml/language/sql/reveng/MySql.g:23:9: 'HASH'
+			{
+<span class="nc" id="L425">			match(&quot;HASH&quot;); </span>
+
+			}
+
+<span class="nc" id="L429">			state.type = _type;</span>
+<span class="nc" id="L430">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L435">	}</span>
+	// $ANTLR end &quot;T__35&quot;
+
+	// $ANTLR start &quot;T__36&quot;
+	public final void mT__36() throws RecognitionException {
+		try {
+<span class="nc" id="L441">			int _type = T__36;</span>
+<span class="nc" id="L442">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:24:7: ( 'IF' )
+			// org/argouml/language/sql/reveng/MySql.g:24:9: 'IF'
+			{
+<span class="nc" id="L446">			match(&quot;IF&quot;); </span>
+
+			}
+
+<span class="nc" id="L450">			state.type = _type;</span>
+<span class="nc" id="L451">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L456">	}</span>
+	// $ANTLR end &quot;T__36&quot;
+
+	// $ANTLR start &quot;T__37&quot;
+	public final void mT__37() throws RecognitionException {
+		try {
+<span class="nc" id="L462">			int _type = T__37;</span>
+<span class="nc" id="L463">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:25:7: ( 'INDEX' )
+			// org/argouml/language/sql/reveng/MySql.g:25:9: 'INDEX'
+			{
+<span class="nc" id="L467">			match(&quot;INDEX&quot;); </span>
+
+			}
+
+<span class="nc" id="L471">			state.type = _type;</span>
+<span class="nc" id="L472">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L477">	}</span>
+	// $ANTLR end &quot;T__37&quot;
+
+	// $ANTLR start &quot;T__38&quot;
+	public final void mT__38() throws RecognitionException {
+		try {
+<span class="nc" id="L483">			int _type = T__38;</span>
+<span class="nc" id="L484">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:26:7: ( 'KEY' )
+			// org/argouml/language/sql/reveng/MySql.g:26:9: 'KEY'
+			{
+<span class="nc" id="L488">			match(&quot;KEY&quot;); </span>
+
+			}
+
+<span class="nc" id="L492">			state.type = _type;</span>
+<span class="nc" id="L493">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L498">	}</span>
+	// $ANTLR end &quot;T__38&quot;
+
+	// $ANTLR start &quot;T__39&quot;
+	public final void mT__39() throws RecognitionException {
+		try {
+<span class="nc" id="L504">			int _type = T__39;</span>
+<span class="nc" id="L505">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:27:7: ( 'MATCH' )
+			// org/argouml/language/sql/reveng/MySql.g:27:9: 'MATCH'
+			{
+<span class="nc" id="L509">			match(&quot;MATCH&quot;); </span>
+
+			}
+
+<span class="nc" id="L513">			state.type = _type;</span>
+<span class="nc" id="L514">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L519">	}</span>
+	// $ANTLR end &quot;T__39&quot;
+
+	// $ANTLR start &quot;T__40&quot;
+	public final void mT__40() throws RecognitionException {
+		try {
+<span class="nc" id="L525">			int _type = T__40;</span>
+<span class="nc" id="L526">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:28:7: ( 'NO ACTION' )
+			// org/argouml/language/sql/reveng/MySql.g:28:9: 'NO ACTION'
+			{
+<span class="nc" id="L530">			match(&quot;NO ACTION&quot;); </span>
+
+			}
+
+<span class="nc" id="L534">			state.type = _type;</span>
+<span class="nc" id="L535">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L540">	}</span>
+	// $ANTLR end &quot;T__40&quot;
+
+	// $ANTLR start &quot;T__41&quot;
+	public final void mT__41() throws RecognitionException {
+		try {
+<span class="nc" id="L546">			int _type = T__41;</span>
+<span class="nc" id="L547">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:29:7: ( 'NOT' )
+			// org/argouml/language/sql/reveng/MySql.g:29:9: 'NOT'
+			{
+<span class="nc" id="L551">			match(&quot;NOT&quot;); </span>
+
+			}
+
+<span class="nc" id="L555">			state.type = _type;</span>
+<span class="nc" id="L556">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L561">	}</span>
+	// $ANTLR end &quot;T__41&quot;
+
+	// $ANTLR start &quot;T__42&quot;
+	public final void mT__42() throws RecognitionException {
+		try {
+<span class="nc" id="L567">			int _type = T__42;</span>
+<span class="nc" id="L568">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:30:7: ( 'NULL' )
+			// org/argouml/language/sql/reveng/MySql.g:30:9: 'NULL'
+			{
+<span class="nc" id="L572">			match(&quot;NULL&quot;); </span>
+
+			}
+
+<span class="nc" id="L576">			state.type = _type;</span>
+<span class="nc" id="L577">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L582">	}</span>
+	// $ANTLR end &quot;T__42&quot;
+
+	// $ANTLR start &quot;T__43&quot;
+	public final void mT__43() throws RecognitionException {
+		try {
+<span class="nc" id="L588">			int _type = T__43;</span>
+<span class="nc" id="L589">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:31:7: ( 'ON' )
+			// org/argouml/language/sql/reveng/MySql.g:31:9: 'ON'
+			{
+<span class="nc" id="L593">			match(&quot;ON&quot;); </span>
+
+			}
+
+<span class="nc" id="L597">			state.type = _type;</span>
+<span class="nc" id="L598">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L603">	}</span>
+	// $ANTLR end &quot;T__43&quot;
+
+	// $ANTLR start &quot;T__44&quot;
+	public final void mT__44() throws RecognitionException {
+		try {
+<span class="nc" id="L609">			int _type = T__44;</span>
+<span class="nc" id="L610">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:32:7: ( 'PARTIAL' )
+			// org/argouml/language/sql/reveng/MySql.g:32:9: 'PARTIAL'
+			{
+<span class="nc" id="L614">			match(&quot;PARTIAL&quot;); </span>
+
+			}
+
+<span class="nc" id="L618">			state.type = _type;</span>
+<span class="nc" id="L619">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L624">	}</span>
+	// $ANTLR end &quot;T__44&quot;
+
+	// $ANTLR start &quot;T__45&quot;
+	public final void mT__45() throws RecognitionException {
+		try {
+<span class="nc" id="L630">			int _type = T__45;</span>
+<span class="nc" id="L631">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:33:7: ( 'PRIMARY' )
+			// org/argouml/language/sql/reveng/MySql.g:33:9: 'PRIMARY'
+			{
+<span class="nc" id="L635">			match(&quot;PRIMARY&quot;); </span>
+
+			}
+
+<span class="nc" id="L639">			state.type = _type;</span>
+<span class="nc" id="L640">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L645">	}</span>
+	// $ANTLR end &quot;T__45&quot;
+
+	// $ANTLR start &quot;T__46&quot;
+	public final void mT__46() throws RecognitionException {
+		try {
+<span class="nc" id="L651">			int _type = T__46;</span>
+<span class="nc" id="L652">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:34:7: ( 'REFERENCES' )
+			// org/argouml/language/sql/reveng/MySql.g:34:9: 'REFERENCES'
+			{
+<span class="nc" id="L656">			match(&quot;REFERENCES&quot;); </span>
+
+			}
+
+<span class="nc" id="L660">			state.type = _type;</span>
+<span class="nc" id="L661">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L666">	}</span>
+	// $ANTLR end &quot;T__46&quot;
+
+	// $ANTLR start &quot;T__47&quot;
+	public final void mT__47() throws RecognitionException {
+		try {
+<span class="nc" id="L672">			int _type = T__47;</span>
+<span class="nc" id="L673">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:35:7: ( 'RESTRICT' )
+			// org/argouml/language/sql/reveng/MySql.g:35:9: 'RESTRICT'
+			{
+<span class="nc" id="L677">			match(&quot;RESTRICT&quot;); </span>
+
+			}
+
+<span class="nc" id="L681">			state.type = _type;</span>
+<span class="nc" id="L682">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L687">	}</span>
+	// $ANTLR end &quot;T__47&quot;
+
+	// $ANTLR start &quot;T__48&quot;
+	public final void mT__48() throws RecognitionException {
+		try {
+<span class="nc" id="L693">			int _type = T__48;</span>
+<span class="nc" id="L694">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:36:7: ( 'SET DEFAULT' )
+			// org/argouml/language/sql/reveng/MySql.g:36:9: 'SET DEFAULT'
+			{
+<span class="nc" id="L698">			match(&quot;SET DEFAULT&quot;); </span>
+
+			}
+
+<span class="nc" id="L702">			state.type = _type;</span>
+<span class="nc" id="L703">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L708">	}</span>
+	// $ANTLR end &quot;T__48&quot;
+
+	// $ANTLR start &quot;T__49&quot;
+	public final void mT__49() throws RecognitionException {
+		try {
+<span class="nc" id="L714">			int _type = T__49;</span>
+<span class="nc" id="L715">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:37:7: ( 'SET' )
+			// org/argouml/language/sql/reveng/MySql.g:37:9: 'SET'
+			{
+<span class="nc" id="L719">			match(&quot;SET&quot;); </span>
+
+			}
+
+<span class="nc" id="L723">			state.type = _type;</span>
+<span class="nc" id="L724">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L729">	}</span>
+	// $ANTLR end &quot;T__49&quot;
+
+	// $ANTLR start &quot;T__50&quot;
+	public final void mT__50() throws RecognitionException {
+		try {
+<span class="nc" id="L735">			int _type = T__50;</span>
+<span class="nc" id="L736">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:38:7: ( 'TABLE' )
+			// org/argouml/language/sql/reveng/MySql.g:38:9: 'TABLE'
+			{
+<span class="nc" id="L740">			match(&quot;TABLE&quot;); </span>
+
+			}
+
+<span class="nc" id="L744">			state.type = _type;</span>
+<span class="nc" id="L745">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L750">	}</span>
+	// $ANTLR end &quot;T__50&quot;
+
+	// $ANTLR start &quot;T__51&quot;
+	public final void mT__51() throws RecognitionException {
+		try {
+<span class="nc" id="L756">			int _type = T__51;</span>
+<span class="nc" id="L757">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:39:7: ( 'UNIQUE' )
+			// org/argouml/language/sql/reveng/MySql.g:39:9: 'UNIQUE'
+			{
+<span class="nc" id="L761">			match(&quot;UNIQUE&quot;); </span>
+
+			}
+
+<span class="nc" id="L765">			state.type = _type;</span>
+<span class="nc" id="L766">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L771">	}</span>
+	// $ANTLR end &quot;T__51&quot;
+
+	// $ANTLR start &quot;T__52&quot;
+	public final void mT__52() throws RecognitionException {
+		try {
+<span class="nc" id="L777">			int _type = T__52;</span>
+<span class="nc" id="L778">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:40:7: ( 'UNSIGNED' )
+			// org/argouml/language/sql/reveng/MySql.g:40:9: 'UNSIGNED'
+			{
+<span class="nc" id="L782">			match(&quot;UNSIGNED&quot;); </span>
+
+			}
+
+<span class="nc" id="L786">			state.type = _type;</span>
+<span class="nc" id="L787">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L792">	}</span>
+	// $ANTLR end &quot;T__52&quot;
+
+	// $ANTLR start &quot;T__53&quot;
+	public final void mT__53() throws RecognitionException {
+		try {
+<span class="nc" id="L798">			int _type = T__53;</span>
+<span class="nc" id="L799">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:41:7: ( 'UPDATE' )
+			// org/argouml/language/sql/reveng/MySql.g:41:9: 'UPDATE'
+			{
+<span class="nc" id="L803">			match(&quot;UPDATE&quot;); </span>
+
+			}
+
+<span class="nc" id="L807">			state.type = _type;</span>
+<span class="nc" id="L808">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L813">	}</span>
+	// $ANTLR end &quot;T__53&quot;
+
+	// $ANTLR start &quot;T__54&quot;
+	public final void mT__54() throws RecognitionException {
+		try {
+<span class="nc" id="L819">			int _type = T__54;</span>
+<span class="nc" id="L820">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:42:7: ( 'ZEROFILL' )
+			// org/argouml/language/sql/reveng/MySql.g:42:9: 'ZEROFILL'
+			{
+<span class="nc" id="L824">			match(&quot;ZEROFILL&quot;); </span>
+
+			}
+
+<span class="nc" id="L828">			state.type = _type;</span>
+<span class="nc" id="L829">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L834">	}</span>
+	// $ANTLR end &quot;T__54&quot;
+
+	// $ANTLR start &quot;LEFT_PAREN&quot;
+	public final void mLEFT_PAREN() throws RecognitionException {
+		try {
+<span class="nc" id="L840">			int _type = LEFT_PAREN;</span>
+<span class="nc" id="L841">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:292:12: ( '(' )
+			// org/argouml/language/sql/reveng/MySql.g:292:14: '('
+			{
+<span class="nc" id="L845">			match('('); </span>
+			}
+
+<span class="nc" id="L848">			state.type = _type;</span>
+<span class="nc" id="L849">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L854">	}</span>
+	// $ANTLR end &quot;LEFT_PAREN&quot;
+
+	// $ANTLR start &quot;RIGHT_PAREN&quot;
+	public final void mRIGHT_PAREN() throws RecognitionException {
+		try {
+<span class="nc" id="L860">			int _type = RIGHT_PAREN;</span>
+<span class="nc" id="L861">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:293:13: ( ')' )
+			// org/argouml/language/sql/reveng/MySql.g:293:15: ')'
+			{
+<span class="nc" id="L865">			match(')'); </span>
+			}
+
+<span class="nc" id="L868">			state.type = _type;</span>
+<span class="nc" id="L869">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L874">	}</span>
+	// $ANTLR end &quot;RIGHT_PAREN&quot;
+
+	// $ANTLR start &quot;COMMA&quot;
+	public final void mCOMMA() throws RecognitionException {
+		try {
+<span class="nc" id="L880">			int _type = COMMA;</span>
+<span class="nc" id="L881">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:294:7: ( ',' )
+			// org/argouml/language/sql/reveng/MySql.g:294:9: ','
+			{
+<span class="nc" id="L885">			match(','); </span>
+			}
+
+<span class="nc" id="L888">			state.type = _type;</span>
+<span class="nc" id="L889">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L894">	}</span>
+	// $ANTLR end &quot;COMMA&quot;
+
+	// $ANTLR start &quot;SEMICOLON&quot;
+	public final void mSEMICOLON() throws RecognitionException {
+		try {
+<span class="nc" id="L900">			int _type = SEMICOLON;</span>
+<span class="nc" id="L901">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:295:11: ( ';' )
+			// org/argouml/language/sql/reveng/MySql.g:295:13: ';'
+			{
+<span class="nc" id="L905">			match(';'); </span>
+			}
+
+<span class="nc" id="L908">			state.type = _type;</span>
+<span class="nc" id="L909">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L914">	}</span>
+	// $ANTLR end &quot;SEMICOLON&quot;
+
+	// $ANTLR start &quot;DOT&quot;
+	public final void mDOT() throws RecognitionException {
+		try {
+<span class="nc" id="L920">			int _type = DOT;</span>
+<span class="nc" id="L921">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:296:5: ( '.' )
+			// org/argouml/language/sql/reveng/MySql.g:296:10: '.'
+			{
+<span class="nc" id="L925">			match('.'); </span>
+			}
+
+<span class="nc" id="L928">			state.type = _type;</span>
+<span class="nc" id="L929">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L934">	}</span>
+	// $ANTLR end &quot;DOT&quot;
+
+	// $ANTLR start &quot;NUMBER&quot;
+	public final void mNUMBER() throws RecognitionException {
+		try {
+<span class="nc" id="L940">			int _type = NUMBER;</span>
+<span class="nc" id="L941">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:299:9: ( ( DIGIT )+ )
+			// org/argouml/language/sql/reveng/MySql.g:299:13: ( DIGIT )+
+			{
+			// org/argouml/language/sql/reveng/MySql.g:299:13: ( DIGIT )+
+<span class="nc" id="L946">			int cnt1=0;</span>
+			loop1:
+			while (true) {
+<span class="nc" id="L949">				int alt1=2;</span>
+<span class="nc" id="L950">				int LA1_0 = input.LA(1);</span>
+<span class="nc bnc" id="L951" title="All 4 branches missed.">				if ( ((LA1_0 &gt;= '0' &amp;&amp; LA1_0 &lt;= '9')) ) {</span>
+<span class="nc" id="L952">					alt1=1;</span>
+				}
+
+<span class="nc bnc" id="L955" title="All 2 branches missed.">				switch (alt1) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:
+					{
+<span class="nc bnc" id="L959" title="All 4 branches missed.">					if ( (input.LA(1) &gt;= '0' &amp;&amp; input.LA(1) &lt;= '9') ) {</span>
+<span class="nc" id="L960">						input.consume();</span>
+					}
+					else {
+<span class="nc" id="L963">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L964">						recover(mse);</span>
+<span class="nc" id="L965">						throw mse;</span>
+					}
+					}
+					break;
+
+				default :
+<span class="nc bnc" id="L971" title="All 2 branches missed.">					if ( cnt1 &gt;= 1 ) break loop1;</span>
+<span class="nc" id="L972">					EarlyExitException eee = new EarlyExitException(1, input);</span>
+<span class="nc" id="L973">					throw eee;</span>
+				}
+<span class="nc" id="L975">				cnt1++;</span>
+<span class="nc" id="L976">			}</span>
+
+			}
+
+<span class="nc" id="L980">			state.type = _type;</span>
+<span class="nc" id="L981">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L986">	}</span>
+	// $ANTLR end &quot;NUMBER&quot;
+
+	// $ANTLR start &quot;ID&quot;
+	public final void mID() throws RecognitionException {
+		try {
+<span class="nc" id="L992">			int _type = ID;</span>
+<span class="nc" id="L993">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:300:5: ( ( ( LETTER | '_' ) ( ( DIGIT )* ) )+ )
+			// org/argouml/language/sql/reveng/MySql.g:300:7: ( ( LETTER | '_' ) ( ( DIGIT )* ) )+
+			{
+			// org/argouml/language/sql/reveng/MySql.g:300:7: ( ( LETTER | '_' ) ( ( DIGIT )* ) )+
+<span class="nc" id="L998">			int cnt3=0;</span>
+			loop3:
+			while (true) {
+<span class="nc" id="L1001">				int alt3=2;</span>
+<span class="nc" id="L1002">				int LA3_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1003" title="All 10 branches missed.">				if ( ((LA3_0 &gt;= 'A' &amp;&amp; LA3_0 &lt;= 'Z')||LA3_0=='_'||(LA3_0 &gt;= 'a' &amp;&amp; LA3_0 &lt;= 'z')) ) {</span>
+<span class="nc" id="L1004">					alt3=1;</span>
+				}
+
+<span class="nc bnc" id="L1007" title="All 2 branches missed.">				switch (alt3) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:300:8: ( LETTER | '_' ) ( ( DIGIT )* )
+					{
+<span class="nc bnc" id="L1011" title="All 10 branches missed.">					if ( (input.LA(1) &gt;= 'A' &amp;&amp; input.LA(1) &lt;= 'Z')||input.LA(1)=='_'||(input.LA(1) &gt;= 'a' &amp;&amp; input.LA(1) &lt;= 'z') ) {</span>
+<span class="nc" id="L1012">						input.consume();</span>
+					}
+					else {
+<span class="nc" id="L1015">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1016">						recover(mse);</span>
+<span class="nc" id="L1017">						throw mse;</span>
+					}
+					// org/argouml/language/sql/reveng/MySql.g:300:24: ( ( DIGIT )* )
+					// org/argouml/language/sql/reveng/MySql.g:300:25: ( DIGIT )*
+					{
+					// org/argouml/language/sql/reveng/MySql.g:300:25: ( DIGIT )*
+					loop2:
+					while (true) {
+<span class="nc" id="L1025">						int alt2=2;</span>
+<span class="nc" id="L1026">						int LA2_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1027" title="All 4 branches missed.">						if ( ((LA2_0 &gt;= '0' &amp;&amp; LA2_0 &lt;= '9')) ) {</span>
+<span class="nc" id="L1028">							alt2=1;</span>
+						}
+
+<span class="nc bnc" id="L1031" title="All 2 branches missed.">						switch (alt2) {</span>
+						case 1 :
+							// org/argouml/language/sql/reveng/MySql.g:
+							{
+<span class="nc bnc" id="L1035" title="All 4 branches missed.">							if ( (input.LA(1) &gt;= '0' &amp;&amp; input.LA(1) &lt;= '9') ) {</span>
+<span class="nc" id="L1036">								input.consume();</span>
+							}
+							else {
+<span class="nc" id="L1039">								MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1040">								recover(mse);</span>
+<span class="nc" id="L1041">								throw mse;</span>
+							}
+							}
+							break;
+
+						default :
+<span class="nc" id="L1047">							break loop2;</span>
+						}
+<span class="nc" id="L1049">					}</span>
+
+					}
+
+					}
+					break;
+
+				default :
+<span class="nc bnc" id="L1057" title="All 2 branches missed.">					if ( cnt3 &gt;= 1 ) break loop3;</span>
+<span class="nc" id="L1058">					EarlyExitException eee = new EarlyExitException(3, input);</span>
+<span class="nc" id="L1059">					throw eee;</span>
+				}
+<span class="nc" id="L1061">				cnt3++;</span>
+<span class="nc" id="L1062">			}</span>
+
+			}
+
+<span class="nc" id="L1066">			state.type = _type;</span>
+<span class="nc" id="L1067">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L1072">	}</span>
+	// $ANTLR end &quot;ID&quot;
+
+	// $ANTLR start &quot;VAR_MYSQL&quot;
+	public final void mVAR_MYSQL() throws RecognitionException {
+		try {
+<span class="nc" id="L1078">			int _type = VAR_MYSQL;</span>
+<span class="nc" id="L1079">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:302:11: ( '@' ( '@' )? ID )
+			// org/argouml/language/sql/reveng/MySql.g:302:13: '@' ( '@' )? ID
+			{
+<span class="nc" id="L1083">			match('@'); </span>
+			// org/argouml/language/sql/reveng/MySql.g:302:17: ( '@' )?
+<span class="nc" id="L1085">			int alt4=2;</span>
+<span class="nc" id="L1086">			int LA4_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1087" title="All 2 branches missed.">			if ( (LA4_0=='@') ) {</span>
+<span class="nc" id="L1088">				alt4=1;</span>
+			}
+<span class="nc bnc" id="L1090" title="All 2 branches missed.">			switch (alt4) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:302:18: '@'
+					{
+<span class="nc" id="L1094">					match('@'); </span>
+					}
+					break;
+
+			}
+
+<span class="nc" id="L1100">			mID(); </span>
+
+			}
+
+<span class="nc" id="L1104">			state.type = _type;</span>
+<span class="nc" id="L1105">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L1110">	}</span>
+	// $ANTLR end &quot;VAR_MYSQL&quot;
+
+	// $ANTLR start &quot;PROTECT_CHAR&quot;
+	public final void mPROTECT_CHAR() throws RecognitionException {
+		try {
+<span class="nc" id="L1116">			int _type = PROTECT_CHAR;</span>
+<span class="nc" id="L1117">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:304:14: ( '`' )
+			// org/argouml/language/sql/reveng/MySql.g:304:16: '`'
+			{
+<span class="nc" id="L1121">			match('`'); </span>
+			}
+
+<span class="nc" id="L1124">			state.type = _type;</span>
+<span class="nc" id="L1125">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L1130">	}</span>
+	// $ANTLR end &quot;PROTECT_CHAR&quot;
+
+	// $ANTLR start &quot;WS&quot;
+	public final void mWS() throws RecognitionException {
+		try {
+<span class="nc" id="L1136">			int _type = WS;</span>
+<span class="nc" id="L1137">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:306:4: ( ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+ )
+			// org/argouml/language/sql/reveng/MySql.g:306:6: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+			{
+			// org/argouml/language/sql/reveng/MySql.g:306:6: ( '\\t' | ' ' | '\\r' | '\\n' | '\\u000C' )+
+<span class="nc" id="L1142">			int cnt5=0;</span>
+			loop5:
+			while (true) {
+<span class="nc" id="L1145">				int alt5=2;</span>
+<span class="nc" id="L1146">				int LA5_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1147" title="All 10 branches missed.">				if ( ((LA5_0 &gt;= '\t' &amp;&amp; LA5_0 &lt;= '\n')||(LA5_0 &gt;= '\f' &amp;&amp; LA5_0 &lt;= '\r')||LA5_0==' ') ) {</span>
+<span class="nc" id="L1148">					alt5=1;</span>
+				}
+
+<span class="nc bnc" id="L1151" title="All 2 branches missed.">				switch (alt5) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:
+					{
+<span class="nc bnc" id="L1155" title="All 10 branches missed.">					if ( (input.LA(1) &gt;= '\t' &amp;&amp; input.LA(1) &lt;= '\n')||(input.LA(1) &gt;= '\f' &amp;&amp; input.LA(1) &lt;= '\r')||input.LA(1)==' ' ) {</span>
+<span class="nc" id="L1156">						input.consume();</span>
+					}
+					else {
+<span class="nc" id="L1159">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1160">						recover(mse);</span>
+<span class="nc" id="L1161">						throw mse;</span>
+					}
+					}
+					break;
+
+				default :
+<span class="nc bnc" id="L1167" title="All 2 branches missed.">					if ( cnt5 &gt;= 1 ) break loop5;</span>
+<span class="nc" id="L1168">					EarlyExitException eee = new EarlyExitException(5, input);</span>
+<span class="nc" id="L1169">					throw eee;</span>
+				}
+<span class="nc" id="L1171">				cnt5++;</span>
+<span class="nc" id="L1172">			}</span>
+
+<span class="nc" id="L1174">			_channel = HIDDEN;</span>
+			}
+
+<span class="nc" id="L1177">			state.type = _type;</span>
+<span class="nc" id="L1178">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L1183">	}</span>
+	// $ANTLR end &quot;WS&quot;
+
+	// $ANTLR start &quot;SL_COMMENT&quot;
+	public final void mSL_COMMENT() throws RecognitionException {
+		try {
+<span class="nc" id="L1189">			int _type = SL_COMMENT;</span>
+<span class="nc" id="L1190">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:308:12: ( ( ( '--' | '#' ) (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' ) )
+			// org/argouml/language/sql/reveng/MySql.g:309:2: ( ( '--' | '#' ) (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
+			{
+			// org/argouml/language/sql/reveng/MySql.g:309:2: ( ( '--' | '#' ) (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n' )
+			// org/argouml/language/sql/reveng/MySql.g:309:4: ( '--' | '#' ) (~ ( '\\n' | '\\r' ) )* ( '\\r' )? '\\n'
+			{
+			// org/argouml/language/sql/reveng/MySql.g:309:4: ( '--' | '#' )
+<span class="nc" id="L1198">			int alt6=2;</span>
+<span class="nc" id="L1199">			int LA6_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1200" title="All 2 branches missed.">			if ( (LA6_0=='-') ) {</span>
+<span class="nc" id="L1201">				alt6=1;</span>
+			}
+<span class="nc bnc" id="L1203" title="All 2 branches missed.">			else if ( (LA6_0=='#') ) {</span>
+<span class="nc" id="L1204">				alt6=2;</span>
+			}
+
+			else {
+<span class="nc" id="L1208">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 6, 0, input);
+<span class="nc" id="L1210">				throw nvae;</span>
+			}
+
+<span class="nc bnc" id="L1213" title="All 3 branches missed.">			switch (alt6) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:309:5: '--'
+					{
+<span class="nc" id="L1217">					match(&quot;--&quot;); </span>
+
+					}
+<span class="nc" id="L1220">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/MySql.g:309:10: '#'
+					{
+<span class="nc" id="L1224">					match('#'); </span>
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:309:15: (~ ( '\\n' | '\\r' ) )*
+			loop7:
+			while (true) {
+<span class="nc" id="L1233">				int alt7=2;</span>
+<span class="nc" id="L1234">				int LA7_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1235" title="All 12 branches missed.">				if ( ((LA7_0 &gt;= '\u0000' &amp;&amp; LA7_0 &lt;= '\t')||(LA7_0 &gt;= '\u000B' &amp;&amp; LA7_0 &lt;= '\f')||(LA7_0 &gt;= '\u000E' &amp;&amp; LA7_0 &lt;= '\uFFFF')) ) {</span>
+<span class="nc" id="L1236">					alt7=1;</span>
+				}
+
+<span class="nc bnc" id="L1239" title="All 2 branches missed.">				switch (alt7) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:
+					{
+<span class="nc bnc" id="L1243" title="All 12 branches missed.">					if ( (input.LA(1) &gt;= '\u0000' &amp;&amp; input.LA(1) &lt;= '\t')||(input.LA(1) &gt;= '\u000B' &amp;&amp; input.LA(1) &lt;= '\f')||(input.LA(1) &gt;= '\u000E' &amp;&amp; input.LA(1) &lt;= '\uFFFF') ) {</span>
+<span class="nc" id="L1244">						input.consume();</span>
+					}
+					else {
+<span class="nc" id="L1247">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1248">						recover(mse);</span>
+<span class="nc" id="L1249">						throw mse;</span>
+					}
+					}
+					break;
+
+				default :
+<span class="nc" id="L1255">					break loop7;</span>
+				}
+<span class="nc" id="L1257">			}</span>
+
+			// org/argouml/language/sql/reveng/MySql.g:309:29: ( '\\r' )?
+<span class="nc" id="L1260">			int alt8=2;</span>
+<span class="nc" id="L1261">			int LA8_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1262" title="All 2 branches missed.">			if ( (LA8_0=='\r') ) {</span>
+<span class="nc" id="L1263">				alt8=1;</span>
+			}
+<span class="nc bnc" id="L1265" title="All 2 branches missed.">			switch (alt8) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:309:29: '\\r'
+					{
+<span class="nc" id="L1269">					match('\r'); </span>
+					}
+					break;
+
+			}
+
+<span class="nc" id="L1275">			match('\n'); </span>
+			}
+
+			}
+
+<span class="nc" id="L1280">			state.type = _type;</span>
+<span class="nc" id="L1281">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L1286">	}</span>
+	// $ANTLR end &quot;SL_COMMENT&quot;
+
+	// $ANTLR start &quot;ML_COMMENT&quot;
+	public final void mML_COMMENT() throws RecognitionException {
+		try {
+<span class="nc" id="L1292">			int _type = ML_COMMENT;</span>
+<span class="nc" id="L1293">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:313:12: ( '/*' ( . )* '*/' )
+			// org/argouml/language/sql/reveng/MySql.g:314:2: '/*' ( . )* '*/'
+			{
+<span class="nc" id="L1297">			match(&quot;/*&quot;); </span>
+
+			// org/argouml/language/sql/reveng/MySql.g:314:7: ( . )*
+			loop9:
+			while (true) {
+<span class="nc" id="L1302">				int alt9=2;</span>
+<span class="nc" id="L1303">				int LA9_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1304" title="All 2 branches missed.">				if ( (LA9_0=='*') ) {</span>
+<span class="nc" id="L1305">					int LA9_1 = input.LA(2);</span>
+<span class="nc bnc" id="L1306" title="All 2 branches missed.">					if ( (LA9_1=='/') ) {</span>
+<span class="nc" id="L1307">						alt9=2;</span>
+					}
+<span class="nc bnc" id="L1309" title="All 8 branches missed.">					else if ( ((LA9_1 &gt;= '\u0000' &amp;&amp; LA9_1 &lt;= '.')||(LA9_1 &gt;= '0' &amp;&amp; LA9_1 &lt;= '\uFFFF')) ) {</span>
+<span class="nc" id="L1310">						alt9=1;</span>
+					}
+
+<span class="nc" id="L1313">				}</span>
+<span class="nc bnc" id="L1314" title="All 8 branches missed.">				else if ( ((LA9_0 &gt;= '\u0000' &amp;&amp; LA9_0 &lt;= ')')||(LA9_0 &gt;= '+' &amp;&amp; LA9_0 &lt;= '\uFFFF')) ) {</span>
+<span class="nc" id="L1315">					alt9=1;</span>
+				}
+
+<span class="nc bnc" id="L1318" title="All 2 branches missed.">				switch (alt9) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:314:7: .
+					{
+<span class="nc" id="L1322">					matchAny(); </span>
+					}
+<span class="nc" id="L1324">					break;</span>
+
+				default :
+<span class="nc" id="L1327">					break loop9;</span>
+				}
+<span class="nc" id="L1329">			}</span>
+
+<span class="nc" id="L1331">			match(&quot;*/&quot;); </span>
+
+			}
+
+<span class="nc" id="L1335">			state.type = _type;</span>
+<span class="nc" id="L1336">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L1341">	}</span>
+	// $ANTLR end &quot;ML_COMMENT&quot;
+
+	// $ANTLR start &quot;QUOTED_TEXT&quot;
+	public final void mQUOTED_TEXT() throws RecognitionException {
+		try {
+<span class="nc" id="L1347">			int _type = QUOTED_TEXT;</span>
+<span class="nc" id="L1348">			int _channel = DEFAULT_TOKEN_CHANNEL;</span>
+			// org/argouml/language/sql/reveng/MySql.g:317:13: ( '\\'' (~ ( '\\'' ) | '\\'' '\\'' )* '\\'' )
+			// org/argouml/language/sql/reveng/MySql.g:318:2: '\\'' (~ ( '\\'' ) | '\\'' '\\'' )* '\\''
+			{
+<span class="nc" id="L1352">			match('\''); </span>
+			// org/argouml/language/sql/reveng/MySql.g:319:2: (~ ( '\\'' ) | '\\'' '\\'' )*
+			loop10:
+			while (true) {
+<span class="nc" id="L1356">				int alt10=3;</span>
+<span class="nc" id="L1357">				int LA10_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1358" title="All 2 branches missed.">				if ( (LA10_0=='\'') ) {</span>
+<span class="nc" id="L1359">					int LA10_1 = input.LA(2);</span>
+<span class="nc bnc" id="L1360" title="All 2 branches missed.">					if ( (LA10_1=='\'') ) {</span>
+<span class="nc" id="L1361">						alt10=2;</span>
+					}
+
+<span class="nc" id="L1364">				}</span>
+<span class="nc bnc" id="L1365" title="All 8 branches missed.">				else if ( ((LA10_0 &gt;= '\u0000' &amp;&amp; LA10_0 &lt;= '&amp;')||(LA10_0 &gt;= '(' &amp;&amp; LA10_0 &lt;= '\uFFFF')) ) {</span>
+<span class="nc" id="L1366">					alt10=1;</span>
+				}
+
+<span class="nc bnc" id="L1369" title="All 3 branches missed.">				switch (alt10) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:319:4: ~ ( '\\'' )
+					{
+<span class="nc bnc" id="L1373" title="All 8 branches missed.">					if ( (input.LA(1) &gt;= '\u0000' &amp;&amp; input.LA(1) &lt;= '&amp;')||(input.LA(1) &gt;= '(' &amp;&amp; input.LA(1) &lt;= '\uFFFF') ) {</span>
+<span class="nc" id="L1374">						input.consume();</span>
+					}
+					else {
+<span class="nc" id="L1377">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1378">						recover(mse);</span>
+<span class="nc" id="L1379">						throw mse;</span>
+					}
+					}
+					break;
+				case 2 :
+					// org/argouml/language/sql/reveng/MySql.g:324:3: '\\'' '\\''
+					{
+<span class="nc" id="L1386">					match('\''); </span>
+<span class="nc" id="L1387">					match('\''); </span>
+					}
+<span class="nc" id="L1389">					break;</span>
+
+				default :
+<span class="nc" id="L1392">					break loop10;</span>
+				}
+<span class="nc" id="L1394">			}</span>
+
+<span class="nc" id="L1396">			match('\''); </span>
+			}
+
+<span class="nc" id="L1399">			state.type = _type;</span>
+<span class="nc" id="L1400">			state.channel = _channel;</span>
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L1405">	}</span>
+	// $ANTLR end &quot;QUOTED_TEXT&quot;
+
+	// $ANTLR start &quot;LETTER&quot;
+	public final void mLETTER() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:331:5: ( 'a' .. 'z' | 'A' .. 'Z' )
+			// org/argouml/language/sql/reveng/MySql.g:
+			{
+<span class="nc bnc" id="L1414" title="All 8 branches missed.">			if ( (input.LA(1) &gt;= 'A' &amp;&amp; input.LA(1) &lt;= 'Z')||(input.LA(1) &gt;= 'a' &amp;&amp; input.LA(1) &lt;= 'z') ) {</span>
+<span class="nc" id="L1415">				input.consume();</span>
+			}
+			else {
+<span class="nc" id="L1418">				MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1419">				recover(mse);</span>
+<span class="nc" id="L1420">				throw mse;</span>
+			}
+			}
+
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L1428">	}</span>
+	// $ANTLR end &quot;LETTER&quot;
+
+	// $ANTLR start &quot;DIGIT&quot;
+	public final void mDIGIT() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:335:16: ( '0' .. '9' )
+			// org/argouml/language/sql/reveng/MySql.g:
+			{
+<span class="nc bnc" id="L1437" title="All 4 branches missed.">			if ( (input.LA(1) &gt;= '0' &amp;&amp; input.LA(1) &lt;= '9') ) {</span>
+<span class="nc" id="L1438">				input.consume();</span>
+			}
+			else {
+<span class="nc" id="L1441">				MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1442">				recover(mse);</span>
+<span class="nc" id="L1443">				throw mse;</span>
+			}
+			}
+
+		}
+		finally {
+			// do for sure before leaving
+		}
+<span class="nc" id="L1451">	}</span>
+	// $ANTLR end &quot;DIGIT&quot;
+
+	@Override
+	public void mTokens() throws RecognitionException {
+		// org/argouml/language/sql/reveng/MySql.g:1:8: ( T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | T__48 | T__49 | T__50 | T__51 | T__52 | T__53 | T__54 | LEFT_PAREN | RIGHT_PAREN | COMMA | SEMICOLON | DOT | NUMBER | ID | VAR_MYSQL | PROTECT_CHAR | WS | SL_COMMENT | ML_COMMENT | QUOTED_TEXT )
+<span class="nc" id="L1457">		int alt11=49;</span>
+<span class="nc" id="L1458">		alt11 = dfa11.predict(input);</span>
+<span class="nc bnc" id="L1459" title="All 50 branches missed.">		switch (alt11) {</span>
+			case 1 :
+				// org/argouml/language/sql/reveng/MySql.g:1:10: T__19
+				{
+<span class="nc" id="L1463">				mT__19(); </span>
+
+				}
+<span class="nc" id="L1466">				break;</span>
+			case 2 :
+				// org/argouml/language/sql/reveng/MySql.g:1:16: T__20
+				{
+<span class="nc" id="L1470">				mT__20(); </span>
+
+				}
+<span class="nc" id="L1473">				break;</span>
+			case 3 :
+				// org/argouml/language/sql/reveng/MySql.g:1:22: T__21
+				{
+<span class="nc" id="L1477">				mT__21(); </span>
+
+				}
+<span class="nc" id="L1480">				break;</span>
+			case 4 :
+				// org/argouml/language/sql/reveng/MySql.g:1:28: T__22
+				{
+<span class="nc" id="L1484">				mT__22(); </span>
+
+				}
+<span class="nc" id="L1487">				break;</span>
+			case 5 :
+				// org/argouml/language/sql/reveng/MySql.g:1:34: T__23
+				{
+<span class="nc" id="L1491">				mT__23(); </span>
+
+				}
+<span class="nc" id="L1494">				break;</span>
+			case 6 :
+				// org/argouml/language/sql/reveng/MySql.g:1:40: T__24
+				{
+<span class="nc" id="L1498">				mT__24(); </span>
+
+				}
+<span class="nc" id="L1501">				break;</span>
+			case 7 :
+				// org/argouml/language/sql/reveng/MySql.g:1:46: T__25
+				{
+<span class="nc" id="L1505">				mT__25(); </span>
+
+				}
+<span class="nc" id="L1508">				break;</span>
+			case 8 :
+				// org/argouml/language/sql/reveng/MySql.g:1:52: T__26
+				{
+<span class="nc" id="L1512">				mT__26(); </span>
+
+				}
+<span class="nc" id="L1515">				break;</span>
+			case 9 :
+				// org/argouml/language/sql/reveng/MySql.g:1:58: T__27
+				{
+<span class="nc" id="L1519">				mT__27(); </span>
+
+				}
+<span class="nc" id="L1522">				break;</span>
+			case 10 :
+				// org/argouml/language/sql/reveng/MySql.g:1:64: T__28
+				{
+<span class="nc" id="L1526">				mT__28(); </span>
+
+				}
+<span class="nc" id="L1529">				break;</span>
+			case 11 :
+				// org/argouml/language/sql/reveng/MySql.g:1:70: T__29
+				{
+<span class="nc" id="L1533">				mT__29(); </span>
+
+				}
+<span class="nc" id="L1536">				break;</span>
+			case 12 :
+				// org/argouml/language/sql/reveng/MySql.g:1:76: T__30
+				{
+<span class="nc" id="L1540">				mT__30(); </span>
+
+				}
+<span class="nc" id="L1543">				break;</span>
+			case 13 :
+				// org/argouml/language/sql/reveng/MySql.g:1:82: T__31
+				{
+<span class="nc" id="L1547">				mT__31(); </span>
+
+				}
+<span class="nc" id="L1550">				break;</span>
+			case 14 :
+				// org/argouml/language/sql/reveng/MySql.g:1:88: T__32
+				{
+<span class="nc" id="L1554">				mT__32(); </span>
+
+				}
+<span class="nc" id="L1557">				break;</span>
+			case 15 :
+				// org/argouml/language/sql/reveng/MySql.g:1:94: T__33
+				{
+<span class="nc" id="L1561">				mT__33(); </span>
+
+				}
+<span class="nc" id="L1564">				break;</span>
+			case 16 :
+				// org/argouml/language/sql/reveng/MySql.g:1:100: T__34
+				{
+<span class="nc" id="L1568">				mT__34(); </span>
+
+				}
+<span class="nc" id="L1571">				break;</span>
+			case 17 :
+				// org/argouml/language/sql/reveng/MySql.g:1:106: T__35
+				{
+<span class="nc" id="L1575">				mT__35(); </span>
+
+				}
+<span class="nc" id="L1578">				break;</span>
+			case 18 :
+				// org/argouml/language/sql/reveng/MySql.g:1:112: T__36
+				{
+<span class="nc" id="L1582">				mT__36(); </span>
+
+				}
+<span class="nc" id="L1585">				break;</span>
+			case 19 :
+				// org/argouml/language/sql/reveng/MySql.g:1:118: T__37
+				{
+<span class="nc" id="L1589">				mT__37(); </span>
+
+				}
+<span class="nc" id="L1592">				break;</span>
+			case 20 :
+				// org/argouml/language/sql/reveng/MySql.g:1:124: T__38
+				{
+<span class="nc" id="L1596">				mT__38(); </span>
+
+				}
+<span class="nc" id="L1599">				break;</span>
+			case 21 :
+				// org/argouml/language/sql/reveng/MySql.g:1:130: T__39
+				{
+<span class="nc" id="L1603">				mT__39(); </span>
+
+				}
+<span class="nc" id="L1606">				break;</span>
+			case 22 :
+				// org/argouml/language/sql/reveng/MySql.g:1:136: T__40
+				{
+<span class="nc" id="L1610">				mT__40(); </span>
+
+				}
+<span class="nc" id="L1613">				break;</span>
+			case 23 :
+				// org/argouml/language/sql/reveng/MySql.g:1:142: T__41
+				{
+<span class="nc" id="L1617">				mT__41(); </span>
+
+				}
+<span class="nc" id="L1620">				break;</span>
+			case 24 :
+				// org/argouml/language/sql/reveng/MySql.g:1:148: T__42
+				{
+<span class="nc" id="L1624">				mT__42(); </span>
+
+				}
+<span class="nc" id="L1627">				break;</span>
+			case 25 :
+				// org/argouml/language/sql/reveng/MySql.g:1:154: T__43
+				{
+<span class="nc" id="L1631">				mT__43(); </span>
+
+				}
+<span class="nc" id="L1634">				break;</span>
+			case 26 :
+				// org/argouml/language/sql/reveng/MySql.g:1:160: T__44
+				{
+<span class="nc" id="L1638">				mT__44(); </span>
+
+				}
+<span class="nc" id="L1641">				break;</span>
+			case 27 :
+				// org/argouml/language/sql/reveng/MySql.g:1:166: T__45
+				{
+<span class="nc" id="L1645">				mT__45(); </span>
+
+				}
+<span class="nc" id="L1648">				break;</span>
+			case 28 :
+				// org/argouml/language/sql/reveng/MySql.g:1:172: T__46
+				{
+<span class="nc" id="L1652">				mT__46(); </span>
+
+				}
+<span class="nc" id="L1655">				break;</span>
+			case 29 :
+				// org/argouml/language/sql/reveng/MySql.g:1:178: T__47
+				{
+<span class="nc" id="L1659">				mT__47(); </span>
+
+				}
+<span class="nc" id="L1662">				break;</span>
+			case 30 :
+				// org/argouml/language/sql/reveng/MySql.g:1:184: T__48
+				{
+<span class="nc" id="L1666">				mT__48(); </span>
+
+				}
+<span class="nc" id="L1669">				break;</span>
+			case 31 :
+				// org/argouml/language/sql/reveng/MySql.g:1:190: T__49
+				{
+<span class="nc" id="L1673">				mT__49(); </span>
+
+				}
+<span class="nc" id="L1676">				break;</span>
+			case 32 :
+				// org/argouml/language/sql/reveng/MySql.g:1:196: T__50
+				{
+<span class="nc" id="L1680">				mT__50(); </span>
+
+				}
+<span class="nc" id="L1683">				break;</span>
+			case 33 :
+				// org/argouml/language/sql/reveng/MySql.g:1:202: T__51
+				{
+<span class="nc" id="L1687">				mT__51(); </span>
+
+				}
+<span class="nc" id="L1690">				break;</span>
+			case 34 :
+				// org/argouml/language/sql/reveng/MySql.g:1:208: T__52
+				{
+<span class="nc" id="L1694">				mT__52(); </span>
+
+				}
+<span class="nc" id="L1697">				break;</span>
+			case 35 :
+				// org/argouml/language/sql/reveng/MySql.g:1:214: T__53
+				{
+<span class="nc" id="L1701">				mT__53(); </span>
+
+				}
+<span class="nc" id="L1704">				break;</span>
+			case 36 :
+				// org/argouml/language/sql/reveng/MySql.g:1:220: T__54
+				{
+<span class="nc" id="L1708">				mT__54(); </span>
+
+				}
+<span class="nc" id="L1711">				break;</span>
+			case 37 :
+				// org/argouml/language/sql/reveng/MySql.g:1:226: LEFT_PAREN
+				{
+<span class="nc" id="L1715">				mLEFT_PAREN(); </span>
+
+				}
+<span class="nc" id="L1718">				break;</span>
+			case 38 :
+				// org/argouml/language/sql/reveng/MySql.g:1:237: RIGHT_PAREN
+				{
+<span class="nc" id="L1722">				mRIGHT_PAREN(); </span>
+
+				}
+<span class="nc" id="L1725">				break;</span>
+			case 39 :
+				// org/argouml/language/sql/reveng/MySql.g:1:249: COMMA
+				{
+<span class="nc" id="L1729">				mCOMMA(); </span>
+
+				}
+<span class="nc" id="L1732">				break;</span>
+			case 40 :
+				// org/argouml/language/sql/reveng/MySql.g:1:255: SEMICOLON
+				{
+<span class="nc" id="L1736">				mSEMICOLON(); </span>
+
+				}
+<span class="nc" id="L1739">				break;</span>
+			case 41 :
+				// org/argouml/language/sql/reveng/MySql.g:1:265: DOT
+				{
+<span class="nc" id="L1743">				mDOT(); </span>
+
+				}
+<span class="nc" id="L1746">				break;</span>
+			case 42 :
+				// org/argouml/language/sql/reveng/MySql.g:1:269: NUMBER
+				{
+<span class="nc" id="L1750">				mNUMBER(); </span>
+
+				}
+<span class="nc" id="L1753">				break;</span>
+			case 43 :
+				// org/argouml/language/sql/reveng/MySql.g:1:276: ID
+				{
+<span class="nc" id="L1757">				mID(); </span>
+
+				}
+<span class="nc" id="L1760">				break;</span>
+			case 44 :
+				// org/argouml/language/sql/reveng/MySql.g:1:279: VAR_MYSQL
+				{
+<span class="nc" id="L1764">				mVAR_MYSQL(); </span>
+
+				}
+<span class="nc" id="L1767">				break;</span>
+			case 45 :
+				// org/argouml/language/sql/reveng/MySql.g:1:289: PROTECT_CHAR
+				{
+<span class="nc" id="L1771">				mPROTECT_CHAR(); </span>
+
+				}
+<span class="nc" id="L1774">				break;</span>
+			case 46 :
+				// org/argouml/language/sql/reveng/MySql.g:1:302: WS
+				{
+<span class="nc" id="L1778">				mWS(); </span>
+
+				}
+<span class="nc" id="L1781">				break;</span>
+			case 47 :
+				// org/argouml/language/sql/reveng/MySql.g:1:305: SL_COMMENT
+				{
+<span class="nc" id="L1785">				mSL_COMMENT(); </span>
+
+				}
+<span class="nc" id="L1788">				break;</span>
+			case 48 :
+				// org/argouml/language/sql/reveng/MySql.g:1:316: ML_COMMENT
+				{
+<span class="nc" id="L1792">				mML_COMMENT(); </span>
+
+				}
+<span class="nc" id="L1795">				break;</span>
+			case 49 :
+				// org/argouml/language/sql/reveng/MySql.g:1:327: QUOTED_TEXT
+				{
+<span class="nc" id="L1799">				mQUOTED_TEXT(); </span>
+
+				}
+				break;
+
+		}
+<span class="nc" id="L1805">	}</span>
+
+
+<span class="nc" id="L1808">	protected DFA11 dfa11 = new DFA11(this);</span>
+	static final String DFA11_eotS =
+		&quot;\2\uffff\22\32\15\uffff\16\32\1\116\5\32\1\125\30\32\1\uffff\1\32\1\161&quot;+
+		&quot;\1\32\1\uffff\1\163\1\32\1\uffff\4\32\1\172\17\32\1\u008a\3\32\1\u008e&quot;+
+		&quot;\1\u008f\1\32\1\uffff\1\32\1\uffff\1\u0092\4\32\2\uffff\6\32\1\u009d\10&quot;+
+		&quot;\32\1\uffff\3\32\2\uffff\1\u00a9\1\u00aa\1\uffff\4\32\1\u00af\5\32\1\uffff&quot;+
+		&quot;\4\32\1\u00b9\2\32\1\u00bc\1\u00bd\1\u00be\1\32\2\uffff\4\32\1\uffff\1&quot;+
+		&quot;\u00c4\1\32\1\u00c6\2\32\1\u00c9\1\u00ca\1\u00cb\1\32\1\uffff\1\32\1\u00ce&quot;+
+		&quot;\3\uffff\1\u00cf\1\u00d0\1\u00d1\2\32\1\uffff\1\32\1\uffff\2\32\3\uffff&quot;+
+		&quot;\2\32\4\uffff\1\32\1\u00da\1\u00db\1\u00dc\4\32\3\uffff\1\32\1\u00e2\1&quot;+
+		&quot;\32\1\u00e4\1\32\1\uffff\1\32\1\uffff\4\32\1\u00eb\1\32\1\uffff\2\32\1&quot;+
+		&quot;\u00ef\1\uffff&quot;;
+	static final String DFA11_eofS =
+		&quot;\u00f0\uffff&quot;;
+	static final String DFA11_minS =
+		&quot;\1\11\1\uffff\1\125\1\124\1\101\1\105\1\116\1\117\1\101\1\106\1\105\1&quot;+
+		&quot;\101\1\117\1\116\1\101\2\105\1\101\1\116\1\105\15\uffff\1\124\1\122\1&quot;+
+		&quot;\123\1\101\1\115\1\105\1\122\1\106\1\117\1\107\1\111\1\122\1\114\1\123&quot;+
+		&quot;\1\60\1\104\1\131\1\124\1\40\1\114\1\60\1\122\1\111\1\106\1\124\1\102&quot;+
+		&quot;\1\111\1\104\1\122\1\117\1\105\1\103\1\122\1\115\1\123\1\101\1\122\1\101&quot;+
+		&quot;\1\105\1\120\1\111\1\123\1\105\1\114\1\110\1\uffff\1\105\1\60\1\103\1&quot;+
+		&quot;\uffff\1\60\1\114\1\uffff\1\124\1\115\1\105\1\124\1\40\1\114\1\121\1\111&quot;+
+		&quot;\1\101\1\117\1\137\1\105\1\101\1\123\1\105\2\124\1\105\1\125\1\124\1\60&quot;+
+		&quot;\1\116\1\124\1\111\2\60\1\130\1\uffff\1\110\1\uffff\1\60\1\111\1\101\2&quot;+
+		&quot;\122\2\uffff\1\105\1\125\1\107\1\124\1\106\1\111\1\60\1\104\1\105\1\116&quot;+
+		&quot;\1\122\1\105\1\116\1\114\1\105\1\uffff\1\105\1\123\1\107\2\uffff\2\60&quot;+
+		&quot;\1\uffff\1\101\1\122\1\105\1\111\1\60\1\105\1\116\1\105\1\111\1\116\1&quot;+
+		&quot;\uffff\1\105\2\124\1\101\1\60\2\124\3\60\1\116\2\uffff\1\114\1\131\1\116&quot;+
+		&quot;\1\103\1\uffff\1\60\1\105\1\60\1\114\1\103\3\60\1\111\1\uffff\1\137\1&quot;+
+		&quot;\60\3\uffff\3\60\1\103\1\124\1\uffff\1\104\1\uffff\1\114\1\122\3\uffff&quot;+
+		&quot;\1\116\1\124\4\uffff\1\105\3\60\1\105\1\124\1\111\1\123\3\uffff\1\115&quot;+
+		&quot;\1\60\1\115\1\60\1\105\1\uffff\1\105\1\uffff\1\116\1\123\2\124\1\60\1&quot;+
+		&quot;\101\1\uffff\1\115\1\120\1\60\1\uffff&quot;;
+	static final String DFA11_maxS =
+		&quot;\1\172\1\uffff\1\125\1\124\1\125\1\122\1\130\1\125\1\101\1\116\1\105\1&quot;+
+		&quot;\101\1\125\1\116\1\122\2\105\1\101\1\120\1\105\15\uffff\1\124\1\122\1&quot;+
+		&quot;\123\1\101\1\116\1\105\1\122\1\114\1\117\1\107\1\111\1\122\1\114\1\123&quot;+
+		&quot;\1\172\1\104\1\131\2\124\1\114\1\172\1\122\1\111\1\123\1\124\1\102\1\123&quot;+
+		&quot;\1\104\1\122\1\117\1\105\1\103\1\122\1\115\1\123\1\101\1\122\1\101\1\105&quot;+
+		&quot;\1\120\1\111\1\123\1\105\1\114\1\110\1\uffff\1\105\1\172\1\103\1\uffff&quot;+
+		&quot;\1\172\1\114\1\uffff\1\124\1\115\1\105\1\124\1\172\1\114\1\121\1\111\1&quot;+
+		&quot;\101\1\117\1\137\1\105\1\101\1\123\1\105\2\124\1\105\1\125\1\124\1\172&quot;+
+		&quot;\1\116\1\124\1\111\2\172\1\130\1\uffff\1\110\1\uffff\1\172\1\111\1\101&quot;+
+		&quot;\2\122\2\uffff\1\105\1\125\1\107\1\124\1\106\1\111\1\172\1\104\1\105\1&quot;+
+		&quot;\116\1\122\1\105\1\116\1\114\1\105\1\uffff\1\105\1\123\1\107\2\uffff\2&quot;+
+		&quot;\172\1\uffff\1\101\1\122\1\105\1\111\1\172\1\105\1\116\1\105\1\111\1\116&quot;+
+		&quot;\1\uffff\1\105\2\124\1\101\1\172\2\124\3\172\1\116\2\uffff\1\114\1\131&quot;+
+		&quot;\1\116\1\103\1\uffff\1\172\1\105\1\172\1\114\1\103\3\172\1\111\1\uffff&quot;+
+		&quot;\1\137\1\172\3\uffff\3\172\1\103\1\124\1\uffff\1\104\1\uffff\1\114\1\122&quot;+
+		&quot;\3\uffff\1\116\1\124\4\uffff\1\105\3\172\1\105\1\124\1\111\1\123\3\uffff&quot;+
+		&quot;\1\115\1\172\1\115\1\172\1\105\1\uffff\1\105\1\uffff\1\116\1\123\2\124&quot;+
+		&quot;\1\172\1\101\1\uffff\1\115\1\120\1\172\1\uffff&quot;;
+	static final String DFA11_acceptS =
+		&quot;\1\uffff\1\1\22\uffff\1\45\1\46\1\47\1\50\1\51\1\52\1\53\1\54\1\55\1\56&quot;+
+		&quot;\1\57\1\60\1\61\55\uffff\1\22\3\uffff\1\26\2\uffff\1\31\33\uffff\1\24&quot;+
+		&quot;\1\uffff\1\27\5\uffff\1\36\1\37\17\uffff\1\14\3\uffff\1\20\1\21\2\uffff&quot;+
+		&quot;\1\30\12\uffff\1\3\13\uffff\1\23\1\25\4\uffff\1\40\11\uffff\1\10\2\uffff&quot;+
+		&quot;\1\13\1\15\1\16\5\uffff\1\41\1\uffff\1\43\2\uffff\1\4\1\5\1\6\2\uffff&quot;+
+		&quot;\1\12\1\17\1\32\1\33\10\uffff\1\35\1\42\1\44\5\uffff\1\7\1\uffff\1\34&quot;+
+		&quot;\6\uffff\1\2\3\uffff\1\11&quot;;
+	static final String DFA11_specialS =
+		&quot;\u00f0\uffff}&gt;&quot;;
+<span class="nc" id="L1870">	static final String[] DFA11_transitionS = {</span>
+			&quot;\2\35\1\uffff\2\35\22\uffff\1\35\2\uffff\1\36\3\uffff\1\40\1\24\1\25&quot;+
+			&quot;\2\uffff\1\26\1\36\1\30\1\37\12\31\1\uffff\1\27\1\uffff\1\1\2\uffff\1&quot;+
+			&quot;\33\1\2\1\3\1\4\1\5\1\6\1\7\1\32\1\10\1\11\1\32\1\12\1\32\1\13\1\14\1&quot;+
+			&quot;\15\1\16\1\32\1\17\1\20\1\21\1\22\4\32\1\23\4\uffff\1\32\1\34\32\32&quot;,
+			&quot;&quot;,
+			&quot;\1\41&quot;,
+			&quot;\1\42&quot;,
+			&quot;\1\43\6\uffff\1\44\6\uffff\1\45\2\uffff\1\46\2\uffff\1\47&quot;,
+			&quot;\1\50\14\uffff\1\51&quot;,
+			&quot;\1\52\11\uffff\1\53&quot;,
+			&quot;\1\54\5\uffff\1\55&quot;,
+			&quot;\1\56&quot;,
+			&quot;\1\57\7\uffff\1\60&quot;,
+			&quot;\1\61&quot;,
+			&quot;\1\62&quot;,
+			&quot;\1\63\5\uffff\1\64&quot;,
+			&quot;\1\65&quot;,
+			&quot;\1\66\20\uffff\1\67&quot;,
+			&quot;\1\70&quot;,
+			&quot;\1\71&quot;,
+			&quot;\1\72&quot;,
+			&quot;\1\73\1\uffff\1\74&quot;,
+			&quot;\1\75&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;\1\76&quot;,
+			&quot;\1\77&quot;,
+			&quot;\1\100&quot;,
+			&quot;\1\101&quot;,
+			&quot;\1\102\1\103&quot;,
+			&quot;\1\104&quot;,
+			&quot;\1\105&quot;,
+			&quot;\1\106\5\uffff\1\107&quot;,
+			&quot;\1\110&quot;,
+			&quot;\1\111&quot;,
+			&quot;\1\112&quot;,
+			&quot;\1\113&quot;,
+			&quot;\1\114&quot;,
+			&quot;\1\115&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\117&quot;,
+			&quot;\1\120&quot;,
+			&quot;\1\121&quot;,
+			&quot;\1\122\63\uffff\1\123&quot;,
+			&quot;\1\124&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\126&quot;,
+			&quot;\1\127&quot;,
+			&quot;\1\130\14\uffff\1\131&quot;,
+			&quot;\1\132&quot;,
+			&quot;\1\133&quot;,
+			&quot;\1\134\11\uffff\1\135&quot;,
+			&quot;\1\136&quot;,
+			&quot;\1\137&quot;,
+			&quot;\1\140&quot;,
+			&quot;\1\141&quot;,
+			&quot;\1\142&quot;,
+			&quot;\1\143&quot;,
+			&quot;\1\144&quot;,
+			&quot;\1\145&quot;,
+			&quot;\1\146&quot;,
+			&quot;\1\147&quot;,
+			&quot;\1\150&quot;,
+			&quot;\1\151&quot;,
+			&quot;\1\152&quot;,
+			&quot;\1\153&quot;,
+			&quot;\1\154&quot;,
+			&quot;\1\155&quot;,
+			&quot;\1\156&quot;,
+			&quot;\1\157&quot;,
+			&quot;&quot;,
+			&quot;\1\160&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\162&quot;,
+			&quot;&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\164&quot;,
+			&quot;&quot;,
+			&quot;\1\165&quot;,
+			&quot;\1\166&quot;,
+			&quot;\1\167&quot;,
+			&quot;\1\170&quot;,
+			&quot;\1\171\17\uffff\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\173&quot;,
+			&quot;\1\174&quot;,
+			&quot;\1\175&quot;,
+			&quot;\1\176&quot;,
+			&quot;\1\177&quot;,
+			&quot;\1\u0080&quot;,
+			&quot;\1\u0081&quot;,
+			&quot;\1\u0082&quot;,
+			&quot;\1\u0083&quot;,
+			&quot;\1\u0084&quot;,
+			&quot;\1\u0085&quot;,
+			&quot;\1\u0086&quot;,
+			&quot;\1\u0087&quot;,
+			&quot;\1\u0088&quot;,
+			&quot;\1\u0089&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u008b&quot;,
+			&quot;\1\u008c&quot;,
+			&quot;\1\u008d&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u0090&quot;,
+			&quot;&quot;,
+			&quot;\1\u0091&quot;,
+			&quot;&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u0093&quot;,
+			&quot;\1\u0094&quot;,
+			&quot;\1\u0095&quot;,
+			&quot;\1\u0096&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;\1\u0097&quot;,
+			&quot;\1\u0098&quot;,
+			&quot;\1\u0099&quot;,
+			&quot;\1\u009a&quot;,
+			&quot;\1\u009b&quot;,
+			&quot;\1\u009c&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u009e&quot;,
+			&quot;\1\u009f&quot;,
+			&quot;\1\u00a0&quot;,
+			&quot;\1\u00a1&quot;,
+			&quot;\1\u00a2&quot;,
+			&quot;\1\u00a3&quot;,
+			&quot;\1\u00a4&quot;,
+			&quot;\1\u00a5&quot;,
+			&quot;&quot;,
+			&quot;\1\u00a6&quot;,
+			&quot;\1\u00a7&quot;,
+			&quot;\1\u00a8&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;&quot;,
+			&quot;\1\u00ab&quot;,
+			&quot;\1\u00ac&quot;,
+			&quot;\1\u00ad&quot;,
+			&quot;\1\u00ae&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u00b0&quot;,
+			&quot;\1\u00b1&quot;,
+			&quot;\1\u00b2&quot;,
+			&quot;\1\u00b3&quot;,
+			&quot;\1\u00b4&quot;,
+			&quot;&quot;,
+			&quot;\1\u00b5&quot;,
+			&quot;\1\u00b6&quot;,
+			&quot;\1\u00b7&quot;,
+			&quot;\1\u00b8&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u00ba&quot;,
+			&quot;\1\u00bb&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u00bf&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;\1\u00c0&quot;,
+			&quot;\1\u00c1&quot;,
+			&quot;\1\u00c2&quot;,
+			&quot;\1\u00c3&quot;,
+			&quot;&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u00c5&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u00c7&quot;,
+			&quot;\1\u00c8&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u00cc&quot;,
+			&quot;&quot;,
+			&quot;\1\u00cd&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u00d2&quot;,
+			&quot;\1\u00d3&quot;,
+			&quot;&quot;,
+			&quot;\1\u00d4&quot;,
+			&quot;&quot;,
+			&quot;\1\u00d5&quot;,
+			&quot;\1\u00d6&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;\1\u00d7&quot;,
+			&quot;\1\u00d8&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;\1\u00d9&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u00dd&quot;,
+			&quot;\1\u00de&quot;,
+			&quot;\1\u00df&quot;,
+			&quot;\1\u00e0&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;&quot;,
+			&quot;\1\u00e1&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u00e3&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u00e5&quot;,
+			&quot;&quot;,
+			&quot;\1\u00e6&quot;,
+			&quot;&quot;,
+			&quot;\1\u00e7&quot;,
+			&quot;\1\u00e8&quot;,
+			&quot;\1\u00e9&quot;,
+			&quot;\1\u00ea&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;\1\u00ec&quot;,
+			&quot;&quot;,
+			&quot;\1\u00ed&quot;,
+			&quot;\1\u00ee&quot;,
+			&quot;\12\32\7\uffff\32\32\4\uffff\1\32\1\uffff\32\32&quot;,
+			&quot;&quot;
+	};
+
+<span class="nc" id="L2116">	static final short[] DFA11_eot = DFA.unpackEncodedString(DFA11_eotS);</span>
+<span class="nc" id="L2117">	static final short[] DFA11_eof = DFA.unpackEncodedString(DFA11_eofS);</span>
+<span class="nc" id="L2118">	static final char[] DFA11_min = DFA.unpackEncodedStringToUnsignedChars(DFA11_minS);</span>
+<span class="nc" id="L2119">	static final char[] DFA11_max = DFA.unpackEncodedStringToUnsignedChars(DFA11_maxS);</span>
+<span class="nc" id="L2120">	static final short[] DFA11_accept = DFA.unpackEncodedString(DFA11_acceptS);</span>
+<span class="nc" id="L2121">	static final short[] DFA11_special = DFA.unpackEncodedString(DFA11_specialS);</span>
+	static final short[][] DFA11_transition;
+
+	static {
+<span class="nc" id="L2125">		int numStates = DFA11_transitionS.length;</span>
+<span class="nc" id="L2126">		DFA11_transition = new short[numStates][];</span>
+<span class="nc bnc" id="L2127" title="All 2 branches missed.">		for (int i=0; i&lt;numStates; i++) {</span>
+<span class="nc" id="L2128">			DFA11_transition[i] = DFA.unpackEncodedString(DFA11_transitionS[i]);</span>
+		}
+<span class="nc" id="L2130">	}</span>
+
+	protected class DFA11 extends DFA {
+
+<span class="nc" id="L2134">		public DFA11(BaseRecognizer recognizer) {</span>
+<span class="nc" id="L2135">			this.recognizer = recognizer;</span>
+<span class="nc" id="L2136">			this.decisionNumber = 11;</span>
+<span class="nc" id="L2137">			this.eot = DFA11_eot;</span>
+<span class="nc" id="L2138">			this.eof = DFA11_eof;</span>
+<span class="nc" id="L2139">			this.min = DFA11_min;</span>
+<span class="nc" id="L2140">			this.max = DFA11_max;</span>
+<span class="nc" id="L2141">			this.accept = DFA11_accept;</span>
+<span class="nc" id="L2142">			this.special = DFA11_special;</span>
+<span class="nc" id="L2143">			this.transition = DFA11_transition;</span>
+<span class="nc" id="L2144">		}</span>
+		@Override
+		public String getDescription() {
+<span class="nc" id="L2147">			return &quot;1:1: Tokens : ( T__19 | T__20 | T__21 | T__22 | T__23 | T__24 | T__25 | T__26 | T__27 | T__28 | T__29 | T__30 | T__31 | T__32 | T__33 | T__34 | T__35 | T__36 | T__37 | T__38 | T__39 | T__40 | T__41 | T__42 | T__43 | T__44 | T__45 | T__46 | T__47 | T__48 | T__49 | T__50 | T__51 | T__52 | T__53 | T__54 | LEFT_PAREN | RIGHT_PAREN | COMMA | SEMICOLON | DOT | NUMBER | ID | VAR_MYSQL | PROTECT_CHAR | WS | SL_COMMENT | ML_COMMENT | QUOTED_TEXT );&quot;;</span>
+		}
+	}
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

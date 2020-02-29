@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GridBagUtils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.ui</a> &gt; <span class="el_source">GridBagUtils.java</span></div><h1>GridBagUtils.java</h1><pre class="source lang-java linenums">package org.argouml.ui;
+
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
+/**
+ * Utility class for easy alignment of components in a GridBagLayout.
+ * 
+ * @author drahmann
+ */
+public final class GridBagUtils {
+    /**
+     * Constant representing text alignment.
+     */
+    public static final int CENTER = 2;
+
+    /**
+     * Constant representing text alignment.
+     */
+    public static final int LEFT = 0;
+
+    /**
+     * Constant representing text alignment.
+     */
+    public static final int RIGHT = 1;
+
+    private static Insets buttonInsets;
+
+    private static Insets captionInsets;
+
+    private static Insets inputFieldInsets;
+
+    private static int rowDistance;
+
+    static {
+<span class="nc" id="L39">        rowDistance = 2;</span>
+<span class="nc" id="L40">        buttonInsets = new Insets(rowDistance, 5, rowDistance, 5);</span>
+<span class="nc" id="L41">        captionInsets = new Insets(rowDistance + 2, 5, rowDistance, 5);</span>
+<span class="nc" id="L42">        inputFieldInsets = new Insets(rowDistance, 0, rowDistance, 0);</span>
+<span class="nc" id="L43">    }</span>
+
+    /**
+     * Returns GridBagConstraints suitable for a button.
+     * 
+     * @param x
+     *            The x-coordinate of the grid bag where the button should be
+     *            placed.
+     * @param y
+     *            The y-coordinate of the grid bag where the button should be
+     *            placed.
+     * @return Suitable GridBagConstraints.
+     */
+    public static GridBagConstraints buttonConstraints(int x, int y) {
+<span class="nc" id="L57">        return buttonConstraints(x, y, 1, 1);</span>
+    }
+
+    /**
+     * Returns GridBagConstraints suitable for a button larger than 1x1
+     * GridBags.
+     * 
+     * @param x
+     *            The x-coordinate of the grid bag where the button should be
+     *            placed.
+     * @param y
+     *            The y-coordinate of the grid bag where the button should be
+     *            placed.
+     * @param width
+     *            The width of the button.
+     * @param height
+     *            The height of the button.
+     * @return Suitable GridBagConstraints.
+     */
+    public static GridBagConstraints buttonConstraints(int x, int y, int width,
+            int height) {
+<span class="nc" id="L78">        GridBagConstraints gbc = createConstraints(x, y, width, height);</span>
+        // gbc.anchor = GridBagConstraints.WEST;
+<span class="nc" id="L80">        gbc.fill = GridBagConstraints.BOTH;</span>
+<span class="nc" id="L81">        gbc.insets = buttonInsets;</span>
+<span class="nc" id="L82">        return gbc;</span>
+    }
+
+    /**
+     * Returns GridBagConstraints suitable for a caption (label). The text will
+     * be alignemt right.
+     * 
+     * @param x
+     *            The x-coordinate of the grid bag where the label should be
+     *            placed.
+     * @param y
+     *            The y-coordinate of the grid bag where the label should be
+     *            placed.
+     * @return Suitable GridBagConstraints.
+     */
+    public static GridBagConstraints captionConstraints(int x, int y) {
+<span class="nc" id="L98">        return captionConstraints(x, y, 1, 1, RIGHT);</span>
+    }
+
+    /**
+     * Returns GridBagConstraints suitable for a caption. The text will be
+     * aligned according to the given value.
+     * 
+     * @param x
+     *            The x-coordinate of the grid bag where the caption should be
+     *            placed.
+     * @param y
+     *            The y-coordinate of the grid bag where the caption should be
+     *            placed.
+     * @param alignment
+     *            The alignment of the text.
+     * @return Suitable GridBagConstraints.
+     */
+    public static GridBagConstraints captionConstraints(int x, int y,
+            int alignment) {
+<span class="nc" id="L117">        return captionConstraints(x, y, 1, 1, alignment);</span>
+    }
+
+    /**
+     * Returns GridBagConstraints suitable for a caption. The text will be
+     * aligned right.
+     * 
+     * @param x
+     *            The x-coordinate of the grid bag where the caption should be
+     *            placed.
+     * @param y
+     *            The y-coordinate of the grid bag where the caption should be
+     *            placed.
+     * @param width
+     *            The width of the text.
+     * @param height
+     *            The height of the text.
+     * @return Suitable GridBagConstraints.
+     */
+    public static GridBagConstraints captionConstraints(int x, int y,
+            int width, int height) {
+<span class="nc" id="L138">        return captionConstraints(x, y, width, height, RIGHT);</span>
+    }
+
+    /**
+     * Returns GridBagConstraints suitable for a caption. The text will be
+     * aligned according to the given value.
+     * 
+     * @param x
+     *            The x-coordinate of the grid bag where the caption should be
+     *            placed.
+     * @param y
+     *            The y-coordinate of the grid bag where the caption should be
+     *            placed.
+     * @param width
+     *            The width of the text.
+     * @param height
+     *            The height of the text.
+     * @param alignment
+     *            The alignment of the text.
+     * @return Suitable GridBagConstraints.
+     */
+    public static GridBagConstraints captionConstraints(int x, int y,
+            int width, int height, int alignment) {
+<span class="nc" id="L161">        GridBagConstraints gbc = createConstraints(x, y, width, height);</span>
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        if (alignment == LEFT) {</span>
+<span class="nc" id="L163">            gbc.anchor = GridBagConstraints.NORTHWEST;</span>
+<span class="nc bnc" id="L164" title="All 2 branches missed.">        } else if (alignment == RIGHT) {</span>
+<span class="nc" id="L165">            gbc.anchor = GridBagConstraints.NORTHEAST;</span>
+<span class="nc bnc" id="L166" title="All 2 branches missed.">        } else if (alignment == CENTER) {</span>
+<span class="nc" id="L167">            gbc.anchor = GridBagConstraints.CENTER;</span>
+        }
+<span class="nc" id="L169">        gbc.insets = captionInsets;</span>
+<span class="nc" id="L170">        return gbc;</span>
+    }
+
+    /**
+     * Returns {@link GridBagConstraints} suitable for client alignment in the
+     * given GridBag.
+     * 
+     * @param x
+     *            The x-coordinate of the grid bag.
+     * @param y
+     *            The y-coordinate of the grid bag.
+     * @return Suitable {@link GridBagConstraints}.
+     */
+    public static GridBagConstraints clientAlignConstraints(int x, int y) {
+<span class="nc" id="L184">        return clientAlignConstraints(x, y, 1, 1);</span>
+    }
+
+    /**
+     * Returns {@link GridBagConstraints} suitable for client alignment in the
+     * given GridBag with the given width and height.
+     * 
+     * @param x
+     *            The x-coordinate of the GridBag.
+     * @param y
+     *            The y-coordinate of the GridBag.
+     * @param width
+     *            The width.
+     * @param height
+     *            The height.
+     * @return Suitable {@link GridBagConstraints}.
+     */
+    public static GridBagConstraints clientAlignConstraints(int x, int y,
+            int width, int height) {
+<span class="nc" id="L203">        GridBagConstraints gbc = createConstraints(x, y, width, height);</span>
+<span class="nc" id="L204">        gbc.fill = GridBagConstraints.BOTH;</span>
+<span class="nc" id="L205">        return gbc;</span>
+    }
+
+    /**
+     * Returns GridBagConstraints for placing a component at (x, y) with the
+     * dimension (width x height).
+     * 
+     * @param x
+     *            The x-coordinate of the GridBag.
+     * @param y
+     *            The y-coordinate of the GridBag.
+     * @param width
+     *            The width.
+     * @param height
+     *            The height.
+     * @return The {@link GridBagConstraints}
+     */
+    public static GridBagConstraints createConstraints(int x, int y, int width,
+            int height) {
+<span class="nc" id="L224">        GridBagConstraints gbc = new GridBagConstraints();</span>
+<span class="nc" id="L225">        gbc.gridx = x;</span>
+<span class="nc" id="L226">        gbc.gridy = y;</span>
+<span class="nc" id="L227">        gbc.gridwidth = width;</span>
+<span class="nc" id="L228">        gbc.gridheight = height;</span>
+<span class="nc" id="L229">        return gbc;</span>
+    }
+
+    /**
+     * Returns GridBagConstraints for placing a {@link JTextArea} at (x, y).
+     * 
+     * @param x
+     *            The x-coordinate of the GridBag.
+     * @param y
+     *            The y-coordinate of the GridBag.
+     * @return The {@link GridBagConstraints}
+     */
+    public static Object textAreaConstraints(int x, int y) {
+<span class="nc" id="L242">        return textAreaConstraints(x, y, 1, 1);</span>
+    }
+
+    /**
+     * Returns GridBagConstraints for placing a {@link JTextArea} at (x, y) with
+     * the dimension (width x height).
+     * 
+     * @param x
+     *            The x-coordinate of the GridBag.
+     * @param y
+     *            The y-coordinate of the GridBag.
+     * @param width
+     *            The width.
+     * @param height
+     *            The height.
+     * @return The {@link GridBagConstraints}
+     */
+    public static Object textAreaConstraints(int x, int y, int width, int height) {
+<span class="nc" id="L260">        GridBagConstraints gbc = createConstraints(x, y, width, height);</span>
+<span class="nc" id="L261">        gbc.anchor = GridBagConstraints.WEST;</span>
+<span class="nc" id="L262">        gbc.fill = GridBagConstraints.BOTH;</span>
+<span class="nc" id="L263">        gbc.insets = inputFieldInsets;</span>
+<span class="nc" id="L264">        return gbc;</span>
+    }
+
+    /**
+     * Returns GridBagConstraints for placing a {@link JTextField} at (x, y).
+     * 
+     * @param x
+     *            The x-coordinate of the GridBag.
+     * @param y
+     *            The y-coordinate of the GridBag.
+     * @return The {@link GridBagConstraints}
+     */
+    public static GridBagConstraints textFieldConstraints(int x, int y) {
+<span class="nc" id="L277">        return textFieldConstraints(x, y, 1, 1);</span>
+    }
+
+    /**
+     * Returns GridBagConstraints for placing a {@link JTextField} at (x, y)
+     * with the dimension (width x height).
+     * 
+     * @param x
+     *            The x-coordinate of the GridBag.
+     * @param y
+     *            The y-coordinate of the GridBag.
+     * @param width
+     *            The width.
+     * @param height
+     *            The height.
+     * @return The {@link GridBagConstraints}
+     */
+    public static GridBagConstraints textFieldConstraints(int x, int y,
+            int width, int height) {
+<span class="nc" id="L296">        GridBagConstraints gbc = createConstraints(x, y, width, height);</span>
+<span class="nc" id="L297">        gbc.anchor = GridBagConstraints.WEST;</span>
+<span class="nc" id="L298">        gbc.fill = GridBagConstraints.HORIZONTAL;</span>
+<span class="nc" id="L299">        gbc.insets = inputFieldInsets;</span>
+<span class="nc" id="L300">        return gbc;</span>
+    }
+
+    private GridBagUtils() {
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

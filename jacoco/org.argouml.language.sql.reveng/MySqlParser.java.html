@@ -1,0 +1,2316 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>MySqlParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql.reveng</a> &gt; <span class="el_source">MySqlParser.java</span></div><h1>MySqlParser.java</h1><pre class="source lang-java linenums">// $ANTLR 3.5.2 org/argouml/language/sql/reveng/MySql.g 2020-02-29 13:39:49
+
+package org.argouml.language.sql.reveng;
+
+import org.argouml.language.sql.TableDefinition;
+import org.argouml.language.sql.ColumnDefinition;
+import org.argouml.language.sql.ForeignKeyDefinition;
+
+
+
+import org.antlr.runtime.*;
+import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
+
+@SuppressWarnings(&quot;all&quot;)
+public class MySqlParser extends Parser {
+<span class="nc" id="L18">	public static final String[] tokenNames = new String[] {</span>
+		&quot;&lt;invalid&gt;&quot;, &quot;&lt;EOR&gt;&quot;, &quot;&lt;DOWN&gt;&quot;, &quot;&lt;UP&gt;&quot;, &quot;COMMA&quot;, &quot;DIGIT&quot;, &quot;DOT&quot;, &quot;ID&quot;, 
+		&quot;LEFT_PAREN&quot;, &quot;LETTER&quot;, &quot;ML_COMMENT&quot;, &quot;NUMBER&quot;, &quot;PROTECT_CHAR&quot;, &quot;QUOTED_TEXT&quot;, 
+		&quot;RIGHT_PAREN&quot;, &quot;SEMICOLON&quot;, &quot;SL_COMMENT&quot;, &quot;VAR_MYSQL&quot;, &quot;WS&quot;, &quot;'='&quot;, &quot;'AUTO_INCREMENT'&quot;, 
+		&quot;'BTREE'&quot;, &quot;'CASCADE'&quot;, &quot;'CHARSET'&quot;, &quot;'COMMENT'&quot;, &quot;'CONSTRAINT'&quot;, &quot;'CREATE'&quot;, 
+		&quot;'CURRENT_TIMESTAMP'&quot;, &quot;'DEFAULT'&quot;, &quot;'DELETE'&quot;, &quot;'DROP'&quot;, &quot;'ENGINE'&quot;, 
+		&quot;'EXISTS'&quot;, &quot;'FOREIGN'&quot;, &quot;'FULL'&quot;, &quot;'HASH'&quot;, &quot;'IF'&quot;, &quot;'INDEX'&quot;, &quot;'KEY'&quot;, 
+		&quot;'MATCH'&quot;, &quot;'NO ACTION'&quot;, &quot;'NOT'&quot;, &quot;'NULL'&quot;, &quot;'ON'&quot;, &quot;'PARTIAL'&quot;, &quot;'PRIMARY'&quot;, 
+		&quot;'REFERENCES'&quot;, &quot;'RESTRICT'&quot;, &quot;'SET DEFAULT'&quot;, &quot;'SET'&quot;, &quot;'TABLE'&quot;, &quot;'UNIQUE'&quot;, 
+		&quot;'UNSIGNED'&quot;, &quot;'UPDATE'&quot;, &quot;'ZEROFILL'&quot;
+	};
+	public static final int EOF=-1;
+	public static final int T__19=19;
+	public static final int T__20=20;
+	public static final int T__21=21;
+	public static final int T__22=22;
+	public static final int T__23=23;
+	public static final int T__24=24;
+	public static final int T__25=25;
+	public static final int T__26=26;
+	public static final int T__27=27;
+	public static final int T__28=28;
+	public static final int T__29=29;
+	public static final int T__30=30;
+	public static final int T__31=31;
+	public static final int T__32=32;
+	public static final int T__33=33;
+	public static final int T__34=34;
+	public static final int T__35=35;
+	public static final int T__36=36;
+	public static final int T__37=37;
+	public static final int T__38=38;
+	public static final int T__39=39;
+	public static final int T__40=40;
+	public static final int T__41=41;
+	public static final int T__42=42;
+	public static final int T__43=43;
+	public static final int T__44=44;
+	public static final int T__45=45;
+	public static final int T__46=46;
+	public static final int T__47=47;
+	public static final int T__48=48;
+	public static final int T__49=49;
+	public static final int T__50=50;
+	public static final int T__51=51;
+	public static final int T__52=52;
+	public static final int T__53=53;
+	public static final int T__54=54;
+	public static final int COMMA=4;
+	public static final int DIGIT=5;
+	public static final int DOT=6;
+	public static final int ID=7;
+	public static final int LEFT_PAREN=8;
+	public static final int LETTER=9;
+	public static final int ML_COMMENT=10;
+	public static final int NUMBER=11;
+	public static final int PROTECT_CHAR=12;
+	public static final int QUOTED_TEXT=13;
+	public static final int RIGHT_PAREN=14;
+	public static final int SEMICOLON=15;
+	public static final int SL_COMMENT=16;
+	public static final int VAR_MYSQL=17;
+	public static final int WS=18;
+
+	// delegates
+	public Parser[] getDelegates() {
+<span class="nc" id="L84">		return new Parser[] {};</span>
+	}
+
+	// delegators
+
+
+	public MySqlParser(TokenStream input) {
+<span class="nc" id="L91">		this(input, new RecognizerSharedState());</span>
+<span class="nc" id="L92">	}</span>
+	public MySqlParser(TokenStream input, RecognizerSharedState state) {
+<span class="nc" id="L94">		super(input, state);</span>
+<span class="nc" id="L95">	}</span>
+
+<span class="nc" id="L97">	@Override public String[] getTokenNames() { return MySqlParser.tokenNames; }</span>
+<span class="nc" id="L98">	@Override public String getGrammarFileName() { return &quot;org/argouml/language/sql/reveng/MySql.g&quot;; }</span>
+
+
+<span class="nc" id="L101">		private Lexer _lexer = null;</span>
+
+		private Modeller _modeller;
+
+<span class="nc" id="L105">		boolean readSpace = false;</span>
+		public Modeller getModeller() {
+<span class="nc" id="L107">	        return _modeller;</span>
+	    }
+	    
+	    public void setModeller(Modeller modeller) {
+<span class="nc" id="L111">	        _modeller = modeller;</span>
+<span class="nc" id="L112">	    }</span>
+
+
+
+	// $ANTLR start &quot;dump_read&quot;
+	// org/argouml/language/sql/reveng/MySql.g:55:1: dump_read[Modeller modeller, Lexer lexer] : ( dumpComment | drop_table_statement | create_table_statement | set_statement )* ;
+	public final void dump_read(Modeller modeller, Lexer lexer) throws RecognitionException {
+
+<span class="nc" id="L120">		        setModeller(modeller);</span>
+<span class="nc" id="L121">		        _lexer = lexer;</span>
+		        
+		    
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:61:2: ( ( dumpComment | drop_table_statement | create_table_statement | set_statement )* )
+			// org/argouml/language/sql/reveng/MySql.g:62:2: ( dumpComment | drop_table_statement | create_table_statement | set_statement )*
+			{
+			// org/argouml/language/sql/reveng/MySql.g:62:2: ( dumpComment | drop_table_statement | create_table_statement | set_statement )*
+			loop1:
+			while (true) {
+<span class="nc" id="L131">				int alt1=5;</span>
+<span class="nc bnc" id="L132" title="All 5 branches missed.">				switch ( input.LA(1) ) {</span>
+				case ML_COMMENT:
+				case SL_COMMENT:
+					{
+<span class="nc" id="L136">					alt1=1;</span>
+					}
+<span class="nc" id="L138">					break;</span>
+				case 30:
+					{
+<span class="nc" id="L141">					alt1=2;</span>
+					}
+<span class="nc" id="L143">					break;</span>
+				case 26:
+					{
+<span class="nc" id="L146">					alt1=3;</span>
+					}
+<span class="nc" id="L148">					break;</span>
+				case 49:
+					{
+<span class="nc" id="L151">					alt1=4;</span>
+					}
+					break;
+				}
+<span class="nc bnc" id="L155" title="All 5 branches missed.">				switch (alt1) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:62:5: dumpComment
+					{
+<span class="nc" id="L159">					pushFollow(FOLLOW_dumpComment_in_dump_read57);</span>
+<span class="nc" id="L160">					dumpComment();</span>
+<span class="nc" id="L161">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L164">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/MySql.g:63:4: drop_table_statement
+					{
+<span class="nc" id="L168">					pushFollow(FOLLOW_drop_table_statement_in_dump_read62);</span>
+<span class="nc" id="L169">					drop_table_statement();</span>
+<span class="nc" id="L170">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L173">					break;</span>
+				case 3 :
+					// org/argouml/language/sql/reveng/MySql.g:64:4: create_table_statement
+					{
+<span class="nc" id="L177">					pushFollow(FOLLOW_create_table_statement_in_dump_read67);</span>
+<span class="nc" id="L178">					create_table_statement();</span>
+<span class="nc" id="L179">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L182">					break;</span>
+				case 4 :
+					// org/argouml/language/sql/reveng/MySql.g:65:4: set_statement
+					{
+<span class="nc" id="L186">					pushFollow(FOLLOW_set_statement_in_dump_read72);</span>
+<span class="nc" id="L187">					set_statement();</span>
+<span class="nc" id="L188">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L191">					break;</span>
+
+				default :
+<span class="nc" id="L194">					break loop1;</span>
+				}
+<span class="nc" id="L196">			}</span>
+
+
+<span class="nc" id="L199">					getModeller().generateModele();</span>
+				
+			}
+
+		}
+<span class="nc" id="L204">		catch (RecognitionException re) {</span>
+<span class="nc" id="L205">			reportError(re);</span>
+<span class="nc" id="L206">			recover(input,re);</span>
+		}
+<span class="nc" id="L208">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L210">		}</span>
+<span class="nc" id="L211">	}</span>
+	// $ANTLR end &quot;dump_read&quot;
+
+
+
+	// $ANTLR start &quot;dumpComment&quot;
+	// org/argouml/language/sql/reveng/MySql.g:73:1: dumpComment : ( SL_COMMENT | ML_COMMENT ( ';' )? );
+	public final void dumpComment() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:73:12: ( SL_COMMENT | ML_COMMENT ( ';' )? )
+<span class="nc" id="L221">			int alt3=2;</span>
+<span class="nc" id="L222">			int LA3_0 = input.LA(1);</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">			if ( (LA3_0==SL_COMMENT) ) {</span>
+<span class="nc" id="L224">				alt3=1;</span>
+			}
+<span class="nc bnc" id="L226" title="All 2 branches missed.">			else if ( (LA3_0==ML_COMMENT) ) {</span>
+<span class="nc" id="L227">				alt3=2;</span>
+			}
+
+			else {
+<span class="nc" id="L231">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 3, 0, input);
+<span class="nc" id="L233">				throw nvae;</span>
+			}
+
+<span class="nc bnc" id="L236" title="All 3 branches missed.">			switch (alt3) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:74:2: SL_COMMENT
+					{
+<span class="nc" id="L240">					match(input,SL_COMMENT,FOLLOW_SL_COMMENT_in_dumpComment99); </span>
+					}
+<span class="nc" id="L242">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/MySql.g:75:4: ML_COMMENT ( ';' )?
+					{
+<span class="nc" id="L246">					match(input,ML_COMMENT,FOLLOW_ML_COMMENT_in_dumpComment104); </span>
+					// org/argouml/language/sql/reveng/MySql.g:75:15: ( ';' )?
+<span class="nc" id="L248">					int alt2=2;</span>
+<span class="nc" id="L249">					int LA2_0 = input.LA(1);</span>
+<span class="nc bnc" id="L250" title="All 2 branches missed.">					if ( (LA2_0==SEMICOLON) ) {</span>
+<span class="nc" id="L251">						alt2=1;</span>
+					}
+<span class="nc bnc" id="L253" title="All 2 branches missed.">					switch (alt2) {</span>
+						case 1 :
+							// org/argouml/language/sql/reveng/MySql.g:75:16: ';'
+							{
+<span class="nc" id="L257">							match(input,SEMICOLON,FOLLOW_SEMICOLON_in_dumpComment107); </span>
+							}
+							break;
+
+					}
+
+					}
+					break;
+
+			}
+		}
+<span class="nc" id="L268">		catch (RecognitionException re) {</span>
+<span class="nc" id="L269">			reportError(re);</span>
+<span class="nc" id="L270">			recover(input,re);</span>
+		}
+<span class="nc" id="L272">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L274">		}</span>
+<span class="nc" id="L275">	}</span>
+	// $ANTLR end &quot;dumpComment&quot;
+
+
+
+	// $ANTLR start &quot;set_statement&quot;
+	// org/argouml/language/sql/reveng/MySql.g:78:1: set_statement : 'SET' ( VAR_MYSQL | ID ) '=' ( VAR_MYSQL | ID ) ;
+	public final void set_statement() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:78:14: ( 'SET' ( VAR_MYSQL | ID ) '=' ( VAR_MYSQL | ID ) )
+			// org/argouml/language/sql/reveng/MySql.g:79:2: 'SET' ( VAR_MYSQL | ID ) '=' ( VAR_MYSQL | ID )
+			{
+<span class="nc" id="L287">			match(input,49,FOLLOW_49_in_set_statement118); </span>
+<span class="nc bnc" id="L288" title="All 4 branches missed.">			if ( input.LA(1)==ID||input.LA(1)==VAR_MYSQL ) {</span>
+<span class="nc" id="L289">				input.consume();</span>
+<span class="nc" id="L290">				state.errorRecovery=false;</span>
+			}
+			else {
+<span class="nc" id="L293">				MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L294">				throw mse;</span>
+			}
+<span class="nc" id="L296">			match(input,19,FOLLOW_19_in_set_statement128); </span>
+<span class="nc bnc" id="L297" title="All 4 branches missed.">			if ( input.LA(1)==ID||input.LA(1)==VAR_MYSQL ) {</span>
+<span class="nc" id="L298">				input.consume();</span>
+<span class="nc" id="L299">				state.errorRecovery=false;</span>
+			}
+			else {
+<span class="nc" id="L302">				MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L303">				throw mse;</span>
+			}
+			}
+
+		}
+<span class="nc" id="L308">		catch (RecognitionException re) {</span>
+<span class="nc" id="L309">			reportError(re);</span>
+<span class="nc" id="L310">			recover(input,re);</span>
+		}
+<span class="nc" id="L312">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L314">		}</span>
+<span class="nc" id="L315">	}</span>
+	// $ANTLR end &quot;set_statement&quot;
+
+
+
+	// $ANTLR start &quot;drop_table_statement&quot;
+	// org/argouml/language/sql/reveng/MySql.g:82:1: drop_table_statement : 'DROP' 'TABLE' 'IF' 'EXISTS' ( PROTECT_CHAR )? table_name ( PROTECT_CHAR )? SEMICOLON ;
+	public final void drop_table_statement() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:82:22: ( 'DROP' 'TABLE' 'IF' 'EXISTS' ( PROTECT_CHAR )? table_name ( PROTECT_CHAR )? SEMICOLON )
+			// org/argouml/language/sql/reveng/MySql.g:83:2: 'DROP' 'TABLE' 'IF' 'EXISTS' ( PROTECT_CHAR )? table_name ( PROTECT_CHAR )? SEMICOLON
+			{
+<span class="nc" id="L327">			match(input,30,FOLLOW_30_in_drop_table_statement146); </span>
+<span class="nc" id="L328">			match(input,50,FOLLOW_50_in_drop_table_statement148); </span>
+<span class="nc" id="L329">			match(input,36,FOLLOW_36_in_drop_table_statement150); </span>
+<span class="nc" id="L330">			match(input,32,FOLLOW_32_in_drop_table_statement152); </span>
+			// org/argouml/language/sql/reveng/MySql.g:83:31: ( PROTECT_CHAR )?
+<span class="nc" id="L332">			int alt4=2;</span>
+<span class="nc" id="L333">			int LA4_0 = input.LA(1);</span>
+<span class="nc bnc" id="L334" title="All 2 branches missed.">			if ( (LA4_0==PROTECT_CHAR) ) {</span>
+<span class="nc" id="L335">				alt4=1;</span>
+			}
+<span class="nc bnc" id="L337" title="All 2 branches missed.">			switch (alt4) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:83:32: PROTECT_CHAR
+					{
+<span class="nc" id="L341">					match(input,PROTECT_CHAR,FOLLOW_PROTECT_CHAR_in_drop_table_statement155); </span>
+					}
+					break;
+
+			}
+
+<span class="nc" id="L347">			pushFollow(FOLLOW_table_name_in_drop_table_statement159);</span>
+<span class="nc" id="L348">			table_name();</span>
+<span class="nc" id="L349">			state._fsp--;</span>
+
+			// org/argouml/language/sql/reveng/MySql.g:83:58: ( PROTECT_CHAR )?
+<span class="nc" id="L352">			int alt5=2;</span>
+<span class="nc" id="L353">			int LA5_0 = input.LA(1);</span>
+<span class="nc bnc" id="L354" title="All 2 branches missed.">			if ( (LA5_0==PROTECT_CHAR) ) {</span>
+<span class="nc" id="L355">				alt5=1;</span>
+			}
+<span class="nc bnc" id="L357" title="All 2 branches missed.">			switch (alt5) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:83:59: PROTECT_CHAR
+					{
+<span class="nc" id="L361">					match(input,PROTECT_CHAR,FOLLOW_PROTECT_CHAR_in_drop_table_statement162); </span>
+					}
+					break;
+
+			}
+
+<span class="nc" id="L367">			match(input,SEMICOLON,FOLLOW_SEMICOLON_in_drop_table_statement166); </span>
+			}
+
+		}
+<span class="nc" id="L371">		catch (RecognitionException re) {</span>
+<span class="nc" id="L372">			reportError(re);</span>
+<span class="nc" id="L373">			recover(input,re);</span>
+		}
+<span class="nc" id="L375">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L377">		}</span>
+<span class="nc" id="L378">	}</span>
+	// $ANTLR end &quot;drop_table_statement&quot;
+
+
+
+	// $ANTLR start &quot;create_table_statement&quot;
+	// org/argouml/language/sql/reveng/MySql.g:85:1: create_table_statement : 'CREATE' 'TABLE' ( PROTECT_CHAR )? table_name ( PROTECT_CHAR )? create_definition_list[table] table_options[table] SEMICOLON ;
+	public final void create_table_statement() throws RecognitionException {
+<span class="nc" id="L386">		ParserRuleReturnScope table_name1 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:85:24: ( 'CREATE' 'TABLE' ( PROTECT_CHAR )? table_name ( PROTECT_CHAR )? create_definition_list[table] table_options[table] SEMICOLON )
+			// org/argouml/language/sql/reveng/MySql.g:86:2: 'CREATE' 'TABLE' ( PROTECT_CHAR )? table_name ( PROTECT_CHAR )? create_definition_list[table] table_options[table] SEMICOLON
+			{
+<span class="nc" id="L392">			match(input,26,FOLLOW_26_in_create_table_statement178); </span>
+<span class="nc" id="L393">			match(input,50,FOLLOW_50_in_create_table_statement180); </span>
+			// org/argouml/language/sql/reveng/MySql.g:87:8: ( PROTECT_CHAR )?
+<span class="nc" id="L395">			int alt6=2;</span>
+<span class="nc" id="L396">			int LA6_0 = input.LA(1);</span>
+<span class="nc bnc" id="L397" title="All 2 branches missed.">			if ( (LA6_0==PROTECT_CHAR) ) {</span>
+<span class="nc" id="L398">				alt6=1;</span>
+			}
+<span class="nc bnc" id="L400" title="All 2 branches missed.">			switch (alt6) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:87:9: PROTECT_CHAR
+					{
+<span class="nc" id="L404">					match(input,PROTECT_CHAR,FOLLOW_PROTECT_CHAR_in_create_table_statement190); </span>
+					}
+					break;
+
+			}
+
+<span class="nc" id="L410">			pushFollow(FOLLOW_table_name_in_create_table_statement194);</span>
+<span class="nc" id="L411">			table_name1=table_name();</span>
+<span class="nc" id="L412">			state._fsp--;</span>
+
+			// org/argouml/language/sql/reveng/MySql.g:87:35: ( PROTECT_CHAR )?
+<span class="nc" id="L415">			int alt7=2;</span>
+<span class="nc" id="L416">			int LA7_0 = input.LA(1);</span>
+<span class="nc bnc" id="L417" title="All 2 branches missed.">			if ( (LA7_0==PROTECT_CHAR) ) {</span>
+<span class="nc" id="L418">				alt7=1;</span>
+			}
+<span class="nc bnc" id="L420" title="All 2 branches missed.">			switch (alt7) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:87:36: PROTECT_CHAR
+					{
+<span class="nc" id="L424">					match(input,PROTECT_CHAR,FOLLOW_PROTECT_CHAR_in_create_table_statement197); </span>
+					}
+					break;
+
+			}
+
+
+<span class="nc bnc" id="L431" title="All 2 branches missed.">			    		 	TableDefinition table = getModeller().getTableFromName((table_name1!=null?input.toString(table_name1.start,table_name1.stop):null));</span>
+						
+<span class="nc" id="L433">			pushFollow(FOLLOW_create_definition_list_in_create_table_statement223);</span>
+<span class="nc" id="L434">			create_definition_list(table);</span>
+<span class="nc" id="L435">			state._fsp--;</span>
+
+<span class="nc" id="L437">			pushFollow(FOLLOW_table_options_in_create_table_statement239);</span>
+<span class="nc" id="L438">			table_options(table);</span>
+<span class="nc" id="L439">			state._fsp--;</span>
+
+<span class="nc" id="L441">			match(input,SEMICOLON,FOLLOW_SEMICOLON_in_create_table_statement283); </span>
+			}
+
+		}
+<span class="nc" id="L445">		catch (RecognitionException re) {</span>
+<span class="nc" id="L446">			reportError(re);</span>
+<span class="nc" id="L447">			recover(input,re);</span>
+		}
+<span class="nc" id="L449">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L451">		}</span>
+<span class="nc" id="L452">	}</span>
+	// $ANTLR end &quot;create_table_statement&quot;
+
+
+<span class="nc" id="L456">	public static class table_name_return extends ParserRuleReturnScope {</span>
+	};
+
+
+	// $ANTLR start &quot;table_name&quot;
+	// org/argouml/language/sql/reveng/MySql.g:98:1: table_name : ( schema DOT )? table ;
+	public final MySqlParser.table_name_return table_name() throws RecognitionException {
+<span class="nc" id="L463">		MySqlParser.table_name_return retval = new MySqlParser.table_name_return();</span>
+<span class="nc" id="L464">		retval.start = input.LT(1);</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:99:6: ( ( schema DOT )? table )
+			// org/argouml/language/sql/reveng/MySql.g:99:10: ( schema DOT )? table
+			{
+			// org/argouml/language/sql/reveng/MySql.g:99:10: ( schema DOT )?
+<span class="nc" id="L471">			int alt8=2;</span>
+<span class="nc" id="L472">			int LA8_0 = input.LA(1);</span>
+<span class="nc bnc" id="L473" title="All 2 branches missed.">			if ( (LA8_0==ID) ) {</span>
+<span class="nc" id="L474">				int LA8_1 = input.LA(2);</span>
+<span class="nc bnc" id="L475" title="All 2 branches missed.">				if ( (LA8_1==DOT) ) {</span>
+<span class="nc" id="L476">					alt8=1;</span>
+				}
+			}
+<span class="nc bnc" id="L479" title="All 2 branches missed.">			switch (alt8) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:99:11: schema DOT
+					{
+<span class="nc" id="L483">					pushFollow(FOLLOW_schema_in_table_name300);</span>
+<span class="nc" id="L484">					schema();</span>
+<span class="nc" id="L485">					state._fsp--;</span>
+
+<span class="nc" id="L487">					match(input,DOT,FOLLOW_DOT_in_table_name302); </span>
+					}
+					break;
+
+			}
+
+<span class="nc" id="L493">			pushFollow(FOLLOW_table_in_table_name306);</span>
+<span class="nc" id="L494">			table();</span>
+<span class="nc" id="L495">			state._fsp--;</span>
+
+			}
+
+<span class="nc" id="L499">			retval.stop = input.LT(-1);</span>
+
+		}
+<span class="nc" id="L502">		catch (RecognitionException re) {</span>
+<span class="nc" id="L503">			reportError(re);</span>
+<span class="nc" id="L504">			recover(input,re);</span>
+		}
+<span class="nc" id="L506">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L508">		}</span>
+<span class="nc" id="L509">		return retval;</span>
+	}
+	// $ANTLR end &quot;table_name&quot;
+
+
+
+	// $ANTLR start &quot;create_definition_list&quot;
+	// org/argouml/language/sql/reveng/MySql.g:102:1: create_definition_list[TableDefinition table] : LEFT_PAREN create_definition[table] ( COMMA create_definition[table] )* RIGHT_PAREN ;
+	public final void create_definition_list(TableDefinition table) throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:103:5: ( LEFT_PAREN create_definition[table] ( COMMA create_definition[table] )* RIGHT_PAREN )
+			// org/argouml/language/sql/reveng/MySql.g:103:7: LEFT_PAREN create_definition[table] ( COMMA create_definition[table] )* RIGHT_PAREN
+			{
+<span class="nc" id="L522">			match(input,LEFT_PAREN,FOLLOW_LEFT_PAREN_in_create_definition_list326); </span>
+<span class="nc" id="L523">			pushFollow(FOLLOW_create_definition_in_create_definition_list328);</span>
+<span class="nc" id="L524">			create_definition(table);</span>
+<span class="nc" id="L525">			state._fsp--;</span>
+
+			// org/argouml/language/sql/reveng/MySql.g:103:43: ( COMMA create_definition[table] )*
+			loop9:
+			while (true) {
+<span class="nc" id="L530">				int alt9=2;</span>
+<span class="nc" id="L531">				int LA9_0 = input.LA(1);</span>
+<span class="nc bnc" id="L532" title="All 2 branches missed.">				if ( (LA9_0==COMMA) ) {</span>
+<span class="nc" id="L533">					alt9=1;</span>
+				}
+
+<span class="nc bnc" id="L536" title="All 2 branches missed.">				switch (alt9) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:103:44: COMMA create_definition[table]
+					{
+<span class="nc" id="L540">					match(input,COMMA,FOLLOW_COMMA_in_create_definition_list332); </span>
+<span class="nc" id="L541">					pushFollow(FOLLOW_create_definition_in_create_definition_list334);</span>
+<span class="nc" id="L542">					create_definition(table);</span>
+<span class="nc" id="L543">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L546">					break;</span>
+
+				default :
+<span class="nc" id="L549">					break loop9;</span>
+				}
+<span class="nc" id="L551">			}</span>
+
+<span class="nc" id="L553">			match(input,RIGHT_PAREN,FOLLOW_RIGHT_PAREN_in_create_definition_list341); </span>
+			}
+
+		}
+<span class="nc" id="L557">		catch (RecognitionException re) {</span>
+<span class="nc" id="L558">			reportError(re);</span>
+<span class="nc" id="L559">			recover(input,re);</span>
+		}
+<span class="nc" id="L561">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L563">		}</span>
+<span class="nc" id="L564">	}</span>
+	// $ANTLR end &quot;create_definition_list&quot;
+
+
+
+	// $ANTLR start &quot;table_options&quot;
+	// org/argouml/language/sql/reveng/MySql.g:106:1: table_options[TableDefinition table] : ( 'ENGINE' '=' ID )? ( 'AUTO_INCREMENT' '=' NUMBER )? ( 'DEFAULT' 'CHARSET' '=' ID )? ( 'COMMENT' '=' text_quoted )? ;
+	public final void table_options(TableDefinition table) throws RecognitionException {
+<span class="nc" id="L572">		String text_quoted2 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:106:38: ( ( 'ENGINE' '=' ID )? ( 'AUTO_INCREMENT' '=' NUMBER )? ( 'DEFAULT' 'CHARSET' '=' ID )? ( 'COMMENT' '=' text_quoted )? )
+			// org/argouml/language/sql/reveng/MySql.g:107:5: ( 'ENGINE' '=' ID )? ( 'AUTO_INCREMENT' '=' NUMBER )? ( 'DEFAULT' 'CHARSET' '=' ID )? ( 'COMMENT' '=' text_quoted )?
+			{
+			// org/argouml/language/sql/reveng/MySql.g:107:5: ( 'ENGINE' '=' ID )?
+<span class="nc" id="L579">			int alt10=2;</span>
+<span class="nc" id="L580">			int LA10_0 = input.LA(1);</span>
+<span class="nc bnc" id="L581" title="All 2 branches missed.">			if ( (LA10_0==31) ) {</span>
+<span class="nc" id="L582">				alt10=1;</span>
+			}
+<span class="nc bnc" id="L584" title="All 2 branches missed.">			switch (alt10) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:107:6: 'ENGINE' '=' ID
+					{
+<span class="nc" id="L588">					match(input,31,FOLLOW_31_in_table_options357); </span>
+<span class="nc" id="L589">					match(input,19,FOLLOW_19_in_table_options359); </span>
+<span class="nc" id="L590">					match(input,ID,FOLLOW_ID_in_table_options361); </span>
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:108:5: ( 'AUTO_INCREMENT' '=' NUMBER )?
+<span class="nc" id="L597">			int alt11=2;</span>
+<span class="nc" id="L598">			int LA11_0 = input.LA(1);</span>
+<span class="nc bnc" id="L599" title="All 2 branches missed.">			if ( (LA11_0==20) ) {</span>
+<span class="nc" id="L600">				alt11=1;</span>
+			}
+<span class="nc bnc" id="L602" title="All 2 branches missed.">			switch (alt11) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:108:6: 'AUTO_INCREMENT' '=' NUMBER
+					{
+<span class="nc" id="L606">					match(input,20,FOLLOW_20_in_table_options370); </span>
+<span class="nc" id="L607">					match(input,19,FOLLOW_19_in_table_options372); </span>
+<span class="nc" id="L608">					match(input,NUMBER,FOLLOW_NUMBER_in_table_options374); </span>
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:109:5: ( 'DEFAULT' 'CHARSET' '=' ID )?
+<span class="nc" id="L615">			int alt12=2;</span>
+<span class="nc" id="L616">			int LA12_0 = input.LA(1);</span>
+<span class="nc bnc" id="L617" title="All 2 branches missed.">			if ( (LA12_0==28) ) {</span>
+<span class="nc" id="L618">				alt12=1;</span>
+			}
+<span class="nc bnc" id="L620" title="All 2 branches missed.">			switch (alt12) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:109:6: 'DEFAULT' 'CHARSET' '=' ID
+					{
+<span class="nc" id="L624">					match(input,28,FOLLOW_28_in_table_options383); </span>
+<span class="nc" id="L625">					match(input,23,FOLLOW_23_in_table_options385); </span>
+<span class="nc" id="L626">					match(input,19,FOLLOW_19_in_table_options387); </span>
+<span class="nc" id="L627">					match(input,ID,FOLLOW_ID_in_table_options389); </span>
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:110:5: ( 'COMMENT' '=' text_quoted )?
+<span class="nc" id="L634">			int alt13=2;</span>
+<span class="nc" id="L635">			int LA13_0 = input.LA(1);</span>
+<span class="nc bnc" id="L636" title="All 2 branches missed.">			if ( (LA13_0==24) ) {</span>
+<span class="nc" id="L637">				alt13=1;</span>
+			}
+<span class="nc bnc" id="L639" title="All 2 branches missed.">			switch (alt13) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:110:6: 'COMMENT' '=' text_quoted
+					{
+<span class="nc" id="L643">					match(input,24,FOLLOW_24_in_table_options398); </span>
+<span class="nc" id="L644">					match(input,19,FOLLOW_19_in_table_options400); </span>
+<span class="nc" id="L645">					pushFollow(FOLLOW_text_quoted_in_table_options402);</span>
+<span class="nc" id="L646">					text_quoted2=text_quoted();</span>
+<span class="nc" id="L647">					state._fsp--;</span>
+
+<span class="nc" id="L649">					table.setComment(text_quoted2);</span>
+					}
+					break;
+
+			}
+
+			}
+
+		}
+<span class="nc" id="L658">		catch (RecognitionException re) {</span>
+<span class="nc" id="L659">			reportError(re);</span>
+<span class="nc" id="L660">			recover(input,re);</span>
+		}
+<span class="nc" id="L662">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L664">		}</span>
+<span class="nc" id="L665">	}</span>
+	// $ANTLR end &quot;table_options&quot;
+
+
+
+	// $ANTLR start &quot;create_definition&quot;
+	// org/argouml/language/sql/reveng/MySql.g:113:1: create_definition[TableDefinition table] : ( ( 'KEY' | 'INDEX' ) index_name ( index_type )? columns_list_name | constraint_def[table] | column_name data_type_def[col] );
+	public final void create_definition(TableDefinition table) throws RecognitionException {
+<span class="nc" id="L673">		String column_name3 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:113:42: ( ( 'KEY' | 'INDEX' ) index_name ( index_type )? columns_list_name | constraint_def[table] | column_name data_type_def[col] )
+<span class="nc" id="L677">			int alt15=3;</span>
+<span class="nc bnc" id="L678" title="All 4 branches missed.">			switch ( input.LA(1) ) {</span>
+			case 37:
+			case 38:
+				{
+<span class="nc" id="L682">				alt15=1;</span>
+				}
+<span class="nc" id="L684">				break;</span>
+			case 25:
+			case 33:
+			case 45:
+			case 51:
+				{
+<span class="nc" id="L690">				alt15=2;</span>
+				}
+<span class="nc" id="L692">				break;</span>
+			case ID:
+			case PROTECT_CHAR:
+				{
+<span class="nc" id="L696">				alt15=3;</span>
+				}
+<span class="nc" id="L698">				break;</span>
+			default:
+<span class="nc" id="L700">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 15, 0, input);
+<span class="nc" id="L702">				throw nvae;</span>
+			}
+<span class="nc bnc" id="L704" title="All 4 branches missed.">			switch (alt15) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:114:9: ( 'KEY' | 'INDEX' ) index_name ( index_type )? columns_list_name
+					{
+<span class="nc bnc" id="L708" title="All 4 branches missed.">					if ( (input.LA(1) &gt;= 37 &amp;&amp; input.LA(1) &lt;= 38) ) {</span>
+<span class="nc" id="L709">						input.consume();</span>
+<span class="nc" id="L710">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L713">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L714">						throw mse;</span>
+					}
+<span class="nc" id="L716">					pushFollow(FOLLOW_index_name_in_create_definition431);</span>
+<span class="nc" id="L717">					index_name();</span>
+<span class="nc" id="L718">					state._fsp--;</span>
+
+					// org/argouml/language/sql/reveng/MySql.g:114:36: ( index_type )?
+<span class="nc" id="L721">					int alt14=2;</span>
+<span class="nc" id="L722">					int LA14_0 = input.LA(1);</span>
+<span class="nc bnc" id="L723" title="All 4 branches missed.">					if ( (LA14_0==21||LA14_0==35) ) {</span>
+<span class="nc" id="L724">						alt14=1;</span>
+					}
+<span class="nc bnc" id="L726" title="All 2 branches missed.">					switch (alt14) {</span>
+						case 1 :
+							// org/argouml/language/sql/reveng/MySql.g:114:37: index_type
+							{
+<span class="nc" id="L730">							pushFollow(FOLLOW_index_type_in_create_definition434);</span>
+<span class="nc" id="L731">							index_type();</span>
+<span class="nc" id="L732">							state._fsp--;</span>
+
+							}
+							break;
+
+					}
+
+<span class="nc" id="L739">					pushFollow(FOLLOW_columns_list_name_in_create_definition438);</span>
+<span class="nc" id="L740">					columns_list_name();</span>
+<span class="nc" id="L741">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L744">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/MySql.g:115:11: constraint_def[table]
+					{
+<span class="nc" id="L748">					pushFollow(FOLLOW_constraint_def_in_create_definition450);</span>
+<span class="nc" id="L749">					constraint_def(table);</span>
+<span class="nc" id="L750">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L753">					break;</span>
+				case 3 :
+					// org/argouml/language/sql/reveng/MySql.g:117:10: column_name data_type_def[col]
+					{
+<span class="nc" id="L757">					pushFollow(FOLLOW_column_name_in_create_definition472);</span>
+<span class="nc" id="L758">					column_name3=column_name();</span>
+<span class="nc" id="L759">					state._fsp--;</span>
+
+
+<span class="nc" id="L762">					         	ColumnDefinition col = ColumnDefinition.findOrCreateColumnDefinition(table, column_name3);</span>
+					         
+<span class="nc" id="L764">					pushFollow(FOLLOW_data_type_def_in_create_definition476);</span>
+<span class="nc" id="L765">					data_type_def(col);</span>
+<span class="nc" id="L766">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+		}
+<span class="nc" id="L773">		catch (RecognitionException re) {</span>
+<span class="nc" id="L774">			reportError(re);</span>
+<span class="nc" id="L775">			recover(input,re);</span>
+		}
+<span class="nc" id="L777">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L779">		}</span>
+<span class="nc" id="L780">	}</span>
+	// $ANTLR end &quot;create_definition&quot;
+
+
+
+	// $ANTLR start &quot;text_quoted&quot;
+	// org/argouml/language/sql/reveng/MySql.g:122:1: text_quoted returns [String value] : QUOTED_TEXT ;
+	public final String text_quoted() throws RecognitionException {
+<span class="nc" id="L788">		String value = null;</span>
+
+
+<span class="nc" id="L791">		Token QUOTED_TEXT4=null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:122:36: ( QUOTED_TEXT )
+			// org/argouml/language/sql/reveng/MySql.g:123:2: QUOTED_TEXT
+			{
+
+<span class="nc" id="L798">					int iStartToken = input.LT(1).getTokenIndex();</span>
+				
+<span class="nc" id="L800">			QUOTED_TEXT4=(Token)match(input,QUOTED_TEXT,FOLLOW_QUOTED_TEXT_in_text_quoted494); </span>
+
+<span class="nc bnc" id="L802" title="All 2 branches missed.">					value = (QUOTED_TEXT4!=null?QUOTED_TEXT4.getText():null);</span>
+<span class="nc" id="L803">					value = value.substring(1);</span>
+<span class="nc" id="L804">					value = value.substring(0, value.length() -1 );</span>
+<span class="nc" id="L805">					value = value.replaceAll(&quot;''&quot;,&quot;'&quot;);</span>
+				
+			}
+
+		}
+<span class="nc" id="L810">		catch (RecognitionException re) {</span>
+<span class="nc" id="L811">			reportError(re);</span>
+<span class="nc" id="L812">			recover(input,re);</span>
+		}
+<span class="nc" id="L814">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L816">		}</span>
+<span class="nc" id="L817">		return value;</span>
+	}
+	// $ANTLR end &quot;text_quoted&quot;
+
+
+
+	// $ANTLR start &quot;text_quoted_keep&quot;
+	// org/argouml/language/sql/reveng/MySql.g:135:1: text_quoted_keep returns [String value] : QUOTED_TEXT ;
+	public final String text_quoted_keep() throws RecognitionException {
+<span class="nc" id="L826">		String value = null;</span>
+
+
+<span class="nc" id="L829">		Token QUOTED_TEXT5=null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:135:41: ( QUOTED_TEXT )
+			// org/argouml/language/sql/reveng/MySql.g:136:2: QUOTED_TEXT
+			{
+
+<span class="nc" id="L836">					int iStartToken = input.LT(1).getTokenIndex();</span>
+				
+<span class="nc" id="L838">			QUOTED_TEXT5=(Token)match(input,QUOTED_TEXT,FOLLOW_QUOTED_TEXT_in_text_quoted_keep514); </span>
+
+<span class="nc bnc" id="L840" title="All 2 branches missed.">					value = (QUOTED_TEXT5!=null?QUOTED_TEXT5.getText():null);</span>
+				
+			}
+
+		}
+<span class="nc" id="L845">		catch (RecognitionException re) {</span>
+<span class="nc" id="L846">			reportError(re);</span>
+<span class="nc" id="L847">			recover(input,re);</span>
+		}
+<span class="nc" id="L849">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L851">		}</span>
+<span class="nc" id="L852">		return value;</span>
+	}
+	// $ANTLR end &quot;text_quoted_keep&quot;
+
+
+
+	// $ANTLR start &quot;constraint_def&quot;
+	// org/argouml/language/sql/reveng/MySql.g:145:1: constraint_def[TableDefinition table] returns [String constrName] : ( 'CONSTRAINT' symbol )? ( constraint_unique | constraint_fk[table, constrName] | constraint_pk[table, constrName] ) ;
+	public final String constraint_def(TableDefinition table) throws RecognitionException {
+<span class="nc" id="L861">		String constrName = null;</span>
+
+
+<span class="nc" id="L864">		String symbol6 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:145:68: ( ( 'CONSTRAINT' symbol )? ( constraint_unique | constraint_fk[table, constrName] | constraint_pk[table, constrName] ) )
+			// org/argouml/language/sql/reveng/MySql.g:146:3: ( 'CONSTRAINT' symbol )? ( constraint_unique | constraint_fk[table, constrName] | constraint_pk[table, constrName] )
+			{
+			// org/argouml/language/sql/reveng/MySql.g:146:3: ( 'CONSTRAINT' symbol )?
+<span class="nc" id="L871">			int alt16=2;</span>
+<span class="nc" id="L872">			int LA16_0 = input.LA(1);</span>
+<span class="nc bnc" id="L873" title="All 2 branches missed.">			if ( (LA16_0==25) ) {</span>
+<span class="nc" id="L874">				alt16=1;</span>
+			}
+<span class="nc bnc" id="L876" title="All 2 branches missed.">			switch (alt16) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:146:4: 'CONSTRAINT' symbol
+					{
+<span class="nc" id="L880">					match(input,25,FOLLOW_25_in_constraint_def536); </span>
+<span class="nc" id="L881">					pushFollow(FOLLOW_symbol_in_constraint_def538);</span>
+<span class="nc" id="L882">					symbol6=symbol();</span>
+<span class="nc" id="L883">					state._fsp--;</span>
+
+
+<span class="nc" id="L886">						 		constrName =  symbol6;</span>
+						 	
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:152:3: ( constraint_unique | constraint_fk[table, constrName] | constraint_pk[table, constrName] )
+<span class="nc" id="L894">			int alt17=3;</span>
+<span class="nc bnc" id="L895" title="All 4 branches missed.">			switch ( input.LA(1) ) {</span>
+			case 51:
+				{
+<span class="nc" id="L898">				alt17=1;</span>
+				}
+<span class="nc" id="L900">				break;</span>
+			case 33:
+				{
+<span class="nc" id="L903">				alt17=2;</span>
+				}
+<span class="nc" id="L905">				break;</span>
+			case 45:
+				{
+<span class="nc" id="L908">				alt17=3;</span>
+				}
+<span class="nc" id="L910">				break;</span>
+			default:
+<span class="nc" id="L912">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 17, 0, input);
+<span class="nc" id="L914">				throw nvae;</span>
+			}
+<span class="nc bnc" id="L916" title="All 4 branches missed.">			switch (alt17) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:153:3: constraint_unique
+					{
+<span class="nc" id="L920">					pushFollow(FOLLOW_constraint_unique_in_constraint_def561);</span>
+<span class="nc" id="L921">					constraint_unique();</span>
+<span class="nc" id="L922">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L925">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/MySql.g:154:5: constraint_fk[table, constrName]
+					{
+<span class="nc" id="L929">					pushFollow(FOLLOW_constraint_fk_in_constraint_def568);</span>
+<span class="nc" id="L930">					constraint_fk(table, constrName);</span>
+<span class="nc" id="L931">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L934">					break;</span>
+				case 3 :
+					// org/argouml/language/sql/reveng/MySql.g:155:5: constraint_pk[table, constrName]
+					{
+<span class="nc" id="L938">					pushFollow(FOLLOW_constraint_pk_in_constraint_def575);</span>
+<span class="nc" id="L939">					constraint_pk(table, constrName);</span>
+<span class="nc" id="L940">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+			}
+
+		}
+<span class="nc" id="L950">		catch (RecognitionException re) {</span>
+<span class="nc" id="L951">			reportError(re);</span>
+<span class="nc" id="L952">			recover(input,re);</span>
+		}
+<span class="nc" id="L954">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L956">		}</span>
+<span class="nc" id="L957">		return constrName;</span>
+	}
+	// $ANTLR end &quot;constraint_def&quot;
+
+
+
+	// $ANTLR start &quot;constraint_unique&quot;
+	// org/argouml/language/sql/reveng/MySql.g:159:1: constraint_unique : 'UNIQUE' ( 'INDEX' | 'KEY' )? ( index_name )? ( index_type )? columns_list_name ;
+	public final void constraint_unique() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:159:19: ( 'UNIQUE' ( 'INDEX' | 'KEY' )? ( index_name )? ( index_type )? columns_list_name )
+			// org/argouml/language/sql/reveng/MySql.g:160:2: 'UNIQUE' ( 'INDEX' | 'KEY' )? ( index_name )? ( index_type )? columns_list_name
+			{
+<span class="nc" id="L970">			match(input,51,FOLLOW_51_in_constraint_unique592); </span>
+			// org/argouml/language/sql/reveng/MySql.g:160:11: ( 'INDEX' | 'KEY' )?
+<span class="nc" id="L972">			int alt18=2;</span>
+<span class="nc" id="L973">			int LA18_0 = input.LA(1);</span>
+<span class="nc bnc" id="L974" title="All 4 branches missed.">			if ( ((LA18_0 &gt;= 37 &amp;&amp; LA18_0 &lt;= 38)) ) {</span>
+<span class="nc" id="L975">				alt18=1;</span>
+			}
+<span class="nc bnc" id="L977" title="All 2 branches missed.">			switch (alt18) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:
+					{
+<span class="nc bnc" id="L981" title="All 4 branches missed.">					if ( (input.LA(1) &gt;= 37 &amp;&amp; input.LA(1) &lt;= 38) ) {</span>
+<span class="nc" id="L982">						input.consume();</span>
+<span class="nc" id="L983">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L986">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L987">						throw mse;</span>
+					}
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:160:30: ( index_name )?
+<span class="nc" id="L995">			int alt19=2;</span>
+<span class="nc" id="L996">			int LA19_0 = input.LA(1);</span>
+<span class="nc bnc" id="L997" title="All 2 branches missed.">			if ( (LA19_0==LEFT_PAREN) ) {</span>
+<span class="nc" id="L998">				int LA19_1 = input.LA(2);</span>
+<span class="nc bnc" id="L999" title="All 2 branches missed.">				if ( (LA19_1==PROTECT_CHAR) ) {</span>
+<span class="nc" id="L1000">					int LA19_4 = input.LA(3);</span>
+<span class="nc bnc" id="L1001" title="All 2 branches missed.">					if ( (LA19_4==ID) ) {</span>
+<span class="nc bnc" id="L1002" title="All 4 branches missed.">						switch ( input.LA(4) ) {</span>
+							case PROTECT_CHAR:
+								{
+<span class="nc" id="L1005">								int LA19_6 = input.LA(5);</span>
+<span class="nc bnc" id="L1006" title="All 2 branches missed.">								if ( (LA19_6==RIGHT_PAREN) ) {</span>
+<span class="nc" id="L1007">									int LA19_7 = input.LA(6);</span>
+<span class="nc bnc" id="L1008" title="All 6 branches missed.">									if ( (LA19_7==LEFT_PAREN||LA19_7==21||LA19_7==35) ) {</span>
+<span class="nc" id="L1009">										alt19=1;</span>
+									}
+<span class="nc" id="L1011">								}</span>
+<span class="nc bnc" id="L1012" title="All 6 branches missed.">								else if ( (LA19_6==LEFT_PAREN||LA19_6==21||LA19_6==35) ) {</span>
+<span class="nc" id="L1013">									alt19=1;</span>
+								}
+								}
+<span class="nc" id="L1016">								break;</span>
+							case RIGHT_PAREN:
+								{
+<span class="nc" id="L1019">								int LA19_7 = input.LA(5);</span>
+<span class="nc bnc" id="L1020" title="All 6 branches missed.">								if ( (LA19_7==LEFT_PAREN||LA19_7==21||LA19_7==35) ) {</span>
+<span class="nc" id="L1021">									alt19=1;</span>
+								}
+								}
+<span class="nc" id="L1024">								break;</span>
+							case LEFT_PAREN:
+							case 21:
+							case 35:
+								{
+<span class="nc" id="L1029">								alt19=1;</span>
+								}
+								break;
+						}
+					}
+<span class="nc" id="L1034">				}</span>
+<span class="nc bnc" id="L1035" title="All 2 branches missed.">				else if ( (LA19_1==ID) ) {</span>
+<span class="nc bnc" id="L1036" title="All 4 branches missed.">					switch ( input.LA(3) ) {</span>
+						case PROTECT_CHAR:
+							{
+<span class="nc" id="L1039">							int LA19_6 = input.LA(4);</span>
+<span class="nc bnc" id="L1040" title="All 2 branches missed.">							if ( (LA19_6==RIGHT_PAREN) ) {</span>
+<span class="nc" id="L1041">								int LA19_7 = input.LA(5);</span>
+<span class="nc bnc" id="L1042" title="All 6 branches missed.">								if ( (LA19_7==LEFT_PAREN||LA19_7==21||LA19_7==35) ) {</span>
+<span class="nc" id="L1043">									alt19=1;</span>
+								}
+<span class="nc" id="L1045">							}</span>
+<span class="nc bnc" id="L1046" title="All 6 branches missed.">							else if ( (LA19_6==LEFT_PAREN||LA19_6==21||LA19_6==35) ) {</span>
+<span class="nc" id="L1047">								alt19=1;</span>
+							}
+							}
+<span class="nc" id="L1050">							break;</span>
+						case RIGHT_PAREN:
+							{
+<span class="nc" id="L1053">							int LA19_7 = input.LA(4);</span>
+<span class="nc bnc" id="L1054" title="All 6 branches missed.">							if ( (LA19_7==LEFT_PAREN||LA19_7==21||LA19_7==35) ) {</span>
+<span class="nc" id="L1055">								alt19=1;</span>
+							}
+							}
+<span class="nc" id="L1058">							break;</span>
+						case LEFT_PAREN:
+						case 21:
+						case 35:
+							{
+<span class="nc" id="L1063">							alt19=1;</span>
+							}
+							break;
+					}
+				}
+<span class="nc" id="L1068">			}</span>
+<span class="nc bnc" id="L1069" title="All 4 branches missed.">			else if ( (LA19_0==ID||LA19_0==PROTECT_CHAR) ) {</span>
+<span class="nc" id="L1070">				alt19=1;</span>
+			}
+<span class="nc bnc" id="L1072" title="All 2 branches missed.">			switch (alt19) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:160:31: index_name
+					{
+<span class="nc" id="L1076">					pushFollow(FOLLOW_index_name_in_constraint_unique604);</span>
+<span class="nc" id="L1077">					index_name();</span>
+<span class="nc" id="L1078">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:160:44: ( index_type )?
+<span class="nc" id="L1086">			int alt20=2;</span>
+<span class="nc" id="L1087">			int LA20_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1088" title="All 4 branches missed.">			if ( (LA20_0==21||LA20_0==35) ) {</span>
+<span class="nc" id="L1089">				alt20=1;</span>
+			}
+<span class="nc bnc" id="L1091" title="All 2 branches missed.">			switch (alt20) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:160:45: index_type
+					{
+<span class="nc" id="L1095">					pushFollow(FOLLOW_index_type_in_constraint_unique609);</span>
+<span class="nc" id="L1096">					index_type();</span>
+<span class="nc" id="L1097">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+<span class="nc" id="L1104">			pushFollow(FOLLOW_columns_list_name_in_constraint_unique614);</span>
+<span class="nc" id="L1105">			columns_list_name();</span>
+<span class="nc" id="L1106">			state._fsp--;</span>
+
+			}
+
+		}
+<span class="nc" id="L1111">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1112">			reportError(re);</span>
+<span class="nc" id="L1113">			recover(input,re);</span>
+		}
+<span class="nc" id="L1115">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1117">		}</span>
+<span class="nc" id="L1118">	}</span>
+	// $ANTLR end &quot;constraint_unique&quot;
+
+
+
+	// $ANTLR start &quot;constraint_fk&quot;
+	// org/argouml/language/sql/reveng/MySql.g:162:1: constraint_fk[TableDefinition table, String constrName] : 'FOREIGN' 'KEY' ( symbol )? columns_list_name reference_definition[fk] ;
+	public final void constraint_fk(TableDefinition table, String constrName) throws RecognitionException {
+<span class="nc" id="L1126">		List&lt;String&gt; columns_list_name7 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:162:58: ( 'FOREIGN' 'KEY' ( symbol )? columns_list_name reference_definition[fk] )
+			// org/argouml/language/sql/reveng/MySql.g:163:2: 'FOREIGN' 'KEY' ( symbol )? columns_list_name reference_definition[fk]
+			{
+<span class="nc" id="L1132">			match(input,33,FOLLOW_33_in_constraint_fk625); </span>
+<span class="nc" id="L1133">			match(input,38,FOLLOW_38_in_constraint_fk627); </span>
+			// org/argouml/language/sql/reveng/MySql.g:163:18: ( symbol )?
+<span class="nc" id="L1135">			int alt21=2;</span>
+<span class="nc" id="L1136">			int LA21_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1137" title="All 4 branches missed.">			if ( (LA21_0==ID||LA21_0==PROTECT_CHAR) ) {</span>
+<span class="nc" id="L1138">				alt21=1;</span>
+			}
+<span class="nc bnc" id="L1140" title="All 2 branches missed.">			switch (alt21) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:163:19: symbol
+					{
+<span class="nc" id="L1144">					pushFollow(FOLLOW_symbol_in_constraint_fk630);</span>
+<span class="nc" id="L1145">					symbol();</span>
+<span class="nc" id="L1146">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+
+<span class="nc" id="L1154">					ForeignKeyDefinition fk = new ForeignKeyDefinition(table);</span>
+<span class="nc" id="L1155">					fk.setForeignKeyName(constrName);</span>
+				
+<span class="nc" id="L1157">			pushFollow(FOLLOW_columns_list_name_in_constraint_fk638);</span>
+<span class="nc" id="L1158">			columns_list_name7=columns_list_name();</span>
+<span class="nc" id="L1159">			state._fsp--;</span>
+
+
+<span class="nc bnc" id="L1162" title="All 2 branches missed.">					for(String colName : columns_list_name7) {</span>
+<span class="nc" id="L1163">						fk.addColumnDefinition(colName);</span>
+<span class="nc" id="L1164">					}</span>
+				
+<span class="nc" id="L1166">			pushFollow(FOLLOW_reference_definition_in_constraint_fk644);</span>
+<span class="nc" id="L1167">			reference_definition(fk);</span>
+<span class="nc" id="L1168">			state._fsp--;</span>
+
+			}
+
+		}
+<span class="nc" id="L1173">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1174">			reportError(re);</span>
+<span class="nc" id="L1175">			recover(input,re);</span>
+		}
+<span class="nc" id="L1177">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1179">		}</span>
+<span class="nc" id="L1180">	}</span>
+	// $ANTLR end &quot;constraint_fk&quot;
+
+
+
+	// $ANTLR start &quot;constraint_pk&quot;
+	// org/argouml/language/sql/reveng/MySql.g:177:1: constraint_pk[TableDefinition table, String constrName] : 'PRIMARY' 'KEY' ( index_type )? columns_list_name ;
+	public final void constraint_pk(TableDefinition table, String constrName) throws RecognitionException {
+<span class="nc" id="L1188">		List&lt;String&gt; columns_list_name8 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:177:58: ( 'PRIMARY' 'KEY' ( index_type )? columns_list_name )
+			// org/argouml/language/sql/reveng/MySql.g:178:2: 'PRIMARY' 'KEY' ( index_type )? columns_list_name
+			{
+<span class="nc" id="L1194">			match(input,45,FOLLOW_45_in_constraint_pk657); </span>
+<span class="nc" id="L1195">			match(input,38,FOLLOW_38_in_constraint_pk659); </span>
+			// org/argouml/language/sql/reveng/MySql.g:178:18: ( index_type )?
+<span class="nc" id="L1197">			int alt22=2;</span>
+<span class="nc" id="L1198">			int LA22_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1199" title="All 4 branches missed.">			if ( (LA22_0==21||LA22_0==35) ) {</span>
+<span class="nc" id="L1200">				alt22=1;</span>
+			}
+<span class="nc bnc" id="L1202" title="All 2 branches missed.">			switch (alt22) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:178:19: index_type
+					{
+<span class="nc" id="L1206">					pushFollow(FOLLOW_index_type_in_constraint_pk662);</span>
+<span class="nc" id="L1207">					index_type();</span>
+<span class="nc" id="L1208">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+<span class="nc" id="L1215">			pushFollow(FOLLOW_columns_list_name_in_constraint_pk666);</span>
+<span class="nc" id="L1216">			columns_list_name8=columns_list_name();</span>
+<span class="nc" id="L1217">			state._fsp--;</span>
+
+
+<span class="nc bnc" id="L1220" title="All 2 branches missed.">					for(String colName : columns_list_name8) {</span>
+<span class="nc" id="L1221">						table.addPrimaryKeyField(colName);</span>
+<span class="nc" id="L1222">					}</span>
+				
+			}
+
+		}
+<span class="nc" id="L1227">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1228">			reportError(re);</span>
+<span class="nc" id="L1229">			recover(input,re);</span>
+		}
+<span class="nc" id="L1231">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1233">		}</span>
+<span class="nc" id="L1234">	}</span>
+	// $ANTLR end &quot;constraint_pk&quot;
+
+
+
+	// $ANTLR start &quot;reference_definition&quot;
+	// org/argouml/language/sql/reveng/MySql.g:186:1: reference_definition[ForeignKeyDefinition fk] : 'REFERENCES' tbl_name columns_list_name ( 'MATCH' ( 'FULL' | 'PARTIAL' ) )? ( 'ON' ( 'DELETE' | 'UPDATE' ) reference_option )* ;
+	public final void reference_definition(ForeignKeyDefinition fk) throws RecognitionException {
+<span class="nc" id="L1242">		String tbl_name9 =null;</span>
+<span class="nc" id="L1243">		List&lt;String&gt; columns_list_name10 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:186:48: ( 'REFERENCES' tbl_name columns_list_name ( 'MATCH' ( 'FULL' | 'PARTIAL' ) )? ( 'ON' ( 'DELETE' | 'UPDATE' ) reference_option )* )
+			// org/argouml/language/sql/reveng/MySql.g:187:2: 'REFERENCES' tbl_name columns_list_name ( 'MATCH' ( 'FULL' | 'PARTIAL' ) )? ( 'ON' ( 'DELETE' | 'UPDATE' ) reference_option )*
+			{
+<span class="nc" id="L1249">			match(input,46,FOLLOW_46_in_reference_definition681); </span>
+<span class="nc" id="L1250">			pushFollow(FOLLOW_tbl_name_in_reference_definition683);</span>
+<span class="nc" id="L1251">			tbl_name9=tbl_name();</span>
+<span class="nc" id="L1252">			state._fsp--;</span>
+
+
+<span class="nc" id="L1255">					TableDefinition tableRef = getModeller().getTableFromName(tbl_name9);</span>
+<span class="nc" id="L1256">					fk.setReferencesTable(tableRef);</span>
+					
+				
+<span class="nc" id="L1259">			pushFollow(FOLLOW_columns_list_name_in_reference_definition690);</span>
+<span class="nc" id="L1260">			columns_list_name10=columns_list_name();</span>
+<span class="nc" id="L1261">			state._fsp--;</span>
+
+
+<span class="nc bnc" id="L1264" title="All 2 branches missed.">					for(String colName : columns_list_name10) {</span>
+<span class="nc" id="L1265">						fk.addReferencesColumn(colName);</span>
+<span class="nc" id="L1266">					}</span>
+				
+			// org/argouml/language/sql/reveng/MySql.g:200:2: ( 'MATCH' ( 'FULL' | 'PARTIAL' ) )?
+<span class="nc" id="L1269">			int alt23=2;</span>
+<span class="nc" id="L1270">			int LA23_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1271" title="All 2 branches missed.">			if ( (LA23_0==39) ) {</span>
+<span class="nc" id="L1272">				alt23=1;</span>
+			}
+<span class="nc bnc" id="L1274" title="All 2 branches missed.">			switch (alt23) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:200:3: 'MATCH' ( 'FULL' | 'PARTIAL' )
+					{
+<span class="nc" id="L1278">					match(input,39,FOLLOW_39_in_reference_definition699); </span>
+<span class="nc bnc" id="L1279" title="All 4 branches missed.">					if ( input.LA(1)==34||input.LA(1)==44 ) {</span>
+<span class="nc" id="L1280">						input.consume();</span>
+<span class="nc" id="L1281">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L1284">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1285">						throw mse;</span>
+					}
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:201:2: ( 'ON' ( 'DELETE' | 'UPDATE' ) reference_option )*
+			loop24:
+			while (true) {
+<span class="nc" id="L1295">				int alt24=2;</span>
+<span class="nc" id="L1296">				int LA24_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1297" title="All 2 branches missed.">				if ( (LA24_0==43) ) {</span>
+<span class="nc" id="L1298">					alt24=1;</span>
+				}
+
+<span class="nc bnc" id="L1301" title="All 2 branches missed.">				switch (alt24) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:201:3: 'ON' ( 'DELETE' | 'UPDATE' ) reference_option
+					{
+<span class="nc" id="L1305">					match(input,43,FOLLOW_43_in_reference_definition714); </span>
+<span class="nc bnc" id="L1306" title="All 4 branches missed.">					if ( input.LA(1)==29||input.LA(1)==53 ) {</span>
+<span class="nc" id="L1307">						input.consume();</span>
+<span class="nc" id="L1308">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L1311">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1312">						throw mse;</span>
+					}
+<span class="nc" id="L1314">					pushFollow(FOLLOW_reference_option_in_reference_definition724);</span>
+<span class="nc" id="L1315">					reference_option();</span>
+<span class="nc" id="L1316">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L1319">					break;</span>
+
+				default :
+<span class="nc" id="L1322">					break loop24;</span>
+				}
+<span class="nc" id="L1324">			}</span>
+
+			}
+
+		}
+<span class="nc" id="L1329">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1330">			reportError(re);</span>
+<span class="nc" id="L1331">			recover(input,re);</span>
+		}
+<span class="nc" id="L1333">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1335">		}</span>
+<span class="nc" id="L1336">	}</span>
+	// $ANTLR end &quot;reference_definition&quot;
+
+
+
+	// $ANTLR start &quot;reference_option&quot;
+	// org/argouml/language/sql/reveng/MySql.g:205:1: reference_option : ( 'RESTRICT' | 'CASCADE' | 'SET' 'NULL' | 'NO ACTION' | 'SET DEFAULT' );
+	public final void reference_option() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:205:18: ( 'RESTRICT' | 'CASCADE' | 'SET' 'NULL' | 'NO ACTION' | 'SET DEFAULT' )
+<span class="nc" id="L1346">			int alt25=5;</span>
+<span class="nc bnc" id="L1347" title="All 6 branches missed.">			switch ( input.LA(1) ) {</span>
+			case 47:
+				{
+<span class="nc" id="L1350">				alt25=1;</span>
+				}
+<span class="nc" id="L1352">				break;</span>
+			case 22:
+				{
+<span class="nc" id="L1355">				alt25=2;</span>
+				}
+<span class="nc" id="L1357">				break;</span>
+			case 49:
+				{
+<span class="nc" id="L1360">				alt25=3;</span>
+				}
+<span class="nc" id="L1362">				break;</span>
+			case 40:
+				{
+<span class="nc" id="L1365">				alt25=4;</span>
+				}
+<span class="nc" id="L1367">				break;</span>
+			case 48:
+				{
+<span class="nc" id="L1370">				alt25=5;</span>
+				}
+<span class="nc" id="L1372">				break;</span>
+			default:
+<span class="nc" id="L1374">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 25, 0, input);
+<span class="nc" id="L1376">				throw nvae;</span>
+			}
+<span class="nc bnc" id="L1378" title="All 6 branches missed.">			switch (alt25) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:206:2: 'RESTRICT'
+					{
+<span class="nc" id="L1382">					match(input,47,FOLLOW_47_in_reference_option739); </span>
+					}
+<span class="nc" id="L1384">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/MySql.g:206:15: 'CASCADE'
+					{
+<span class="nc" id="L1388">					match(input,22,FOLLOW_22_in_reference_option743); </span>
+					}
+<span class="nc" id="L1390">					break;</span>
+				case 3 :
+					// org/argouml/language/sql/reveng/MySql.g:206:27: 'SET' 'NULL'
+					{
+<span class="nc" id="L1394">					match(input,49,FOLLOW_49_in_reference_option747); </span>
+<span class="nc" id="L1395">					match(input,42,FOLLOW_42_in_reference_option749); </span>
+					}
+<span class="nc" id="L1397">					break;</span>
+				case 4 :
+					// org/argouml/language/sql/reveng/MySql.g:206:42: 'NO ACTION'
+					{
+<span class="nc" id="L1401">					match(input,40,FOLLOW_40_in_reference_option753); </span>
+					}
+<span class="nc" id="L1403">					break;</span>
+				case 5 :
+					// org/argouml/language/sql/reveng/MySql.g:206:56: 'SET DEFAULT'
+					{
+<span class="nc" id="L1407">					match(input,48,FOLLOW_48_in_reference_option757); </span>
+					}
+					break;
+
+			}
+		}
+<span class="nc" id="L1413">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1414">			reportError(re);</span>
+<span class="nc" id="L1415">			recover(input,re);</span>
+		}
+<span class="nc" id="L1417">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1419">		}</span>
+<span class="nc" id="L1420">	}</span>
+	// $ANTLR end &quot;reference_option&quot;
+
+
+
+	// $ANTLR start &quot;columns_list_name&quot;
+	// org/argouml/language/sql/reveng/MySql.g:209:1: columns_list_name returns [List&lt;String&gt; listColumn] : LEFT_PAREN c1= column_name ( COMMA c2= column_name )* RIGHT_PAREN ;
+	public final List&lt;String&gt; columns_list_name() throws RecognitionException {
+<span class="nc" id="L1428">		List&lt;String&gt; listColumn = null;</span>
+
+
+<span class="nc" id="L1431">		String c1 =null;</span>
+<span class="nc" id="L1432">		String c2 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:209:52: ( LEFT_PAREN c1= column_name ( COMMA c2= column_name )* RIGHT_PAREN )
+			// org/argouml/language/sql/reveng/MySql.g:211:2: LEFT_PAREN c1= column_name ( COMMA c2= column_name )* RIGHT_PAREN
+			{
+<span class="nc" id="L1438">			match(input,LEFT_PAREN,FOLLOW_LEFT_PAREN_in_columns_list_name772); </span>
+<span class="nc" id="L1439">			pushFollow(FOLLOW_column_name_in_columns_list_name776);</span>
+<span class="nc" id="L1440">			c1=column_name();</span>
+<span class="nc" id="L1441">			state._fsp--;</span>
+
+
+<span class="nc" id="L1444">					listColumn = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L1445">					listColumn.add(c1);</span>
+				
+			// org/argouml/language/sql/reveng/MySql.g:216:2: ( COMMA c2= column_name )*
+			loop26:
+			while (true) {
+<span class="nc" id="L1450">				int alt26=2;</span>
+<span class="nc" id="L1451">				int LA26_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1452" title="All 2 branches missed.">				if ( (LA26_0==COMMA) ) {</span>
+<span class="nc" id="L1453">					alt26=1;</span>
+				}
+
+<span class="nc bnc" id="L1456" title="All 2 branches missed.">				switch (alt26) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:217:3: COMMA c2= column_name
+					{
+<span class="nc" id="L1460">					match(input,COMMA,FOLLOW_COMMA_in_columns_list_name788); </span>
+<span class="nc" id="L1461">					pushFollow(FOLLOW_column_name_in_columns_list_name792);</span>
+<span class="nc" id="L1462">					c2=column_name();</span>
+<span class="nc" id="L1463">					state._fsp--;</span>
+
+
+<span class="nc" id="L1466">								listColumn.add(c2);</span>
+							
+					}
+<span class="nc" id="L1469">					break;</span>
+
+				default :
+<span class="nc" id="L1472">					break loop26;</span>
+				}
+<span class="nc" id="L1474">			}</span>
+
+<span class="nc" id="L1476">			match(input,RIGHT_PAREN,FOLLOW_RIGHT_PAREN_in_columns_list_name800); </span>
+			}
+
+		}
+<span class="nc" id="L1480">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1481">			reportError(re);</span>
+<span class="nc" id="L1482">			recover(input,re);</span>
+		}
+<span class="nc" id="L1484">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1486">		}</span>
+<span class="nc" id="L1487">		return listColumn;</span>
+	}
+	// $ANTLR end &quot;columns_list_name&quot;
+
+
+
+	// $ANTLR start &quot;column_name&quot;
+	// org/argouml/language/sql/reveng/MySql.g:223:1: column_name returns [String cn] : name_with_esc ;
+	public final String column_name() throws RecognitionException {
+<span class="nc" id="L1496">		String cn = null;</span>
+
+
+<span class="nc" id="L1499">		String name_with_esc11 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:223:33: ( name_with_esc )
+			// org/argouml/language/sql/reveng/MySql.g:224:2: name_with_esc
+			{
+<span class="nc" id="L1505">			pushFollow(FOLLOW_name_with_esc_in_column_name815);</span>
+<span class="nc" id="L1506">			name_with_esc11=name_with_esc();</span>
+<span class="nc" id="L1507">			state._fsp--;</span>
+
+<span class="nc" id="L1509">			cn = name_with_esc11;</span>
+			}
+
+		}
+<span class="nc" id="L1513">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1514">			reportError(re);</span>
+<span class="nc" id="L1515">			recover(input,re);</span>
+		}
+<span class="nc" id="L1517">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1519">		}</span>
+<span class="nc" id="L1520">		return cn;</span>
+	}
+	// $ANTLR end &quot;column_name&quot;
+
+
+
+	// $ANTLR start &quot;tbl_name&quot;
+	// org/argouml/language/sql/reveng/MySql.g:227:1: tbl_name returns [String name] : name_with_esc ;
+	public final String tbl_name() throws RecognitionException {
+<span class="nc" id="L1529">		String name = null;</span>
+
+
+<span class="nc" id="L1532">		String name_with_esc12 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:227:32: ( name_with_esc )
+			// org/argouml/language/sql/reveng/MySql.g:228:5: name_with_esc
+			{
+<span class="nc" id="L1538">			pushFollow(FOLLOW_name_with_esc_in_tbl_name838);</span>
+<span class="nc" id="L1539">			name_with_esc12=name_with_esc();</span>
+<span class="nc" id="L1540">			state._fsp--;</span>
+
+<span class="nc" id="L1542">			name = name_with_esc12;</span>
+			}
+
+		}
+<span class="nc" id="L1546">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1547">			reportError(re);</span>
+<span class="nc" id="L1548">			recover(input,re);</span>
+		}
+<span class="nc" id="L1550">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1552">		}</span>
+<span class="nc" id="L1553">		return name;</span>
+	}
+	// $ANTLR end &quot;tbl_name&quot;
+
+
+
+	// $ANTLR start &quot;data_type_def&quot;
+	// org/argouml/language/sql/reveng/MySql.g:231:1: data_type_def[ColumnDefinition col] : data_type ( data_length )? ( 'UNSIGNED' )? ( 'ZEROFILL' )? ( 'NOT' 'NULL' | 'NULL' )? ( 'DEFAULT' default_statement[col] )? ( 'AUTO_INCREMENT' )? ( 'PRIMARY' 'KEY' | 'KEY' )? ( 'COMMENT' text_quoted )? ;
+	public final void data_type_def(ColumnDefinition col) throws RecognitionException {
+<span class="nc" id="L1562">		ParserRuleReturnScope data_type13 =null;</span>
+<span class="nc" id="L1563">		ParserRuleReturnScope data_length14 =null;</span>
+<span class="nc" id="L1564">		String text_quoted15 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:231:38: ( data_type ( data_length )? ( 'UNSIGNED' )? ( 'ZEROFILL' )? ( 'NOT' 'NULL' | 'NULL' )? ( 'DEFAULT' default_statement[col] )? ( 'AUTO_INCREMENT' )? ( 'PRIMARY' 'KEY' | 'KEY' )? ( 'COMMENT' text_quoted )? )
+			// org/argouml/language/sql/reveng/MySql.g:232:5: data_type ( data_length )? ( 'UNSIGNED' )? ( 'ZEROFILL' )? ( 'NOT' 'NULL' | 'NULL' )? ( 'DEFAULT' default_statement[col] )? ( 'AUTO_INCREMENT' )? ( 'PRIMARY' 'KEY' | 'KEY' )? ( 'COMMENT' text_quoted )?
+			{
+<span class="nc" id="L1570">			pushFollow(FOLLOW_data_type_in_data_type_def855);</span>
+<span class="nc" id="L1571">			data_type13=data_type();</span>
+<span class="nc" id="L1572">			state._fsp--;</span>
+
+<span class="nc bnc" id="L1574" title="All 2 branches missed.">			col.setDatatype((data_type13!=null?input.toString(data_type13.start,data_type13.stop):null));</span>
+			// org/argouml/language/sql/reveng/MySql.g:233:6: ( data_length )?
+<span class="nc" id="L1576">			int alt27=2;</span>
+<span class="nc" id="L1577">			int LA27_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1578" title="All 2 branches missed.">			if ( (LA27_0==LEFT_PAREN) ) {</span>
+<span class="nc" id="L1579">				alt27=1;</span>
+			}
+<span class="nc bnc" id="L1581" title="All 2 branches missed.">			switch (alt27) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:233:7: data_length
+					{
+<span class="nc" id="L1585">					pushFollow(FOLLOW_data_length_in_data_type_def866);</span>
+<span class="nc" id="L1586">					data_length14=data_length();</span>
+<span class="nc" id="L1587">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+
+<span class="nc bnc" id="L1595" title="All 2 branches missed.">			    		col.setLength((data_length14!=null?((MySqlParser.data_length_return)data_length14).len:null));</span>
+<span class="nc bnc" id="L1596" title="All 2 branches missed.">			    		col.setNbDecimal((data_length14!=null?((MySqlParser.data_length_return)data_length14).decimal:null));//can be null</span>
+			    	
+			// org/argouml/language/sql/reveng/MySql.g:237:6: ( 'UNSIGNED' )?
+<span class="nc" id="L1599">			int alt28=2;</span>
+<span class="nc" id="L1600">			int LA28_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1601" title="All 2 branches missed.">			if ( (LA28_0==52) ) {</span>
+<span class="nc" id="L1602">				alt28=1;</span>
+			}
+<span class="nc bnc" id="L1604" title="All 2 branches missed.">			switch (alt28) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:237:8: 'UNSIGNED'
+					{
+<span class="nc" id="L1608">					match(input,52,FOLLOW_52_in_data_type_def879); </span>
+
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:239:6: ( 'ZEROFILL' )?
+<span class="nc" id="L1616">			int alt29=2;</span>
+<span class="nc" id="L1617">			int LA29_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1618" title="All 2 branches missed.">			if ( (LA29_0==54) ) {</span>
+<span class="nc" id="L1619">				alt29=1;</span>
+			}
+<span class="nc bnc" id="L1621" title="All 2 branches missed.">			switch (alt29) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:239:8: 'ZEROFILL'
+					{
+<span class="nc" id="L1625">					match(input,54,FOLLOW_54_in_data_type_def899); </span>
+
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:240:6: ( 'NOT' 'NULL' | 'NULL' )?
+<span class="nc" id="L1633">			int alt30=3;</span>
+<span class="nc" id="L1634">			int LA30_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1635" title="All 2 branches missed.">			if ( (LA30_0==41) ) {</span>
+<span class="nc" id="L1636">				alt30=1;</span>
+			}
+<span class="nc bnc" id="L1638" title="All 2 branches missed.">			else if ( (LA30_0==42) ) {</span>
+<span class="nc" id="L1639">				alt30=2;</span>
+			}
+<span class="nc bnc" id="L1641" title="All 3 branches missed.">			switch (alt30) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:240:8: 'NOT' 'NULL'
+					{
+<span class="nc" id="L1645">					match(input,41,FOLLOW_41_in_data_type_def914); </span>
+<span class="nc" id="L1646">					match(input,42,FOLLOW_42_in_data_type_def916); </span>
+
+<span class="nc" id="L1648">					   	 	col.setNullable(false);</span>
+					   	 	
+					}
+<span class="nc" id="L1651">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/MySql.g:243:9: 'NULL'
+					{
+<span class="nc" id="L1655">					match(input,42,FOLLOW_42_in_data_type_def929); </span>
+
+<span class="nc" id="L1657">					   	 	col.setNullable(true);</span>
+					   	 	
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:247:6: ( 'DEFAULT' default_statement[col] )?
+<span class="nc" id="L1665">			int alt31=2;</span>
+<span class="nc" id="L1666">			int LA31_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1667" title="All 2 branches missed.">			if ( (LA31_0==28) ) {</span>
+<span class="nc" id="L1668">				alt31=1;</span>
+			}
+<span class="nc bnc" id="L1670" title="All 2 branches missed.">			switch (alt31) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:247:8: 'DEFAULT' default_statement[col]
+					{
+<span class="nc" id="L1674">					match(input,28,FOLLOW_28_in_data_type_def949); </span>
+<span class="nc" id="L1675">					pushFollow(FOLLOW_default_statement_in_data_type_def951);</span>
+<span class="nc" id="L1676">					default_statement(col);</span>
+<span class="nc" id="L1677">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:249:6: ( 'AUTO_INCREMENT' )?
+<span class="nc" id="L1685">			int alt32=2;</span>
+<span class="nc" id="L1686">			int LA32_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1687" title="All 2 branches missed.">			if ( (LA32_0==20) ) {</span>
+<span class="nc" id="L1688">				alt32=1;</span>
+			}
+<span class="nc bnc" id="L1690" title="All 2 branches missed.">			switch (alt32) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:249:8: 'AUTO_INCREMENT'
+					{
+<span class="nc" id="L1694">					match(input,20,FOLLOW_20_in_data_type_def971); </span>
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:250:6: ( 'PRIMARY' 'KEY' | 'KEY' )?
+<span class="nc" id="L1701">			int alt33=3;</span>
+<span class="nc" id="L1702">			int LA33_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1703" title="All 2 branches missed.">			if ( (LA33_0==45) ) {</span>
+<span class="nc" id="L1704">				alt33=1;</span>
+			}
+<span class="nc bnc" id="L1706" title="All 2 branches missed.">			else if ( (LA33_0==38) ) {</span>
+<span class="nc" id="L1707">				alt33=2;</span>
+			}
+<span class="nc bnc" id="L1709" title="All 3 branches missed.">			switch (alt33) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:250:8: 'PRIMARY' 'KEY'
+					{
+<span class="nc" id="L1713">					match(input,45,FOLLOW_45_in_data_type_def985); </span>
+<span class="nc" id="L1714">					match(input,38,FOLLOW_38_in_data_type_def987); </span>
+					}
+<span class="nc" id="L1716">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/MySql.g:250:27: 'KEY'
+					{
+<span class="nc" id="L1720">					match(input,38,FOLLOW_38_in_data_type_def992); </span>
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/MySql.g:251:6: ( 'COMMENT' text_quoted )?
+<span class="nc" id="L1727">			int alt34=2;</span>
+<span class="nc" id="L1728">			int LA34_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1729" title="All 2 branches missed.">			if ( (LA34_0==24) ) {</span>
+<span class="nc" id="L1730">				alt34=1;</span>
+			}
+<span class="nc bnc" id="L1732" title="All 2 branches missed.">			switch (alt34) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:251:8: 'COMMENT' text_quoted
+					{
+<span class="nc" id="L1736">					match(input,24,FOLLOW_24_in_data_type_def1005); </span>
+<span class="nc" id="L1737">					pushFollow(FOLLOW_text_quoted_in_data_type_def1007);</span>
+<span class="nc" id="L1738">					text_quoted15=text_quoted();</span>
+<span class="nc" id="L1739">					state._fsp--;</span>
+
+<span class="nc" id="L1741">					col.setComment(text_quoted15);</span>
+					}
+					break;
+
+			}
+
+			}
+
+		}
+<span class="nc" id="L1750">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1751">			reportError(re);</span>
+<span class="nc" id="L1752">			recover(input,re);</span>
+		}
+<span class="nc" id="L1754">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1756">		}</span>
+<span class="nc" id="L1757">	}</span>
+	// $ANTLR end &quot;data_type_def&quot;
+
+
+
+	// $ANTLR start &quot;default_statement&quot;
+	// org/argouml/language/sql/reveng/MySql.g:255:1: default_statement[ColumnDefinition col] : ( 'NULL' | 'CURRENT_TIMESTAMP' ( 'ON' 'UPDATE' 'CURRENT_TIMESTAMP' )? | text_quoted_keep );
+	public final void default_statement(ColumnDefinition col) throws RecognitionException {
+<span class="nc" id="L1765">		String text_quoted_keep16 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:255:41: ( 'NULL' | 'CURRENT_TIMESTAMP' ( 'ON' 'UPDATE' 'CURRENT_TIMESTAMP' )? | text_quoted_keep )
+<span class="nc" id="L1769">			int alt36=3;</span>
+<span class="nc bnc" id="L1770" title="All 4 branches missed.">			switch ( input.LA(1) ) {</span>
+			case 42:
+				{
+<span class="nc" id="L1773">				alt36=1;</span>
+				}
+<span class="nc" id="L1775">				break;</span>
+			case 27:
+				{
+<span class="nc" id="L1778">				alt36=2;</span>
+				}
+<span class="nc" id="L1780">				break;</span>
+			case QUOTED_TEXT:
+				{
+<span class="nc" id="L1783">				alt36=3;</span>
+				}
+<span class="nc" id="L1785">				break;</span>
+			default:
+<span class="nc" id="L1787">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 36, 0, input);
+<span class="nc" id="L1789">				throw nvae;</span>
+			}
+<span class="nc bnc" id="L1791" title="All 4 branches missed.">			switch (alt36) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:256:2: 'NULL'
+					{
+<span class="nc" id="L1795">					match(input,42,FOLLOW_42_in_default_statement1026); </span>
+
+<span class="nc" id="L1797">							col.setDefaultValue(&quot;NULL&quot;);</span>
+						
+					}
+<span class="nc" id="L1800">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/MySql.g:259:4: 'CURRENT_TIMESTAMP' ( 'ON' 'UPDATE' 'CURRENT_TIMESTAMP' )?
+					{
+<span class="nc" id="L1804">					match(input,27,FOLLOW_27_in_default_statement1033); </span>
+					// org/argouml/language/sql/reveng/MySql.g:259:24: ( 'ON' 'UPDATE' 'CURRENT_TIMESTAMP' )?
+<span class="nc" id="L1806">					int alt35=2;</span>
+<span class="nc" id="L1807">					int LA35_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1808" title="All 2 branches missed.">					if ( (LA35_0==43) ) {</span>
+<span class="nc" id="L1809">						alt35=1;</span>
+					}
+<span class="nc bnc" id="L1811" title="All 2 branches missed.">					switch (alt35) {</span>
+						case 1 :
+							// org/argouml/language/sql/reveng/MySql.g:259:25: 'ON' 'UPDATE' 'CURRENT_TIMESTAMP'
+							{
+<span class="nc" id="L1815">							match(input,43,FOLLOW_43_in_default_statement1036); </span>
+<span class="nc" id="L1816">							match(input,53,FOLLOW_53_in_default_statement1038); </span>
+<span class="nc" id="L1817">							match(input,27,FOLLOW_27_in_default_statement1040); </span>
+							}
+							break;
+
+					}
+
+
+<span class="nc" id="L1824">							col.setDefaultValue(&quot;CURRENT_TIMESTAMP&quot;);</span>
+						
+					}
+<span class="nc" id="L1827">					break;</span>
+				case 3 :
+					// org/argouml/language/sql/reveng/MySql.g:262:4: text_quoted_keep
+					{
+<span class="nc" id="L1831">					pushFollow(FOLLOW_text_quoted_keep_in_default_statement1049);</span>
+<span class="nc" id="L1832">					text_quoted_keep16=text_quoted_keep();</span>
+<span class="nc" id="L1833">					state._fsp--;</span>
+
+
+<span class="nc" id="L1836">							col.setDefaultValue(text_quoted_keep16);</span>
+						
+					}
+					break;
+
+			}
+		}
+<span class="nc" id="L1843">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1844">			reportError(re);</span>
+<span class="nc" id="L1845">			recover(input,re);</span>
+		}
+<span class="nc" id="L1847">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1849">		}</span>
+<span class="nc" id="L1850">	}</span>
+	// $ANTLR end &quot;default_statement&quot;
+
+
+<span class="nc" id="L1854">	public static class data_length_return extends ParserRuleReturnScope {</span>
+		public Integer len;
+		public Integer decimal;
+	};
+
+
+	// $ANTLR start &quot;data_length&quot;
+	// org/argouml/language/sql/reveng/MySql.g:267:1: data_length returns [Integer len, Integer decimal] : LEFT_PAREN i1= NUMBER ( COMMA i2= NUMBER )? RIGHT_PAREN ;
+	public final MySqlParser.data_length_return data_length() throws RecognitionException {
+<span class="nc" id="L1863">		MySqlParser.data_length_return retval = new MySqlParser.data_length_return();</span>
+<span class="nc" id="L1864">		retval.start = input.LT(1);</span>
+
+<span class="nc" id="L1866">		Token i1=null;</span>
+<span class="nc" id="L1867">		Token i2=null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:267:52: ( LEFT_PAREN i1= NUMBER ( COMMA i2= NUMBER )? RIGHT_PAREN )
+			// org/argouml/language/sql/reveng/MySql.g:268:6: LEFT_PAREN i1= NUMBER ( COMMA i2= NUMBER )? RIGHT_PAREN
+			{
+<span class="nc" id="L1873">			match(input,LEFT_PAREN,FOLLOW_LEFT_PAREN_in_data_length1070); </span>
+<span class="nc" id="L1874">			i1=(Token)match(input,NUMBER,FOLLOW_NUMBER_in_data_length1074); </span>
+			// org/argouml/language/sql/reveng/MySql.g:268:27: ( COMMA i2= NUMBER )?
+<span class="nc" id="L1876">			int alt37=2;</span>
+<span class="nc" id="L1877">			int LA37_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1878" title="All 2 branches missed.">			if ( (LA37_0==COMMA) ) {</span>
+<span class="nc" id="L1879">				alt37=1;</span>
+			}
+<span class="nc bnc" id="L1881" title="All 2 branches missed.">			switch (alt37) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:268:28: COMMA i2= NUMBER
+					{
+<span class="nc" id="L1885">					match(input,COMMA,FOLLOW_COMMA_in_data_length1077); </span>
+<span class="nc" id="L1886">					i2=(Token)match(input,NUMBER,FOLLOW_NUMBER_in_data_length1081); </span>
+<span class="nc bnc" id="L1887" title="All 2 branches missed.">					retval.decimal = Integer.valueOf((i2!=null?i2.getText():null));</span>
+					}
+					break;
+
+			}
+
+<span class="nc" id="L1893">			match(input,RIGHT_PAREN,FOLLOW_RIGHT_PAREN_in_data_length1088); </span>
+<span class="nc bnc" id="L1894" title="All 2 branches missed.">			retval.len = Integer.valueOf((i1!=null?i1.getText():null));</span>
+			}
+
+<span class="nc" id="L1897">			retval.stop = input.LT(-1);</span>
+
+		}
+<span class="nc" id="L1900">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1901">			reportError(re);</span>
+<span class="nc" id="L1902">			recover(input,re);</span>
+		}
+<span class="nc" id="L1904">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1906">		}</span>
+<span class="nc" id="L1907">		return retval;</span>
+	}
+	// $ANTLR end &quot;data_length&quot;
+
+
+
+	// $ANTLR start &quot;schema&quot;
+	// org/argouml/language/sql/reveng/MySql.g:271:1: schema : ID ;
+	public final void schema() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:271:8: ( ID )
+			// org/argouml/language/sql/reveng/MySql.g:271:10: ID
+			{
+<span class="nc" id="L1920">			match(input,ID,FOLLOW_ID_in_schema1104); </span>
+			}
+
+		}
+<span class="nc" id="L1924">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1925">			reportError(re);</span>
+<span class="nc" id="L1926">			recover(input,re);</span>
+		}
+<span class="nc" id="L1928">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1930">		}</span>
+<span class="nc" id="L1931">	}</span>
+	// $ANTLR end &quot;schema&quot;
+
+
+
+	// $ANTLR start &quot;table&quot;
+	// org/argouml/language/sql/reveng/MySql.g:272:1: table : ID ;
+	public final void table() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:272:7: ( ID )
+			// org/argouml/language/sql/reveng/MySql.g:272:9: ID
+			{
+<span class="nc" id="L1943">			match(input,ID,FOLLOW_ID_in_table1111); </span>
+			}
+
+		}
+<span class="nc" id="L1947">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1948">			reportError(re);</span>
+<span class="nc" id="L1949">			recover(input,re);</span>
+		}
+<span class="nc" id="L1951">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1953">		}</span>
+<span class="nc" id="L1954">	}</span>
+	// $ANTLR end &quot;table&quot;
+
+
+<span class="nc" id="L1958">	public static class data_type_return extends ParserRuleReturnScope {</span>
+	};
+
+
+	// $ANTLR start &quot;data_type&quot;
+	// org/argouml/language/sql/reveng/MySql.g:273:1: data_type : ID ;
+	public final MySqlParser.data_type_return data_type() throws RecognitionException {
+<span class="nc" id="L1965">		MySqlParser.data_type_return retval = new MySqlParser.data_type_return();</span>
+<span class="nc" id="L1966">		retval.start = input.LT(1);</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:273:11: ( ID )
+			// org/argouml/language/sql/reveng/MySql.g:273:13: ID
+			{
+<span class="nc" id="L1972">			match(input,ID,FOLLOW_ID_in_data_type1119); </span>
+			}
+
+<span class="nc" id="L1975">			retval.stop = input.LT(-1);</span>
+
+		}
+<span class="nc" id="L1978">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1979">			reportError(re);</span>
+<span class="nc" id="L1980">			recover(input,re);</span>
+		}
+<span class="nc" id="L1982">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1984">		}</span>
+<span class="nc" id="L1985">		return retval;</span>
+	}
+	// $ANTLR end &quot;data_type&quot;
+
+
+
+	// $ANTLR start &quot;index_name&quot;
+	// org/argouml/language/sql/reveng/MySql.g:274:1: index_name returns [String name] : ( LEFT_PAREN )? name_with_esc ( RIGHT_PAREN )? ;
+	public final String index_name() throws RecognitionException {
+<span class="nc" id="L1994">		String name = null;</span>
+
+
+<span class="nc" id="L1997">		String name_with_esc17 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:274:34: ( ( LEFT_PAREN )? name_with_esc ( RIGHT_PAREN )? )
+			// org/argouml/language/sql/reveng/MySql.g:275:2: ( LEFT_PAREN )? name_with_esc ( RIGHT_PAREN )?
+			{
+			// org/argouml/language/sql/reveng/MySql.g:275:2: ( LEFT_PAREN )?
+<span class="nc" id="L2004">			int alt38=2;</span>
+<span class="nc" id="L2005">			int LA38_0 = input.LA(1);</span>
+<span class="nc bnc" id="L2006" title="All 2 branches missed.">			if ( (LA38_0==LEFT_PAREN) ) {</span>
+<span class="nc" id="L2007">				alt38=1;</span>
+			}
+<span class="nc bnc" id="L2009" title="All 2 branches missed.">			switch (alt38) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:275:3: LEFT_PAREN
+					{
+<span class="nc" id="L2013">					match(input,LEFT_PAREN,FOLLOW_LEFT_PAREN_in_index_name1132); </span>
+					}
+					break;
+
+			}
+
+<span class="nc" id="L2019">			pushFollow(FOLLOW_name_with_esc_in_index_name1136);</span>
+<span class="nc" id="L2020">			name_with_esc17=name_with_esc();</span>
+<span class="nc" id="L2021">			state._fsp--;</span>
+
+<span class="nc" id="L2023">			name = name_with_esc17; </span>
+			// org/argouml/language/sql/reveng/MySql.g:275:62: ( RIGHT_PAREN )?
+<span class="nc" id="L2025">			int alt39=2;</span>
+<span class="nc" id="L2026">			int LA39_0 = input.LA(1);</span>
+<span class="nc bnc" id="L2027" title="All 2 branches missed.">			if ( (LA39_0==RIGHT_PAREN) ) {</span>
+<span class="nc" id="L2028">				alt39=1;</span>
+			}
+<span class="nc bnc" id="L2030" title="All 2 branches missed.">			switch (alt39) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:275:63: RIGHT_PAREN
+					{
+<span class="nc" id="L2034">					match(input,RIGHT_PAREN,FOLLOW_RIGHT_PAREN_in_index_name1141); </span>
+					}
+					break;
+
+			}
+
+			}
+
+		}
+<span class="nc" id="L2043">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2044">			reportError(re);</span>
+<span class="nc" id="L2045">			recover(input,re);</span>
+		}
+<span class="nc" id="L2047">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2049">		}</span>
+<span class="nc" id="L2050">		return name;</span>
+	}
+	// $ANTLR end &quot;index_name&quot;
+
+
+
+	// $ANTLR start &quot;index_type&quot;
+	// org/argouml/language/sql/reveng/MySql.g:277:1: index_type : ( 'BTREE' | 'HASH' );
+	public final void index_type() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:277:12: ( 'BTREE' | 'HASH' )
+			// org/argouml/language/sql/reveng/MySql.g:
+			{
+<span class="nc bnc" id="L2063" title="All 4 branches missed.">			if ( input.LA(1)==21||input.LA(1)==35 ) {</span>
+<span class="nc" id="L2064">				input.consume();</span>
+<span class="nc" id="L2065">				state.errorRecovery=false;</span>
+			}
+			else {
+<span class="nc" id="L2068">				MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L2069">				throw mse;</span>
+			}
+			}
+
+		}
+<span class="nc" id="L2074">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2075">			reportError(re);</span>
+<span class="nc" id="L2076">			recover(input,re);</span>
+		}
+<span class="nc" id="L2078">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2080">		}</span>
+<span class="nc" id="L2081">	}</span>
+	// $ANTLR end &quot;index_type&quot;
+
+
+
+	// $ANTLR start &quot;symbol&quot;
+	// org/argouml/language/sql/reveng/MySql.g:279:1: symbol returns [String name] : name_with_esc ;
+	public final String symbol() throws RecognitionException {
+<span class="nc" id="L2089">		String name = null;</span>
+
+
+<span class="nc" id="L2092">		String name_with_esc18 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:279:30: ( name_with_esc )
+			// org/argouml/language/sql/reveng/MySql.g:280:2: name_with_esc
+			{
+<span class="nc" id="L2098">			pushFollow(FOLLOW_name_with_esc_in_symbol1170);</span>
+<span class="nc" id="L2099">			name_with_esc18=name_with_esc();</span>
+<span class="nc" id="L2100">			state._fsp--;</span>
+
+<span class="nc" id="L2102">			name = name_with_esc18; </span>
+			}
+
+		}
+<span class="nc" id="L2106">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2107">			reportError(re);</span>
+<span class="nc" id="L2108">			recover(input,re);</span>
+		}
+<span class="nc" id="L2110">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2112">		}</span>
+<span class="nc" id="L2113">		return name;</span>
+	}
+	// $ANTLR end &quot;symbol&quot;
+
+
+
+	// $ANTLR start &quot;name_with_esc&quot;
+	// org/argouml/language/sql/reveng/MySql.g:283:1: name_with_esc returns [String name] : ( PROTECT_CHAR )? ID ( PROTECT_CHAR )? ;
+	public final String name_with_esc() throws RecognitionException {
+<span class="nc" id="L2122">		String name = null;</span>
+
+
+<span class="nc" id="L2125">		Token ID19=null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/MySql.g:283:37: ( ( PROTECT_CHAR )? ID ( PROTECT_CHAR )? )
+			// org/argouml/language/sql/reveng/MySql.g:284:2: ( PROTECT_CHAR )? ID ( PROTECT_CHAR )?
+			{
+			// org/argouml/language/sql/reveng/MySql.g:284:2: ( PROTECT_CHAR )?
+<span class="nc" id="L2132">			int alt40=2;</span>
+<span class="nc" id="L2133">			int LA40_0 = input.LA(1);</span>
+<span class="nc bnc" id="L2134" title="All 2 branches missed.">			if ( (LA40_0==PROTECT_CHAR) ) {</span>
+<span class="nc" id="L2135">				alt40=1;</span>
+			}
+<span class="nc bnc" id="L2137" title="All 2 branches missed.">			switch (alt40) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:284:3: PROTECT_CHAR
+					{
+<span class="nc" id="L2141">					match(input,PROTECT_CHAR,FOLLOW_PROTECT_CHAR_in_name_with_esc1189); </span>
+					}
+					break;
+
+			}
+
+<span class="nc" id="L2147">			ID19=(Token)match(input,ID,FOLLOW_ID_in_name_with_esc1193); </span>
+<span class="nc bnc" id="L2148" title="All 2 branches missed.">			name = String.valueOf((ID19!=null?ID19.getText():null)); </span>
+			// org/argouml/language/sql/reveng/MySql.g:284:58: ( PROTECT_CHAR )?
+<span class="nc" id="L2150">			int alt41=2;</span>
+<span class="nc" id="L2151">			int LA41_0 = input.LA(1);</span>
+<span class="nc bnc" id="L2152" title="All 2 branches missed.">			if ( (LA41_0==PROTECT_CHAR) ) {</span>
+<span class="nc" id="L2153">				alt41=1;</span>
+			}
+<span class="nc bnc" id="L2155" title="All 2 branches missed.">			switch (alt41) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/MySql.g:284:59: PROTECT_CHAR
+					{
+<span class="nc" id="L2159">					match(input,PROTECT_CHAR,FOLLOW_PROTECT_CHAR_in_name_with_esc1198); </span>
+					}
+					break;
+
+			}
+
+			}
+
+		}
+<span class="nc" id="L2168">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2169">			reportError(re);</span>
+<span class="nc" id="L2170">			recover(input,re);</span>
+		}
+<span class="nc" id="L2172">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2174">		}</span>
+<span class="nc" id="L2175">		return name;</span>
+	}
+	// $ANTLR end &quot;name_with_esc&quot;
+
+	// Delegated rules
+
+
+
+<span class="nc" id="L2183">	public static final BitSet FOLLOW_dumpComment_in_dump_read57 = new BitSet(new long[]{0x0002000044010402L});</span>
+<span class="nc" id="L2184">	public static final BitSet FOLLOW_drop_table_statement_in_dump_read62 = new BitSet(new long[]{0x0002000044010402L});</span>
+<span class="nc" id="L2185">	public static final BitSet FOLLOW_create_table_statement_in_dump_read67 = new BitSet(new long[]{0x0002000044010402L});</span>
+<span class="nc" id="L2186">	public static final BitSet FOLLOW_set_statement_in_dump_read72 = new BitSet(new long[]{0x0002000044010402L});</span>
+<span class="nc" id="L2187">	public static final BitSet FOLLOW_SL_COMMENT_in_dumpComment99 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2188">	public static final BitSet FOLLOW_ML_COMMENT_in_dumpComment104 = new BitSet(new long[]{0x0000000000008002L});</span>
+<span class="nc" id="L2189">	public static final BitSet FOLLOW_SEMICOLON_in_dumpComment107 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2190">	public static final BitSet FOLLOW_49_in_set_statement118 = new BitSet(new long[]{0x0000000000020080L});</span>
+<span class="nc" id="L2191">	public static final BitSet FOLLOW_set_in_set_statement120 = new BitSet(new long[]{0x0000000000080000L});</span>
+<span class="nc" id="L2192">	public static final BitSet FOLLOW_19_in_set_statement128 = new BitSet(new long[]{0x0000000000020080L});</span>
+<span class="nc" id="L2193">	public static final BitSet FOLLOW_set_in_set_statement130 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2194">	public static final BitSet FOLLOW_30_in_drop_table_statement146 = new BitSet(new long[]{0x0004000000000000L});</span>
+<span class="nc" id="L2195">	public static final BitSet FOLLOW_50_in_drop_table_statement148 = new BitSet(new long[]{0x0000001000000000L});</span>
+<span class="nc" id="L2196">	public static final BitSet FOLLOW_36_in_drop_table_statement150 = new BitSet(new long[]{0x0000000100000000L});</span>
+<span class="nc" id="L2197">	public static final BitSet FOLLOW_32_in_drop_table_statement152 = new BitSet(new long[]{0x0000000000001080L});</span>
+<span class="nc" id="L2198">	public static final BitSet FOLLOW_PROTECT_CHAR_in_drop_table_statement155 = new BitSet(new long[]{0x0000000000000080L});</span>
+<span class="nc" id="L2199">	public static final BitSet FOLLOW_table_name_in_drop_table_statement159 = new BitSet(new long[]{0x0000000000009000L});</span>
+<span class="nc" id="L2200">	public static final BitSet FOLLOW_PROTECT_CHAR_in_drop_table_statement162 = new BitSet(new long[]{0x0000000000008000L});</span>
+<span class="nc" id="L2201">	public static final BitSet FOLLOW_SEMICOLON_in_drop_table_statement166 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2202">	public static final BitSet FOLLOW_26_in_create_table_statement178 = new BitSet(new long[]{0x0004000000000000L});</span>
+<span class="nc" id="L2203">	public static final BitSet FOLLOW_50_in_create_table_statement180 = new BitSet(new long[]{0x0000000000001080L});</span>
+<span class="nc" id="L2204">	public static final BitSet FOLLOW_PROTECT_CHAR_in_create_table_statement190 = new BitSet(new long[]{0x0000000000000080L});</span>
+<span class="nc" id="L2205">	public static final BitSet FOLLOW_table_name_in_create_table_statement194 = new BitSet(new long[]{0x0000000000001100L});</span>
+<span class="nc" id="L2206">	public static final BitSet FOLLOW_PROTECT_CHAR_in_create_table_statement197 = new BitSet(new long[]{0x0000000000000100L});</span>
+<span class="nc" id="L2207">	public static final BitSet FOLLOW_create_definition_list_in_create_table_statement223 = new BitSet(new long[]{0x0000000091108000L});</span>
+<span class="nc" id="L2208">	public static final BitSet FOLLOW_table_options_in_create_table_statement239 = new BitSet(new long[]{0x0000000000008000L});</span>
+<span class="nc" id="L2209">	public static final BitSet FOLLOW_SEMICOLON_in_create_table_statement283 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2210">	public static final BitSet FOLLOW_schema_in_table_name300 = new BitSet(new long[]{0x0000000000000040L});</span>
+<span class="nc" id="L2211">	public static final BitSet FOLLOW_DOT_in_table_name302 = new BitSet(new long[]{0x0000000000000080L});</span>
+<span class="nc" id="L2212">	public static final BitSet FOLLOW_table_in_table_name306 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2213">	public static final BitSet FOLLOW_LEFT_PAREN_in_create_definition_list326 = new BitSet(new long[]{0x0008206202001080L});</span>
+<span class="nc" id="L2214">	public static final BitSet FOLLOW_create_definition_in_create_definition_list328 = new BitSet(new long[]{0x0000000000004010L});</span>
+<span class="nc" id="L2215">	public static final BitSet FOLLOW_COMMA_in_create_definition_list332 = new BitSet(new long[]{0x0008206202001080L});</span>
+<span class="nc" id="L2216">	public static final BitSet FOLLOW_create_definition_in_create_definition_list334 = new BitSet(new long[]{0x0000000000004010L});</span>
+<span class="nc" id="L2217">	public static final BitSet FOLLOW_RIGHT_PAREN_in_create_definition_list341 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2218">	public static final BitSet FOLLOW_31_in_table_options357 = new BitSet(new long[]{0x0000000000080000L});</span>
+<span class="nc" id="L2219">	public static final BitSet FOLLOW_19_in_table_options359 = new BitSet(new long[]{0x0000000000000080L});</span>
+<span class="nc" id="L2220">	public static final BitSet FOLLOW_ID_in_table_options361 = new BitSet(new long[]{0x0000000011100002L});</span>
+<span class="nc" id="L2221">	public static final BitSet FOLLOW_20_in_table_options370 = new BitSet(new long[]{0x0000000000080000L});</span>
+<span class="nc" id="L2222">	public static final BitSet FOLLOW_19_in_table_options372 = new BitSet(new long[]{0x0000000000000800L});</span>
+<span class="nc" id="L2223">	public static final BitSet FOLLOW_NUMBER_in_table_options374 = new BitSet(new long[]{0x0000000011000002L});</span>
+<span class="nc" id="L2224">	public static final BitSet FOLLOW_28_in_table_options383 = new BitSet(new long[]{0x0000000000800000L});</span>
+<span class="nc" id="L2225">	public static final BitSet FOLLOW_23_in_table_options385 = new BitSet(new long[]{0x0000000000080000L});</span>
+<span class="nc" id="L2226">	public static final BitSet FOLLOW_19_in_table_options387 = new BitSet(new long[]{0x0000000000000080L});</span>
+<span class="nc" id="L2227">	public static final BitSet FOLLOW_ID_in_table_options389 = new BitSet(new long[]{0x0000000001000002L});</span>
+<span class="nc" id="L2228">	public static final BitSet FOLLOW_24_in_table_options398 = new BitSet(new long[]{0x0000000000080000L});</span>
+<span class="nc" id="L2229">	public static final BitSet FOLLOW_19_in_table_options400 = new BitSet(new long[]{0x0000000000002000L});</span>
+<span class="nc" id="L2230">	public static final BitSet FOLLOW_text_quoted_in_table_options402 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2231">	public static final BitSet FOLLOW_set_in_create_definition425 = new BitSet(new long[]{0x0000000000001180L});</span>
+<span class="nc" id="L2232">	public static final BitSet FOLLOW_index_name_in_create_definition431 = new BitSet(new long[]{0x0000000800200100L});</span>
+<span class="nc" id="L2233">	public static final BitSet FOLLOW_index_type_in_create_definition434 = new BitSet(new long[]{0x0000000000000100L});</span>
+<span class="nc" id="L2234">	public static final BitSet FOLLOW_columns_list_name_in_create_definition438 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2235">	public static final BitSet FOLLOW_constraint_def_in_create_definition450 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2236">	public static final BitSet FOLLOW_column_name_in_create_definition472 = new BitSet(new long[]{0x0000000000000080L});</span>
+<span class="nc" id="L2237">	public static final BitSet FOLLOW_data_type_def_in_create_definition476 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2238">	public static final BitSet FOLLOW_QUOTED_TEXT_in_text_quoted494 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2239">	public static final BitSet FOLLOW_QUOTED_TEXT_in_text_quoted_keep514 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2240">	public static final BitSet FOLLOW_25_in_constraint_def536 = new BitSet(new long[]{0x0000000000001080L});</span>
+<span class="nc" id="L2241">	public static final BitSet FOLLOW_symbol_in_constraint_def538 = new BitSet(new long[]{0x0008200200000000L});</span>
+<span class="nc" id="L2242">	public static final BitSet FOLLOW_constraint_unique_in_constraint_def561 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2243">	public static final BitSet FOLLOW_constraint_fk_in_constraint_def568 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2244">	public static final BitSet FOLLOW_constraint_pk_in_constraint_def575 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2245">	public static final BitSet FOLLOW_51_in_constraint_unique592 = new BitSet(new long[]{0x0000006800201180L});</span>
+<span class="nc" id="L2246">	public static final BitSet FOLLOW_index_name_in_constraint_unique604 = new BitSet(new long[]{0x0000000800200100L});</span>
+<span class="nc" id="L2247">	public static final BitSet FOLLOW_index_type_in_constraint_unique609 = new BitSet(new long[]{0x0000000000000100L});</span>
+<span class="nc" id="L2248">	public static final BitSet FOLLOW_columns_list_name_in_constraint_unique614 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2249">	public static final BitSet FOLLOW_33_in_constraint_fk625 = new BitSet(new long[]{0x0000004000000000L});</span>
+<span class="nc" id="L2250">	public static final BitSet FOLLOW_38_in_constraint_fk627 = new BitSet(new long[]{0x0000000000001180L});</span>
+<span class="nc" id="L2251">	public static final BitSet FOLLOW_symbol_in_constraint_fk630 = new BitSet(new long[]{0x0000000000000100L});</span>
+<span class="nc" id="L2252">	public static final BitSet FOLLOW_columns_list_name_in_constraint_fk638 = new BitSet(new long[]{0x0000400000000000L});</span>
+<span class="nc" id="L2253">	public static final BitSet FOLLOW_reference_definition_in_constraint_fk644 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2254">	public static final BitSet FOLLOW_45_in_constraint_pk657 = new BitSet(new long[]{0x0000004000000000L});</span>
+<span class="nc" id="L2255">	public static final BitSet FOLLOW_38_in_constraint_pk659 = new BitSet(new long[]{0x0000000800200100L});</span>
+<span class="nc" id="L2256">	public static final BitSet FOLLOW_index_type_in_constraint_pk662 = new BitSet(new long[]{0x0000000000000100L});</span>
+<span class="nc" id="L2257">	public static final BitSet FOLLOW_columns_list_name_in_constraint_pk666 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2258">	public static final BitSet FOLLOW_46_in_reference_definition681 = new BitSet(new long[]{0x0000000000001080L});</span>
+<span class="nc" id="L2259">	public static final BitSet FOLLOW_tbl_name_in_reference_definition683 = new BitSet(new long[]{0x0000000000000100L});</span>
+<span class="nc" id="L2260">	public static final BitSet FOLLOW_columns_list_name_in_reference_definition690 = new BitSet(new long[]{0x0000088000000002L});</span>
+<span class="nc" id="L2261">	public static final BitSet FOLLOW_39_in_reference_definition699 = new BitSet(new long[]{0x0000100400000000L});</span>
+<span class="nc" id="L2262">	public static final BitSet FOLLOW_set_in_reference_definition701 = new BitSet(new long[]{0x0000080000000002L});</span>
+<span class="nc" id="L2263">	public static final BitSet FOLLOW_43_in_reference_definition714 = new BitSet(new long[]{0x0020000020000000L});</span>
+<span class="nc" id="L2264">	public static final BitSet FOLLOW_set_in_reference_definition716 = new BitSet(new long[]{0x0003810000400000L});</span>
+<span class="nc" id="L2265">	public static final BitSet FOLLOW_reference_option_in_reference_definition724 = new BitSet(new long[]{0x0000080000000002L});</span>
+<span class="nc" id="L2266">	public static final BitSet FOLLOW_47_in_reference_option739 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2267">	public static final BitSet FOLLOW_22_in_reference_option743 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2268">	public static final BitSet FOLLOW_49_in_reference_option747 = new BitSet(new long[]{0x0000040000000000L});</span>
+<span class="nc" id="L2269">	public static final BitSet FOLLOW_42_in_reference_option749 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2270">	public static final BitSet FOLLOW_40_in_reference_option753 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2271">	public static final BitSet FOLLOW_48_in_reference_option757 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2272">	public static final BitSet FOLLOW_LEFT_PAREN_in_columns_list_name772 = new BitSet(new long[]{0x0000000000001080L});</span>
+<span class="nc" id="L2273">	public static final BitSet FOLLOW_column_name_in_columns_list_name776 = new BitSet(new long[]{0x0000000000004010L});</span>
+<span class="nc" id="L2274">	public static final BitSet FOLLOW_COMMA_in_columns_list_name788 = new BitSet(new long[]{0x0000000000001080L});</span>
+<span class="nc" id="L2275">	public static final BitSet FOLLOW_column_name_in_columns_list_name792 = new BitSet(new long[]{0x0000000000004010L});</span>
+<span class="nc" id="L2276">	public static final BitSet FOLLOW_RIGHT_PAREN_in_columns_list_name800 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2277">	public static final BitSet FOLLOW_name_with_esc_in_column_name815 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2278">	public static final BitSet FOLLOW_name_with_esc_in_tbl_name838 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2279">	public static final BitSet FOLLOW_data_type_in_data_type_def855 = new BitSet(new long[]{0x0050264011100102L});</span>
+<span class="nc" id="L2280">	public static final BitSet FOLLOW_data_length_in_data_type_def866 = new BitSet(new long[]{0x0050264011100002L});</span>
+<span class="nc" id="L2281">	public static final BitSet FOLLOW_52_in_data_type_def879 = new BitSet(new long[]{0x0040264011100002L});</span>
+<span class="nc" id="L2282">	public static final BitSet FOLLOW_54_in_data_type_def899 = new BitSet(new long[]{0x0000264011100002L});</span>
+<span class="nc" id="L2283">	public static final BitSet FOLLOW_41_in_data_type_def914 = new BitSet(new long[]{0x0000040000000000L});</span>
+<span class="nc" id="L2284">	public static final BitSet FOLLOW_42_in_data_type_def916 = new BitSet(new long[]{0x0000204011100002L});</span>
+<span class="nc" id="L2285">	public static final BitSet FOLLOW_42_in_data_type_def929 = new BitSet(new long[]{0x0000204011100002L});</span>
+<span class="nc" id="L2286">	public static final BitSet FOLLOW_28_in_data_type_def949 = new BitSet(new long[]{0x0000040008002000L});</span>
+<span class="nc" id="L2287">	public static final BitSet FOLLOW_default_statement_in_data_type_def951 = new BitSet(new long[]{0x0000204001100002L});</span>
+<span class="nc" id="L2288">	public static final BitSet FOLLOW_20_in_data_type_def971 = new BitSet(new long[]{0x0000204001000002L});</span>
+<span class="nc" id="L2289">	public static final BitSet FOLLOW_45_in_data_type_def985 = new BitSet(new long[]{0x0000004000000000L});</span>
+<span class="nc" id="L2290">	public static final BitSet FOLLOW_38_in_data_type_def987 = new BitSet(new long[]{0x0000000001000002L});</span>
+<span class="nc" id="L2291">	public static final BitSet FOLLOW_38_in_data_type_def992 = new BitSet(new long[]{0x0000000001000002L});</span>
+<span class="nc" id="L2292">	public static final BitSet FOLLOW_24_in_data_type_def1005 = new BitSet(new long[]{0x0000000000002000L});</span>
+<span class="nc" id="L2293">	public static final BitSet FOLLOW_text_quoted_in_data_type_def1007 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2294">	public static final BitSet FOLLOW_42_in_default_statement1026 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2295">	public static final BitSet FOLLOW_27_in_default_statement1033 = new BitSet(new long[]{0x0000080000000002L});</span>
+<span class="nc" id="L2296">	public static final BitSet FOLLOW_43_in_default_statement1036 = new BitSet(new long[]{0x0020000000000000L});</span>
+<span class="nc" id="L2297">	public static final BitSet FOLLOW_53_in_default_statement1038 = new BitSet(new long[]{0x0000000008000000L});</span>
+<span class="nc" id="L2298">	public static final BitSet FOLLOW_27_in_default_statement1040 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2299">	public static final BitSet FOLLOW_text_quoted_keep_in_default_statement1049 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2300">	public static final BitSet FOLLOW_LEFT_PAREN_in_data_length1070 = new BitSet(new long[]{0x0000000000000800L});</span>
+<span class="nc" id="L2301">	public static final BitSet FOLLOW_NUMBER_in_data_length1074 = new BitSet(new long[]{0x0000000000004010L});</span>
+<span class="nc" id="L2302">	public static final BitSet FOLLOW_COMMA_in_data_length1077 = new BitSet(new long[]{0x0000000000000800L});</span>
+<span class="nc" id="L2303">	public static final BitSet FOLLOW_NUMBER_in_data_length1081 = new BitSet(new long[]{0x0000000000004000L});</span>
+<span class="nc" id="L2304">	public static final BitSet FOLLOW_RIGHT_PAREN_in_data_length1088 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2305">	public static final BitSet FOLLOW_ID_in_schema1104 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2306">	public static final BitSet FOLLOW_ID_in_table1111 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2307">	public static final BitSet FOLLOW_ID_in_data_type1119 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2308">	public static final BitSet FOLLOW_LEFT_PAREN_in_index_name1132 = new BitSet(new long[]{0x0000000000001080L});</span>
+<span class="nc" id="L2309">	public static final BitSet FOLLOW_name_with_esc_in_index_name1136 = new BitSet(new long[]{0x0000000000004002L});</span>
+<span class="nc" id="L2310">	public static final BitSet FOLLOW_RIGHT_PAREN_in_index_name1141 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2311">	public static final BitSet FOLLOW_name_with_esc_in_symbol1170 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2312">	public static final BitSet FOLLOW_PROTECT_CHAR_in_name_with_esc1189 = new BitSet(new long[]{0x0000000000000080L});</span>
+<span class="nc" id="L2313">	public static final BitSet FOLLOW_ID_in_name_with_esc1193 = new BitSet(new long[]{0x0000000000001002L});</span>
+<span class="nc" id="L2314">	public static final BitSet FOLLOW_PROTECT_CHAR_in_name_with_esc1198 = new BitSet(new long[]{0x0000000000000002L});</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

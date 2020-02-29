@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SettingsTabSql.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.ui</a> &gt; <span class="el_source">SettingsTabSql.java</span></div><h1>SettingsTabSql.java</h1><pre class="source lang-java linenums">/* $Id$
+ *****************************************************************************
+ * Copyright (c) 2009 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    drahmann
+ *****************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ */
+
+// Copyright (c) 2007 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies. This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied &quot;AS
+// IS&quot;, without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN &quot;AS IS&quot; BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+package org.argouml.ui;
+
+import java.awt.Dimension;
+import java.awt.GridBagLayout;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
+
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+
+import org.argouml.application.api.GUISettingsTabInterface;
+import org.argouml.i18n.Translator;
+import org.argouml.language.sql.DomainMapper;
+import org.argouml.language.sql.GeneratorSql;
+import org.argouml.language.sql.SqlCodeCreator;
+
+/**
+ * Settings tab for this module. Allows configuration of domain mappings.
+ *
+ * @author drahmann
+ */
+public class SettingsTabSql extends JPanel implements GUISettingsTabInterface,
+        ListSelectionListener {
+    public void valueChanged(ListSelectionEvent e) {
+<span class="nc" id="L73">        updateMappings();</span>
+<span class="nc" id="L74">        int index = tblFound.getSelectedRow();</span>
+<span class="nc" id="L75">        SqlCodeCreator scc = (SqlCodeCreator) tblFound.getModel().getValueAt(</span>
+                index, -1);
+<span class="nc" id="L77">        TableModel tm = new TableModelDomainMappings(scc.getClass());</span>
+<span class="nc" id="L78">        tblDomainMappings.setModel(tm);</span>
+
+<span class="nc" id="L80">        previousSelected = scc;</span>
+<span class="nc" id="L81">    }</span>
+
+    private Object[] getElementForRow(int index) {
+<span class="nc" id="L84">        return (Object[]) elements.get(index);</span>
+    }
+
+    private class TableModelDomainMappings extends AbstractTableModel {
+<span class="nc" id="L88">        public TableModelDomainMappings(Class codeCreatorClass) {</span>
+<span class="nc" id="L89">            DomainMapper m = GeneratorSql.getInstance().getDomainMapper();</span>
+<span class="nc" id="L90">            Map mappings = m.getMappingsFor(codeCreatorClass);</span>
+
+<span class="nc" id="L92">            elements = new ArrayList();</span>
+<span class="nc bnc" id="L93" title="All 2 branches missed.">            if (mappings != null) {</span>
+<span class="nc" id="L94">                Set entries = mappings.entrySet();</span>
+<span class="nc bnc" id="L95" title="All 2 branches missed.">                for (Iterator it = entries.iterator(); it.hasNext();) {</span>
+<span class="nc" id="L96">                    Entry entry = (Entry) it.next();</span>
+<span class="nc" id="L97">                    elements.add(newElement(entry.getKey(), entry.getValue()));</span>
+<span class="nc" id="L98">                }</span>
+            }
+<span class="nc" id="L100">        }</span>
+
+        private Object[] newElement(Object key, Object value) {
+<span class="nc" id="L103">            Object[] element = new Object[2];</span>
+<span class="nc" id="L104">            element[0] = key;</span>
+<span class="nc" id="L105">            element[1] = value;</span>
+<span class="nc" id="L106">            return element;</span>
+        }
+
+        public Class getColumnClass(int columnIndex) {
+<span class="nc bnc" id="L110" title="All 4 branches missed.">            if (columnIndex &gt;= 0 &amp;&amp; columnIndex &lt;= 1) {</span>
+<span class="nc" id="L111">                return String.class;</span>
+            }
+<span class="nc" id="L113">            return null;</span>
+        }
+
+        public int getColumnCount() {
+<span class="nc" id="L117">            return 2;</span>
+        }
+
+        public String getColumnName(int column) {
+<span class="nc" id="L121">            return columnNames[column];</span>
+        }
+
+        public int getRowCount() {
+<span class="nc" id="L125">            return elements.size() + 1;</span>
+        }
+
+        public Object getValueAt(int rowIndex, int columnIndex) {
+<span class="nc" id="L129">            Object result = null;</span>
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            if (rowIndex == elements.size()) {</span>
+<span class="nc" id="L131">                result = &quot;&quot;;</span>
+            } else {
+<span class="nc" id="L133">                Object[] element = getElementForRow(rowIndex);</span>
+<span class="nc" id="L134">                result = element[columnIndex];</span>
+            }
+<span class="nc" id="L136">            return result;</span>
+        }
+
+        public boolean isCellEditable(int rowIndex, int columnIndex) {
+<span class="nc bnc" id="L140" title="All 6 branches missed.">            return rowIndex &lt; getRowCount() &amp;&amp; columnIndex &gt;= 0</span>
+                    &amp;&amp; columnIndex &lt;= 1;
+        }
+
+        public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+<span class="nc bnc" id="L145" title="All 2 branches missed.">            if (rowIndex == elements.size()) {</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">                if (columnIndex == 0) {</span>
+<span class="nc" id="L147">                    elements.add(newElement(aValue, &quot;&quot;));</span>
+<span class="nc bnc" id="L148" title="All 2 branches missed.">                } else if (columnIndex == 1) {</span>
+<span class="nc" id="L149">                    elements.add(newElement(&quot;&quot;, aValue));</span>
+                }
+            } else {
+<span class="nc" id="L152">                getElementForRow(rowIndex)[columnIndex] = aValue;</span>
+            }
+<span class="nc" id="L154">        }</span>
+    }
+
+<span class="nc" id="L157">    private String[] columnNames = {</span>
+<span class="nc" id="L158">            Translator.localize(&quot;argouml-sql.settings.domain&quot;),</span>
+<span class="nc" id="L159">            Translator.localize(&quot;argouml-sql.settings.datatype&quot;) };</span>
+
+    private List elements;
+
+    // private Object[][] elements;
+
+    private boolean initialized;
+
+    private JLabel lblDomainMappings;
+
+    private JLabel lblFound;
+
+    private JTable tblFound;
+
+    private SqlCodeCreator previousSelected;
+
+    private JTable tblDomainMappings;
+
+    /**
+     * Create a new instance of this settings tab.
+     */
+    public SettingsTabSql() {
+<span class="nc" id="L181">        super();</span>
+<span class="nc" id="L182">        initialized = false;</span>
+<span class="nc" id="L183">    }</span>
+
+    public String getTabKey() {
+<span class="nc" id="L186">        return &quot;argouml-sql.settings.title&quot;;</span>
+    }
+
+    public JPanel getTabPanel() {
+<span class="nc bnc" id="L190" title="All 2 branches missed.">        if (!initialized) {</span>
+<span class="nc" id="L191">            GridBagLayout l = new GridBagLayout();</span>
+<span class="nc" id="L192">            l.rowWeights = new double[] { 0, 1, 0, 1 };</span>
+<span class="nc" id="L193">            l.columnWeights = new double[] { 0, 1 };</span>
+
+<span class="nc" id="L195">            setLayout(l);</span>
+
+<span class="nc" id="L197">            lblFound = new JLabel(Translator</span>
+<span class="nc" id="L198">                    .localize(&quot;argouml-sql.settings.found-creators&quot;)</span>
+                    + &quot;:&quot;);
+<span class="nc" id="L200">            tblFound = new JTable(new TableModelCodeCreators());</span>
+<span class="nc" id="L201">            tblFound.getSelectionModel().addListSelectionListener(this);</span>
+<span class="nc" id="L202">            lblDomainMappings = new JLabel(Translator</span>
+<span class="nc" id="L203">                    .localize(&quot;argouml-sql.settings.mapped-domains&quot;)</span>
+                    + &quot;:&quot;);
+<span class="nc" id="L205">            tblDomainMappings = new JTable();</span>
+
+<span class="nc" id="L207">            add(lblFound, GridBagUtils.captionConstraints(0, 0));</span>
+<span class="nc" id="L208">            JScrollPane spFound = new JScrollPane(tblFound);</span>
+<span class="nc" id="L209">            spFound.setPreferredSize(new Dimension(300, 200));</span>
+<span class="nc" id="L210">            add(spFound, GridBagUtils.clientAlignConstraints(0, 1, 2, 1));</span>
+<span class="nc" id="L211">            add(lblDomainMappings, GridBagUtils.captionConstraints(0, 2));</span>
+<span class="nc" id="L212">            add(new JScrollPane(tblDomainMappings), GridBagUtils</span>
+<span class="nc" id="L213">                    .clientAlignConstraints(0, 3, 2, 1));</span>
+
+<span class="nc" id="L215">            initialized = true;</span>
+        }
+
+<span class="nc" id="L218">        return this;</span>
+    }
+
+    public void handleResetToDefault() {
+<span class="nc" id="L222">        GeneratorSql.getInstance().getDomainMapper().load();</span>
+<span class="nc" id="L223">    }</span>
+
+    public void handleSettingsTabCancel() {
+<span class="nc" id="L226">        GeneratorSql.getInstance().getDomainMapper().load();</span>
+<span class="nc" id="L227">    }</span>
+
+    public void handleSettingsTabRefresh() {
+<span class="nc" id="L230">        GeneratorSql.getInstance().getDomainMapper().load();</span>
+<span class="nc" id="L231">    }</span>
+
+    public void handleSettingsTabSave() {
+<span class="nc" id="L234">        updateMappings();</span>
+<span class="nc" id="L235">        GeneratorSql.getInstance().getDomainMapper().save();</span>
+<span class="nc" id="L236">    }</span>
+
+    private void updateMappings() {
+<span class="nc bnc" id="L239" title="All 2 branches missed.">        if (previousSelected != null) {</span>
+<span class="nc" id="L240">            DomainMapper m = GeneratorSql.getInstance().getDomainMapper();</span>
+<span class="nc" id="L241">            m.clear(previousSelected.getClass());</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">            for (int i = 0; i &lt; elements.size(); i++) {</span>
+<span class="nc" id="L243">                Object[] element = getElementForRow(i);</span>
+<span class="nc" id="L244">                String domain = (String) element[0];</span>
+<span class="nc" id="L245">                String datatype = (String) element[1];</span>
+<span class="nc" id="L246">                m.setDatatype(previousSelected.getClass(), domain, datatype);</span>
+            }
+        }
+<span class="nc" id="L249">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

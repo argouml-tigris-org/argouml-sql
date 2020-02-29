@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FirebirdSqlCodeCreator.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql</a> &gt; <span class="el_source">FirebirdSqlCodeCreator.java</span></div><h1>FirebirdSqlCodeCreator.java</h1><pre class="source lang-java linenums">package org.argouml.language.sql;
+
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * Class for creating DDL statements for Firebird.
+ * 
+ * @author Kai
+ */
+public class FirebirdSqlCodeCreator implements SqlCodeCreator {
+<span class="fc" id="L12">    private static final String LINE_SEPARATOR = System</span>
+<span class="fc" id="L13">            .getProperty(&quot;line.separator&quot;);</span>
+
+    private int primaryKeyCounter;
+
+    private int exceptionCounter;
+
+    /**
+     * Construct a new code creator.
+     * 
+     */
+<span class="fc" id="L23">    public FirebirdSqlCodeCreator() {</span>
+<span class="fc" id="L24">        resetCounters();</span>
+<span class="fc" id="L25">    }</span>
+
+    /**
+     * Resets counters which are used for auto-generated names (e.g. for primary
+     * keys or for exceptions).
+     */
+    public void resetCounters() {
+<span class="fc" id="L32">        primaryKeyCounter = 1;</span>
+<span class="fc" id="L33">        exceptionCounter = 1;</span>
+<span class="fc" id="L34">    }</span>
+
+    /**
+     * Generate DDL statements for the specified foreign key definition.
+     * 
+     * @param foreignKeyDefinition
+     *            The foreign key definition
+     * @return The generated DDL statement
+     * 
+     * @see org.argouml.language.sql.SqlCodeCreator#createForeignKey(org.argouml.language.sql.ForeignKeyDefinition)
+     */
+    public String createForeignKey(ForeignKeyDefinition foreignKeyDefinition) {
+<span class="fc" id="L46">        String tableName = foreignKeyDefinition.getTableName();</span>
+<span class="fc" id="L47">        List columnNames = foreignKeyDefinition.getColumnNames();</span>
+<span class="fc" id="L48">        String referencesTableName = foreignKeyDefinition</span>
+<span class="fc" id="L49">                .getReferencesTableName();</span>
+<span class="fc" id="L50">        List referencesColumnNames = foreignKeyDefinition</span>
+<span class="fc" id="L51">                .getReferencesColumnNames();</span>
+<span class="fc" id="L52">        String foreignKeyName = foreignKeyDefinition.getForeignKeyName();</span>
+
+<span class="fc" id="L54">        StringBuffer sb = new StringBuffer();</span>
+<span class="fc" id="L55">        sb.append(LINE_SEPARATOR);</span>
+<span class="fc" id="L56">        sb.append(&quot;ALTER TABLE &quot;).append(tableName);</span>
+<span class="fc" id="L57">        sb.append(&quot; ADD CONSTRAINT &quot;).append(foreignKeyName).append(</span>
+                LINE_SEPARATOR);
+<span class="fc" id="L59">        sb.append(&quot;FOREIGN KEY (&quot;);</span>
+<span class="fc" id="L60">        sb.append(Utils.stringsToCommaString(columnNames));</span>
+<span class="fc" id="L61">        sb.append(&quot;) REFERENCES &quot;);</span>
+<span class="fc" id="L62">        sb.append(referencesTableName).append(&quot; (&quot;);</span>
+<span class="fc" id="L63">        sb.append(Utils.stringsToCommaString(referencesColumnNames));</span>
+<span class="fc" id="L64">        sb.append(&quot;)&quot;);</span>
+
+<span class="fc" id="L66">        int refLower = foreignKeyDefinition.getReferencesLower();</span>
+
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (refLower == 0) {</span>
+<span class="fc" id="L69">            sb.append(&quot; ON DELETE SET NULL&quot;);</span>
+        } else {
+<span class="fc" id="L71">            sb.append(&quot; ON DELETE CASCADE&quot;);</span>
+        }
+
+<span class="fc" id="L74">        sb.append(&quot;;&quot;).append(LINE_SEPARATOR);</span>
+<span class="fc" id="L75">        sb.append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L77">        int upper = foreignKeyDefinition.getUpper();</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (upper == 1) {</span>
+<span class="fc" id="L79">            sb.append(getOneToOneTrigger(foreignKeyDefinition));</span>
+        }
+
+<span class="fc" id="L82">        return sb.toString();</span>
+    }
+
+    private String getOneToOneTriggerBody(ForeignKeyDefinition fkDef,
+            String exceptionName) {
+<span class="fc" id="L87">        String tableName = fkDef.getTableName();</span>
+
+<span class="fc" id="L89">        StringBuffer sb = new StringBuffer();</span>
+<span class="fc" id="L90">        sb.append(&quot;    DECLARE VARIABLE x INTEGER;&quot;).append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L92">        sb.append(&quot;BEGIN&quot;).append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L94">        sb.append(&quot;    &quot;);</span>
+<span class="fc" id="L95">        sb.append(&quot;SELECT COUNT(*) FROM &quot;).append(tableName);</span>
+<span class="fc" id="L96">        sb.append(&quot; WHERE &quot;);</span>
+
+<span class="fc" id="L98">        StringBuffer sbWhere = new StringBuffer();</span>
+<span class="fc" id="L99">        List columnNames = fkDef.getColumnNames();</span>
+<span class="fc bfc" id="L100" title="All 2 branches covered.">        for (int i = 0; i &lt; columnNames.size(); i++) {</span>
+<span class="fc bfc" id="L101" title="All 2 branches covered.">            if (sbWhere.length() &gt; 0) {</span>
+<span class="fc" id="L102">                sbWhere.append(&quot; AND &quot;);</span>
+            }
+
+<span class="fc" id="L105">            String colName = (String) columnNames.get(i);</span>
+
+<span class="fc" id="L107">            sbWhere.append(colName);</span>
+<span class="fc" id="L108">            sbWhere.append(&quot; = NEW.&quot;).append(colName);</span>
+        }
+
+<span class="fc" id="L111">        List pkFields = fkDef.getTable().getPrimaryKeyFields();</span>
+<span class="fc bfc" id="L112" title="All 2 branches covered.">        for (int i = 0; i &lt; pkFields.size(); i++) {</span>
+<span class="fc" id="L113">            String pkFieldName = (String) pkFields.get(i);</span>
+<span class="fc" id="L114">            sbWhere.append(&quot; AND &quot;).append(pkFieldName);</span>
+<span class="fc" id="L115">            sbWhere.append(&quot; &lt;&gt; NEW.&quot;).append(pkFieldName);</span>
+<span class="fc" id="L116">            sbWhere.append(&quot; &quot;);</span>
+        }
+
+<span class="fc" id="L119">        sb.append(sbWhere).append(&quot; INTO :x;&quot;).append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L121">        sb.append(&quot;    IF (:x = 1) THEN&quot;).append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L123">        sb.append(&quot;        &quot;);</span>
+<span class="fc" id="L124">        sb.append(&quot;EXCEPTION &quot;).append(exceptionName);</span>
+<span class="fc" id="L125">        sb.append(&quot;;&quot;).append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L127">        sb.append(&quot;END !!&quot;).append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L129">        return sb.toString();</span>
+    }
+
+    private String getOneToOneTrigger(ForeignKeyDefinition fkDef) {
+<span class="fc" id="L133">        String excName1to1violated = &quot;EXC_ONE_TO_ONE_VIOLATED&quot;</span>
+                + exceptionCounter;
+<span class="fc" id="L135">        exceptionCounter++;</span>
+
+<span class="fc" id="L137">        String tableName = fkDef.getTableName();</span>
+<span class="fc" id="L138">        String referencesTableName = fkDef.getReferencesTableName();</span>
+
+<span class="fc" id="L140">        StringBuffer sb = new StringBuffer();</span>
+<span class="fc" id="L141">        sb.append(&quot;CREATE EXCEPTION &quot;).append(excName1to1violated);</span>
+<span class="fc" id="L142">        sb.append(&quot; 'One record in &quot;).append(referencesTableName);</span>
+<span class="fc" id="L143">        sb.append(&quot; references more than one record in &quot;).append(tableName);</span>
+<span class="fc" id="L144">        sb.append(&quot;';&quot;).append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L146">        sb.append(&quot;SET TERM !! ;&quot;).append(LINE_SEPARATOR);</span>
+<span class="fc" id="L147">        sb.append(LINE_SEPARATOR);</span>
+
+        // Names in Firebird need to be shorter than 30 characters
+<span class="fc" id="L150">        String shortTableName = Utils.getShortName(tableName, 22);</span>
+<span class="fc" id="L151">        sb.append(&quot;CREATE TRIGGER trig_bef_ins_&quot;).append(shortTableName);</span>
+<span class="fc" id="L152">        sb.append(&quot; FOR &quot;).append(tableName);</span>
+<span class="fc" id="L153">        sb.append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L155">        sb.append(&quot;BEFORE INSERT AS&quot;).append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L157">        sb.append(getOneToOneTriggerBody(fkDef, excName1to1violated));</span>
+<span class="fc" id="L158">        sb.append(LINE_SEPARATOR).append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L160">        sb.append(&quot;CREATE TRIGGER trig_bef_upd_&quot;).append(shortTableName);</span>
+<span class="fc" id="L161">        sb.append(&quot; FOR &quot;).append(tableName);</span>
+<span class="fc" id="L162">        sb.append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L164">        sb.append(&quot;BEFORE UPDATE AS&quot;).append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L166">        sb.append(getOneToOneTriggerBody(fkDef, excName1to1violated));</span>
+<span class="fc" id="L167">        sb.append(LINE_SEPARATOR).append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L169">        sb.append(&quot;SET TERM ; !!&quot;).append(LINE_SEPARATOR);</span>
+<span class="fc" id="L170">        sb.append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L172">        return sb.toString();</span>
+    }
+
+    /**
+     * Generates DDL statements for creating a table according to the parameter
+     * &lt;code&gt;tableDefinition&lt;/code&gt;.
+     * 
+     * @param tableDefinition
+     *            A &lt;code&gt;TableDefinition&lt;/code&gt; object that holds alls
+     *            necessary data for generating code.
+     * @return The generated code.
+     * @see org.argouml.language.sql.SqlCodeCreator#createTable(org.argouml.language.sql.TableDefinition)
+     */
+    public String createTable(TableDefinition tableDefinition) {
+<span class="fc" id="L186">        StringBuffer sb = new StringBuffer();</span>
+<span class="fc" id="L187">        sb.append(&quot;CREATE TABLE &quot;);</span>
+<span class="fc" id="L188">        sb.append(tableDefinition.getName()).append(&quot; (&quot;);</span>
+<span class="fc" id="L189">        sb.append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L191">        Iterator it = tableDefinition.getColumnDefinitions().iterator();</span>
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        while (it.hasNext()) {</span>
+<span class="fc" id="L193">            ColumnDefinition colDef = (ColumnDefinition) it.next();</span>
+<span class="fc" id="L194">            sb.append(&quot;    &quot;);</span>
+<span class="fc" id="L195">            sb.append(colDef.getName()).append(&quot; &quot;);</span>
+<span class="fc" id="L196">            sb.append(colDef.getDatatype());</span>
+<span class="fc" id="L197">            Boolean nullable = colDef.getNullable();</span>
+<span class="pc bpc" id="L198" title="1 of 2 branches missed.">            if (nullable != null) {</span>
+<span class="fc bfc" id="L199" title="All 2 branches covered.">                if (nullable.equals(Boolean.FALSE)) {</span>
+<span class="fc" id="L200">                    sb.append(&quot; &quot;).append(&quot;NOT NULL&quot;);</span>
+                }
+            }
+<span class="fc" id="L203">            sb.append(&quot;,&quot;).append(LINE_SEPARATOR);</span>
+<span class="fc" id="L204">        }</span>
+
+<span class="fc" id="L206">        StringBuffer sbPk = new StringBuffer();</span>
+<span class="fc" id="L207">        it = tableDefinition.getPrimaryKeyFields().iterator();</span>
+<span class="fc bfc" id="L208" title="All 2 branches covered.">        while (it.hasNext()) {</span>
+<span class="fc" id="L209">            String primaryKeyField = (String) it.next();</span>
+<span class="pc bpc" id="L210" title="1 of 2 branches missed.">            if (sbPk.length() &gt; 0) {</span>
+<span class="nc" id="L211">                sbPk.append(&quot;, &quot;);</span>
+            }
+<span class="fc" id="L213">            sbPk.append(primaryKeyField);</span>
+<span class="fc" id="L214">        }</span>
+
+<span class="fc" id="L216">        sb.append(&quot;CONSTRAINT PK&quot;).append(primaryKeyCounter);</span>
+<span class="fc" id="L217">        sb.append(&quot; PRIMARY KEY (&quot;).append(sbPk).append(&quot;)&quot;);</span>
+<span class="fc" id="L218">        sb.append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L220">        sb.append(&quot;);&quot;).append(LINE_SEPARATOR).append(LINE_SEPARATOR);</span>
+
+<span class="fc" id="L222">        primaryKeyCounter++;</span>
+
+<span class="fc" id="L224">        return sb.toString();</span>
+    }
+
+    /**
+     * @return The name of this code creator.
+     * @see org.argouml.language.sql.SqlCodeCreator#getName()
+     */
+    public String getName() {
+<span class="fc" id="L232">        return &quot;Firebird&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

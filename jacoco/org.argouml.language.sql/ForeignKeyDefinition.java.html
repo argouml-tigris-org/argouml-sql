@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ForeignKeyDefinition.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql</a> &gt; <span class="el_source">ForeignKeyDefinition.java</span></div><h1>ForeignKeyDefinition.java</h1><pre class="source lang-java linenums">/* $Id$
+ *****************************************************************************
+ * Copyright (c) 2009-2013 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    tfmorris
+ *    Laurent BRAUD
+ *****************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ */
+
+// Copyright (c) 2007 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies. This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied &quot;AS
+// IS&quot;, without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN &quot;AS IS&quot; BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+package org.argouml.language.sql;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+/**
+ * Transfer object holding all necessary data for a foreign key definition.
+ * 
+ * @author drahmann
+ */
+public class ForeignKeyDefinition {
+    private TableDefinition table;
+
+    private List&lt;ColumnDefinition&gt; columns;
+
+    private TableDefinition referencesTable;
+
+    private List&lt;ColumnDefinition&gt; referencesColumns;
+
+    private String foreignKeyName;
+
+    private int lower;
+
+    private int upper;
+
+    private int referencesLower;
+
+    private int referencesUpper;
+
+    /**
+     * Creates a new ForeignKeyDefinition.
+     */
+<span class="fc" id="L73">    public ForeignKeyDefinition() {</span>
+<span class="fc" id="L74">        columns = new ArrayList&lt;ColumnDefinition&gt;();</span>
+<span class="fc" id="L75">        referencesColumns = new ArrayList&lt;ColumnDefinition&gt;();</span>
+<span class="fc" id="L76">    }</span>
+    
+    public ForeignKeyDefinition(TableDefinition table) {
+<span class="nc" id="L79">        this();</span>
+<span class="nc" id="L80">        this.table = table;</span>
+<span class="nc" id="L81">        this.table.addFkDefinition(this);</span>
+<span class="nc" id="L82">    }</span>
+
+    /**
+     * @return A List of all column names.
+     */
+    public List&lt;String&gt; getColumnNames() {
+<span class="fc" id="L88">        List&lt;String&gt; columnNames = new ArrayList&lt;String&gt;();</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">        for (Iterator&lt;ColumnDefinition&gt; it = columns.iterator(); it.hasNext();) {</span>
+<span class="fc" id="L90">            ColumnDefinition cd = it.next();</span>
+<span class="fc" id="L91">            columnNames.add(cd.getName());</span>
+<span class="fc" id="L92">        }</span>
+<span class="fc" id="L93">        return columnNames;</span>
+    }
+
+    /**
+     * Add a column definition.
+     * 
+     * @param colDef
+     *            The column definition to add.
+     */
+    public void addColumnDefinition(ColumnDefinition colDef) {
+<span class="fc" id="L103">        columns.add(colDef);</span>
+<span class="fc" id="L104">    }</span>
+
+    /**
+     * Add a column definition (from its name )
+     * @param nameColDef
+     */
+    public void addColumnDefinition(String nameColDef) {
+<span class="nc" id="L111">    	ColumnDefinition colDef = table.getColumnDefinition(nameColDef);</span>
+    	
+<span class="nc bnc" id="L113" title="All 2 branches missed.">		if (colDef == null) {</span>
+<span class="nc" id="L114">			colDef = new ColumnDefinition(table, nameColDef);</span>
+    	}
+<span class="nc" id="L116">        columns.add(colDef);</span>
+<span class="nc" id="L117">    }</span>
+    
+    /**
+     * @return A List with all referenced column definitions.
+     */
+    public List&lt;String&gt; getReferencesColumnNames() {
+<span class="fc" id="L123">        List&lt;String&gt; referencesColumnNames = new ArrayList&lt;String&gt;();</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        for (ColumnDefinition cd : referencesColumns) {</span>
+<span class="fc" id="L125">            referencesColumnNames.add(cd.getName());</span>
+<span class="fc" id="L126">        }</span>
+<span class="fc" id="L127">        return referencesColumnNames;</span>
+    }
+
+    /**
+     * Add a referenced column definition.
+     * 
+     * @param colDef
+     *            The column definition to add.
+     */
+    public void addReferencesColumn(ColumnDefinition colDef) {
+<span class="fc" id="L137">        referencesColumns.add(colDef);</span>
+<span class="fc" id="L138">    }</span>
+
+    /**
+     * Add a referenced column definition (from its name )
+     * @param nameColDef
+     * 
+     * pre : referencesTable contains nameColDef
+     */
+    public void addReferencesColumn(String nameColDef) {
+<span class="nc" id="L147">    	ColumnDefinition colDef = referencesTable.getColumnDefinition(nameColDef);</span>
+    	
+<span class="nc bnc" id="L149" title="All 2 branches missed.">		if (colDef == null) {</span>
+<span class="nc" id="L150">			colDef = new ColumnDefinition(referencesTable, nameColDef);</span>
+    	}
+<span class="nc" id="L152">		referencesColumns.add(colDef);</span>
+<span class="nc" id="L153">    }</span>
+    
+    /**
+     * @return Returns the columns.
+     */
+    public List&lt;ColumnDefinition&gt; getColumns() {
+<span class="nc" id="L159">        return columns;</span>
+    }
+
+    /**
+     * @return Returns the foreignKeyName.
+     */
+    public String getForeignKeyName() {
+<span class="fc" id="L166">        return foreignKeyName;</span>
+    }
+
+    /**
+     * @return Returns the lower.
+     */
+    public int getLower() {
+<span class="nc" id="L173">        return lower;</span>
+    }
+
+    /**
+     * @return Returns the referencesColumns.
+     */
+    public List&lt;ColumnDefinition&gt; getReferencesColumns() {
+<span class="nc" id="L180">        return referencesColumns;</span>
+    }
+
+    /**
+     * Return true if the columnName is in the table.
+     * @param columnName
+     * @return
+     */
+    public boolean hasColumnInTable(String columnName) {
+<span class="nc" id="L189">    	boolean ret = false;</span>
+    	
+<span class="nc bnc" id="L191" title="All 2 branches missed.">    	for(ColumnDefinition col : columns) {</span>
+<span class="nc bnc" id="L192" title="All 2 branches missed.">			if (columnName.equals(col.getName())) {</span>
+<span class="nc" id="L193">				ret = true;</span>
+<span class="nc" id="L194">    			break;</span>
+    		}
+<span class="nc" id="L196">    	}</span>
+    	
+<span class="nc" id="L198">    	return ret;</span>
+    }
+    
+    /**
+     * @return Returns the referencesLower.
+     */
+    public int getReferencesLower() {
+<span class="fc" id="L205">        return referencesLower;</span>
+    }
+
+    /**
+     * @return Returns the referencesTable.
+     */
+    public TableDefinition getReferencesTable() {
+<span class="nc" id="L212">        return referencesTable;</span>
+    }
+
+    /**
+     * @return Returns the referencesUpper.
+     */
+    public int getReferencesUpper() {
+<span class="nc" id="L219">        return referencesUpper;</span>
+    }
+
+    /**
+     * @return Returns the table.
+     */
+    public TableDefinition getTable() {
+<span class="fc" id="L226">        return table;</span>
+    }
+
+    /**
+     * @return Returns the upper.
+     */
+    public int getUpper() {
+<span class="fc" id="L233">        return upper;</span>
+    }
+
+    /**
+     * @return The name of the referenced table.
+     */
+    public String getReferencesTableName() {
+<span class="fc" id="L240">        return referencesTable.getName();</span>
+    }
+
+    /**
+     * @return The name of the table.
+     */
+    public String getTableName() {
+<span class="fc" id="L247">        return table.getName();</span>
+    }
+
+    /**
+     * @param foreignKeyName
+     *            The foreignKeyName to set.
+     */
+    public void setForeignKeyName(String foreignKeyName) {
+<span class="fc" id="L255">        this.foreignKeyName = foreignKeyName;</span>
+<span class="fc" id="L256">    }</span>
+
+    /**
+     * @param referencesTable
+     *            The referencesTable to set.
+     */
+    public void setReferencesTable(TableDefinition referencesTable) {
+<span class="fc" id="L263">        this.referencesTable = referencesTable;</span>
+<span class="fc" id="L264">    }</span>
+
+    /**
+     * @param table
+     *            The table to set.
+     */
+    public void setTable(TableDefinition table) {
+<span class="fc" id="L271">        this.table = table;</span>
+<span class="fc" id="L272">    }</span>
+
+    /**
+     * @param lower
+     *            The lower to set.
+     */
+    public void setLower(int lower) {
+<span class="fc" id="L279">        this.lower = lower;</span>
+<span class="fc" id="L280">    }</span>
+
+    /**
+     * @param referencesLower
+     *            The referencesLower to set.
+     */
+    public void setReferencesLower(int referencesLower) {
+<span class="fc" id="L287">        this.referencesLower = referencesLower;</span>
+<span class="fc" id="L288">    }</span>
+
+    /**
+     * @param referencesUpper
+     *            The referencesUpper to set.
+     */
+    public void setReferencesUpper(int referencesUpper) {
+<span class="fc" id="L295">        this.referencesUpper = referencesUpper;</span>
+<span class="fc" id="L296">    }</span>
+
+    /**
+     * @param upper
+     *            The upper to set.
+     */
+    public void setUpper(int upper) {
+<span class="fc" id="L303">        this.upper = upper;</span>
+<span class="fc" id="L304">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

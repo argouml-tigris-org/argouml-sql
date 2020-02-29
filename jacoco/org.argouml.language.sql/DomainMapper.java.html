@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DomainMapper.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql</a> &gt; <span class="el_source">DomainMapper.java</span></div><h1>DomainMapper.java</h1><pre class="source lang-java linenums">/* $Id$
+ *****************************************************************************
+ * Copyright (c) 2009, 2010 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    drahmann
+ *****************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ */
+
+// Copyright (c) 2007 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies. This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied &quot;AS
+// IS&quot;, without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN &quot;AS IS&quot; BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+package org.argouml.language.sql;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringBufferInputStream;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
+import java.util.TreeMap;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.log4j.Logger;
+import org.argouml.configuration.Configuration;
+import org.argouml.configuration.ConfigurationKey;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+
+/**
+ * Class providing access to domain mappings. Domain mappings are required to
+ * map uml datatypes (domains in db-language) to datatypes of a target database.
+ * This way there can be modelled &lt;code&gt;String&lt;/code&gt;s, &lt;code&gt;int&lt;/code&gt;s
+ * or &lt;code&gt;double&lt;/code&gt;s for a database model. The DomainMapper maps
+ * &lt;code&gt;String&lt;/code&gt; to a &lt;code&gt;VARCHAR(100)&lt;/code&gt;, &lt;code&gt;int&lt;/code&gt;
+ * to &lt;code&gt;INTEGER&lt;/code&gt; or &lt;code&gt;double&lt;/code&gt; to
+ * &lt;code&gt;DOUBLE PRECISION&lt;/code&gt;, according its configuration. This
+ * configuration can be changed in the settings dialog.
+ * 
+ * @author drahmann
+ */
+public class DomainMapper {
+<span class="nc" id="L83">	private static final ConfigurationKey MAPPING_KEY = Configuration.makeKey(&quot;sql&quot;,&quot;domainmapping&quot;);</span>
+	
+    private static final String ROOT_TAG = &quot;&lt;tns:mappings &quot;
+            + &quot;xmlns:tns=\&quot;http://www.argouml.org/Namespace/argouml-sql\&quot; &quot;
+            + &quot;xmlns:xsi=\&quot;http://www.w3.org/2001/XMLSchema-instance\&quot; &quot;
+            + &quot;xsi:schemaLocation=\&quot;&quot;
+            + &quot;http://www.argouml.org/Namespace/argouml-sql domainmapping.xsd \&quot;&gt;&quot;;
+
+    private static final String XML_FILE_NAME = &quot;domainmapping.xml&quot;;
+
+    private static final String XML_TAG = &quot;&lt;?xml version=\&quot;1.0\&quot; &quot;
+            + &quot;encoding=\&quot;UTF-8\&quot;?&gt;&quot;;
+
+    private Map&lt;String, Map&lt;String,String&gt;&gt; databases;
+
+    private String indent;
+
+<span class="nc" id="L100">    private static final Logger LOG = Logger.getLogger(DomainMapper.class);</span>
+
+    /**
+     * Creates a new DomainMapper.
+     * 
+     */
+<span class="nc" id="L106">    public DomainMapper() {</span>
+<span class="nc" id="L107">        databases = new HashMap&lt;String, Map&lt;String,String&gt;&gt;();</span>
+        // TODO: lazy load mappings
+<span class="nc" id="L109">        load();</span>
+<span class="nc" id="L110">    }</span>
+
+    /**
+     * Clears all mappings for the specified database code creator.
+     * 
+     * @param codeCreatorClass The class object of the code creator.
+     */
+    public void clear(Class codeCreatorClass) {
+<span class="nc" id="L118">        getMappingsFor(codeCreatorClass).clear();</span>
+<span class="nc" id="L119">    }</span>
+
+    /**
+     * Returns the datatype for a given domain and code creator. The domain
+     * itself is returned if
+     * &lt;ul&gt;
+     * &lt;li&gt;there does not exist a mapping for the given code creator or&lt;/li&gt;
+     * &lt;li&gt;there is no defined mapping for the given domain&lt;/li&gt;
+     * &lt;/ul&gt;
+     * 
+     * @param codeCreatorClass
+     *            The class of the code creator
+     * @param domain
+     *            The domain
+     * @return The database-specific datatype for the given domain
+     */
+    public String getDatatype(Class codeCreatorClass, String domain) {
+<span class="nc" id="L136">        Map&lt;String, String&gt; mappings = getMappingsFor(codeCreatorClass);</span>
+<span class="nc" id="L137">        String datatype = domain;</span>
+<span class="nc bnc" id="L138" title="All 2 branches missed.">        if (mappings != null) {</span>
+<span class="nc" id="L139">            String dt = mappings.get(domain);</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            if (dt != null) {</span>
+<span class="nc" id="L141">                datatype = dt;</span>
+            }
+        }
+
+<span class="nc" id="L145">        return datatype;</span>
+    }
+
+    private Map&lt;String, String&gt; getMappingsFor(String codeCreatorClassName) {
+<span class="nc" id="L149">        Map&lt;String, String&gt; mappings = databases.get(codeCreatorClassName);</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (mappings == null) {</span>
+<span class="nc" id="L151">            mappings = new TreeMap&lt;String, String&gt;(String.CASE_INSENSITIVE_ORDER);</span>
+<span class="nc" id="L152">            databases.put(codeCreatorClassName, mappings);</span>
+        }
+<span class="nc" id="L154">        return mappings;</span>
+    }
+
+    /**
+     * 
+     * @param codeCreatorClass
+     * @return All mappings for the given database code creator class.
+     */
+    public Map&lt;String, String&gt; getMappingsFor(Class codeCreatorClass) {
+<span class="nc" id="L163">        return getMappingsFor(codeCreatorClass.getName());</span>
+    }
+
+
+    private InputStream getDomainMap() {
+<span class="nc" id="L168">    	String domainMap = Configuration.getString(MAPPING_KEY);</span>
+<span class="nc" id="L169">    	InputStream is = new StringBufferInputStream(domainMap);</span>
+<span class="nc bnc" id="L170" title="All 2 branches missed.">    	if (&quot;&quot;.equals(domainMap)) {</span>
+            try {
+<span class="nc" id="L172">            	URL url = getClass().getResource(XML_FILE_NAME).toURI().toURL();</span>
+<span class="nc" id="L173">				is = url.openStream();</span>
+<span class="nc" id="L174">			} catch (URISyntaxException e) {</span>
+<span class="nc" id="L175">                LOG.warn(&quot;Could not find domainmapping file&quot;, e);</span>
+<span class="nc" id="L176">			} catch (MalformedURLException e) {</span>
+<span class="nc" id="L177">                LOG.warn(&quot;Could not find domainmapping file&quot;, e);</span>
+<span class="nc" id="L178">			} catch (IOException e) {</span>
+<span class="nc" id="L179">                LOG.warn(&quot;Error reading/fetching domain map&quot;, e);</span>
+<span class="nc" id="L180">			}</span>
+        }
+<span class="nc" id="L182">    	return is;</span>
+    }
+
+    /**
+     * Load all mappings from the file domainmapping.xml located in the same
+     * directory than the module.
+     * 
+     * TODO: This should first try to load from user preferences, then a URI.
+     */
+    public void load() {
+
+        DocumentBuilderFactory docFactory = DocumentBuilderFactory
+<span class="nc" id="L194">                .newInstance();</span>
+        try {
+<span class="nc" id="L196">            DocumentBuilder docBuilder = docFactory.newDocumentBuilder();</span>
+<span class="nc" id="L197">            Document document = docBuilder.parse(getDomainMap());</span>
+<span class="nc" id="L198">            Element root = document.getDocumentElement();</span>
+<span class="nc" id="L199">            NodeList childs = root.getChildNodes();</span>
+
+<span class="nc bnc" id="L201" title="All 2 branches missed.">            for (int i = 0; i &lt; childs.getLength(); i++) {</span>
+<span class="nc" id="L202">                Node child = childs.item(i);</span>
+<span class="nc bnc" id="L203" title="All 2 branches missed.">                if (child.getNodeType() != Node.ELEMENT_NODE) {</span>
+<span class="nc" id="L204">                    continue;</span>
+                }
+
+<span class="nc" id="L207">                NamedNodeMap attributes = child.getAttributes();</span>
+<span class="nc" id="L208">                String name = attributes.getNamedItem(&quot;name&quot;).getTextContent();</span>
+
+<span class="nc" id="L210">                Map&lt;String, String&gt; mappings = getMappingsFor(name);</span>
+<span class="nc" id="L211">                readMappings(mappings, child.getChildNodes());</span>
+            }
+<span class="nc" id="L213">        } catch (ParserConfigurationException e) {</span>
+<span class="nc" id="L214">            LOG.error(&quot;Exception&quot;, e);</span>
+<span class="nc" id="L215">        } catch (SAXException e) {</span>
+<span class="nc" id="L216">            LOG.error(&quot;Exception&quot;, e);</span>
+<span class="nc" id="L217">        } catch (IOException e) {</span>
+<span class="nc" id="L218">            LOG.error(&quot;Exception&quot;, e);</span>
+<span class="nc" id="L219">        }</span>
+<span class="nc" id="L220">    }</span>
+
+    /**
+     * Save all mappings to the file domainmapping.xml located in the same
+     * directory than the module.
+     * 
+     * TODO: This needs to be modified to save use the user preference store
+     */
+    public void save() {
+<span class="nc" id="L229">        Writer sw = new StringWriter(1024);</span>
+        try {
+<span class="nc" id="L231">            sw.write(XML_TAG);</span>
+<span class="nc" id="L232">            sw.write(GeneratorSql.LINE_SEPARATOR);</span>
+<span class="nc" id="L233">            sw.write(ROOT_TAG);</span>
+<span class="nc" id="L234">            sw.write(GeneratorSql.LINE_SEPARATOR);</span>
+
+<span class="nc" id="L236">            indent = &quot;\t&quot;;</span>
+<span class="nc" id="L237">            Set&lt;Entry&lt;String,Map&lt;String,String&gt;&gt;&gt; dbEntries = databases.entrySet();</span>
+<span class="nc bnc" id="L238" title="All 2 branches missed.">            for (Iterator&lt;Entry&lt;String, Map&lt;String,String&gt;&gt;&gt; it = dbEntries.iterator(); it.hasNext();) {</span>
+<span class="nc" id="L239">                Entry&lt;String, Map&lt;String, String&gt;&gt; entry = it.next();</span>
+<span class="nc" id="L240">                String className = (String) entry.getKey();</span>
+<span class="nc" id="L241">                Map&lt;String, String&gt; mappings = entry.getValue();</span>
+
+<span class="nc" id="L243">                StringBuffer sb = new StringBuffer();</span>
+<span class="nc" id="L244">                sb.append(indent);</span>
+<span class="nc" id="L245">                sb.append(&quot;&lt;tns:database name=\&quot;&quot;);</span>
+<span class="nc" id="L246">                sb.append(className);</span>
+<span class="nc" id="L247">                sb.append(&quot;\&quot;&gt;&quot;).append(GeneratorSql.LINE_SEPARATOR);</span>
+<span class="nc" id="L248">                sw.write(sb.toString());</span>
+
+<span class="nc" id="L250">                writeMappings(sw, mappings);</span>
+
+<span class="nc" id="L252">                sw.write(&quot;&lt;/tns:database&gt;&quot;);</span>
+<span class="nc" id="L253">            }</span>
+
+<span class="nc" id="L255">            sw.write(&quot;&lt;/tns:mappings&gt;&quot;);</span>
+<span class="nc" id="L256">            sw.close();</span>
+<span class="nc" id="L257">        } catch (IOException e) {</span>
+<span class="nc" id="L258">            LOG.error(&quot;Exception&quot;, e);</span>
+<span class="nc" id="L259">        }</span>
+        
+<span class="nc" id="L261">        Configuration.setString(MAPPING_KEY, sw.toString());</span>
+<span class="nc" id="L262">    }</span>
+
+    /**
+     * Set specified mapping for the given database code creator class.
+     * 
+     * @param codeCreatorClass
+     *            The class of the code creator for which this mapping should be
+     *            set.
+     * @param domain
+     *            The domain (uml datatype).
+     * @param datatype
+     *            The datatype (database-specific).
+     */
+    public void setDatatype(Class codeCreatorClass, String domain,
+            String datatype) {
+<span class="nc" id="L277">        Map&lt;String, String&gt; mappings = getMappingsFor(codeCreatorClass);</span>
+<span class="nc" id="L278">        mappings.put(domain, datatype);</span>
+<span class="nc" id="L279">    }</span>
+
+    private void readMappings(Map&lt;String, String&gt; mappings, NodeList nodes) {
+<span class="nc bnc" id="L282" title="All 2 branches missed.">        for (int i = 0; i &lt; nodes.getLength(); i++) {</span>
+<span class="nc" id="L283">            Node mapping = nodes.item(i);</span>
+<span class="nc bnc" id="L284" title="All 2 branches missed.">            if (mapping.getNodeType() != Node.ELEMENT_NODE) {</span>
+<span class="nc" id="L285">                continue;</span>
+            }
+
+<span class="nc" id="L288">            NamedNodeMap attributes = mapping.getAttributes();</span>
+<span class="nc" id="L289">            Node src = attributes.getNamedItem(&quot;umltype&quot;);</span>
+<span class="nc" id="L290">            Node dst = attributes.getNamedItem(&quot;dbtype&quot;);</span>
+<span class="nc" id="L291">            String srcText = src.getTextContent();</span>
+<span class="nc" id="L292">            String dstText = dst.getTextContent();</span>
+
+<span class="nc" id="L294">            mappings.put(srcText, dstText);</span>
+        }
+<span class="nc" id="L296">    }</span>
+
+    private void writeMappings(Writer fw, Map&lt;String, String&gt; mappings) throws IOException {
+<span class="nc" id="L299">        String oldIndent = indent;</span>
+<span class="nc" id="L300">        indent += &quot;\t&quot;;</span>
+<span class="nc" id="L301">        Set&lt;Entry&lt;String, String&gt;&gt; entries = mappings.entrySet();</span>
+<span class="nc bnc" id="L302" title="All 2 branches missed.">        for (Iterator&lt;Entry&lt;String, String&gt;&gt; it = entries.iterator(); it.hasNext();) {</span>
+<span class="nc" id="L303">            Entry&lt;String, String&gt; entry = it.next();</span>
+<span class="nc" id="L304">            String domain = entry.getKey();</span>
+<span class="nc" id="L305">            String datatype = entry.getValue();</span>
+
+<span class="nc" id="L307">            StringBuffer sb = new StringBuffer();</span>
+<span class="nc" id="L308">            sb.append(indent);</span>
+<span class="nc" id="L309">            sb.append(&quot;&lt;tns:mapping umltype=\&quot;&quot;);</span>
+<span class="nc" id="L310">            sb.append(domain);</span>
+<span class="nc" id="L311">            sb.append(&quot;\&quot; dbtype=\&quot;&quot;);</span>
+<span class="nc" id="L312">            sb.append(datatype);</span>
+<span class="nc" id="L313">            sb.append(&quot;\&quot; /&gt;&quot;).append(GeneratorSql.LINE_SEPARATOR);</span>
+
+<span class="nc" id="L315">            fw.write(sb.toString());</span>
+<span class="nc" id="L316">        }</span>
+<span class="nc" id="L317">        indent = oldIndent;</span>
+<span class="nc" id="L318">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

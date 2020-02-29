@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlCreatorLoader.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql</a> &gt; <span class="el_source">SqlCreatorLoader.java</span></div><h1>SqlCreatorLoader.java</h1><pre class="source lang-java linenums">/* $Id$
+ *****************************************************************************
+ * Copyright (c) 2009 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    tfmorris
+ *****************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ */
+
+// Copyright (c) 2007 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies. This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied &quot;AS
+// IS&quot;, without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN &quot;AS IS&quot; BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+package org.argouml.language.sql;
+
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashSet;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.zip.ZipEntry;
+
+import org.apache.log4j.Logger;
+
+/**
+ * Class for looking through the argouml extension dir for classes implementing
+ * {@link SqlCodeCreator}. Creates an instance of all found classes.
+ * &lt;p&gt;
+ * TODO: This appears to have been cloned from an earlier version of ArgoUML's
+ * ModuleLoader2, but is missing the robustness improvements that were made to
+ * it. - tfm 20080905
+ * &lt;p&gt;
+ * TODO: This should look for some specific naming pattern 
+ * (e.g. SqlCodeCreator*) instead of attempting to load every single class in
+ * every jar. - tfm
+ * &lt;p&gt;
+ * @author drahmann
+ */
+<span class="nc" id="L68">public class SqlCreatorLoader {</span>
+    /**
+     * Scans through the given jar file looking for classes. If a .class file is
+     * found in the .jar a class name is build. Then the specified class loader
+     * is used to try to load the class. If the class can be loaded it is added
+     * to the result.
+     * 
+     * @param classLoader
+     *            The {@link ClassLoader} to use for loading classes.
+     * @param jarFile
+     *            The {@link JarFile} to scan through.
+     * @return A {@link Collection} of {@link Class} objects.
+     */
+    private Collection&lt;Class&gt; getClassesFromJar(ClassLoader classLoader,
+            JarFile jarFile) {
+<span class="nc" id="L83">        Collection&lt;Class&gt; classes = new HashSet&lt;Class&gt;();</span>
+<span class="nc" id="L84">        Enumeration&lt;JarEntry&gt; e = jarFile.entries();</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        while (e.hasMoreElements()) {</span>
+<span class="nc" id="L86">            ZipEntry ze = e.nextElement();</span>
+<span class="nc" id="L87">            String name = ze.getName();</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">            if (name.endsWith(&quot;.class&quot;)) {</span>
+<span class="nc" id="L89">                name = name.substring(0, name.length() - 6);</span>
+<span class="nc" id="L90">                name = name.replace(&quot;/&quot;, &quot;.&quot;);</span>
+
+                try {
+<span class="nc" id="L93">                    classes.add(classLoader.loadClass(name));</span>
+<span class="nc" id="L94">                } catch (ClassNotFoundException e1) {</span>
+<span class="nc" id="L95">                    LOG.info(&quot;Class could not be loaded from jar: &quot; + name);</span>
+<span class="nc" id="L96">                } catch (UnsupportedClassVersionError e1) {</span>
+<span class="nc" id="L97">                    LOG.error(&quot;Unsupported Java class version for &quot; + name);</span>
+<span class="nc" id="L98">                } catch (NoClassDefFoundError e1) {</span>
+<span class="nc" id="L99">                    LOG.error(&quot;Unable to find required class while loading &quot;</span>
+                            + name + &quot; - may indicate an obsolete&quot;
+                            + &quot; extension module or an unresolved dependency&quot;, e1);
+<span class="nc" id="L102">                } catch (Throwable e1) {</span>
+<span class="nc" id="L103">                    LOG.error(&quot;Unexpected error while loading &quot; + name, e1);</span>
+<span class="nc" id="L104">                }</span>
+            }
+<span class="nc" id="L106">        }</span>
+<span class="nc" id="L107">        return classes;</span>
+    }
+
+<span class="nc" id="L110">    private static final Logger LOG = Logger.getLogger(SqlCreatorLoader.class);</span>
+
+    /**
+     * Scans through the given directory for .jar- and .class-files. If such
+     * files are found a class name is build and it is tries to load the class.
+     * If it is possible the loaded class is added to the result list.
+     * 
+     * @param dir
+     *            The directory to scan through.
+     * @return A {@link Collection} of {@link Class} objects.
+     */
+    private Collection&lt;Class&gt; getClassesFromDir(File dir) {
+<span class="nc" id="L122">        Collection&lt;Class&gt; result = new HashSet&lt;Class&gt;();</span>
+
+<span class="nc bnc" id="L124" title="All 2 branches missed.">        if (!dir.exists()) {</span>
+<span class="nc" id="L125">            return result;</span>
+        }
+
+<span class="nc bnc" id="L128" title="All 2 branches missed.">        for (File file : dir.listFiles()) {</span>
+<span class="nc bnc" id="L129" title="All 2 branches missed.">            if (file.isDirectory()) {</span>
+<span class="nc" id="L130">                result.addAll(getClassesFromDir(file));</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">            } else if (file.getName().endsWith(&quot;.jar&quot;)) {</span>
+                try {
+<span class="nc" id="L133">                    JarFile jarFile = new JarFile(file);</span>
+<span class="nc" id="L134">                    ClassLoader cl = new URLClassLoader(new URL[] { file</span>
+<span class="nc" id="L135">                            .toURL() }, getClass().getClassLoader());</span>
+<span class="nc" id="L136">                    result.addAll(getClassesFromJar(cl, jarFile));</span>
+<span class="nc" id="L137">                } catch (IOException e) {</span>
+<span class="nc" id="L138">                    LOG.error(&quot;Exception&quot;, e);</span>
+<span class="nc" id="L139">                }</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">            } else if (file.getName().endsWith(&quot;.class&quot;)) {</span>
+<span class="nc" id="L141">                String className = file.getName();</span>
+<span class="nc" id="L142">                className = className.substring(0, className.length()</span>
+<span class="nc" id="L143">                        - Utils.CLASS_SUFFIX.length());</span>
+<span class="nc" id="L144">                String packageName = dir.getAbsolutePath();</span>
+<span class="nc" id="L145">                packageName = packageName.substring(moduleDir.getPath()</span>
+<span class="nc" id="L146">                        .length());</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">                if (packageName.startsWith(File.separator)) {</span>
+<span class="nc" id="L148">                    packageName = packageName.substring(1);</span>
+                }
+<span class="nc" id="L150">                packageName = packageName.replace(File.separatorChar, '.');</span>
+
+<span class="nc" id="L152">                className = packageName + &quot;.&quot; + className;</span>
+                try {
+<span class="nc" id="L154">                    result.add(Class.forName(className));</span>
+<span class="nc" id="L155">                } catch (ClassNotFoundException e) {</span>
+<span class="nc" id="L156">                    LOG.info(&quot;Class could not be loaded from .class-file: &quot;</span>
+                            + className);
+<span class="nc" id="L158">                }</span>
+            }
+        }
+
+<span class="nc" id="L162">        return result;</span>
+    }
+
+    private File moduleDir;
+
+    /**
+     * Scans through the argouml extension dir and looks for classes
+     * implementing {@link SqlCodeCreator}. If such a class is found, it is
+     * tried to instantiate it using the standard constructor. If this can be
+     * done the instance is added to the &lt;code&gt;Collection&lt;/code&gt; that will be
+     * returned.
+     * 
+     * @return A &lt;code&gt;Collection&lt;/code&gt; containing all found classes that
+     *         implement {@link SqlCodeCreator}.
+     */
+    public Collection&lt;Class&lt;SqlCodeCreator&gt;&gt; getCodeCreators() {
+<span class="nc" id="L178">        Collection&lt;Class&gt; classes = new HashSet&lt;Class&gt;();</span>
+<span class="nc" id="L179">        moduleDir = new File(Utils.getModuleRoot());</span>
+<span class="nc" id="L180">        classes.addAll(getClassesFromDir(moduleDir));</span>
+
+<span class="nc" id="L182">        Collection&lt;Class&lt;SqlCodeCreator&gt;&gt; result = </span>
+        	new HashSet&lt;Class&lt;SqlCodeCreator&gt;&gt;();
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        for (Class foundClass : classes) {</span>
+<span class="nc bnc" id="L185" title="All 2 branches missed.">            if (foundClass != SqlCodeCreator.class</span>
+<span class="nc bnc" id="L186" title="All 2 branches missed.">                    &amp;&amp; SqlCodeCreator.class.isAssignableFrom(foundClass)) {</span>
+<span class="nc" id="L187">                result.add((Class&lt;SqlCodeCreator&gt;) foundClass);</span>
+            }
+<span class="nc" id="L189">        }</span>
+
+<span class="nc" id="L191">        return result;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

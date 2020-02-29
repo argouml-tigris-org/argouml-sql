@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Modeller.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql.reveng</a> &gt; <span class="el_source">Modeller.java</span></div><h1>Modeller.java</h1><pre class="source lang-java linenums">/* $Id$
+ *******************************************************************************
+ * Copyright (c) 2013 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Laurent BRAUD (From Java module)
+ *******************************************************************************
+ */
+
+package org.argouml.language.sql.reveng;
+
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
+
+import org.argouml.application.api.Argo;
+
+import org.argouml.kernel.ProjectManager;
+import org.argouml.language.sql.TableDefinition;
+import org.argouml.model.Model;
+
+
+import org.argouml.profile.Profile;
+
+public class Modeller {
+	public static final int ASSOCIATION = 1;
+	public static final int GENERALIZATION = 2;
+	
+	// these next const need to be in a generic class
+	public static final String ASSOCIATION_1 = &quot;1&quot;;
+	public static final String ASSOCIATION_01 = &quot;0..1&quot;;
+	
+	/**
+     * Current working model.
+     */
+    private Object model;
+
+    /*
+     * Sql profile model.
+     *
+    private Profile sqlProfile;
+    */
+    /**
+     * The name of the file being parsed.
+     */
+    private String fileName;
+    
+    /**
+     * New model elements that were created during this reverse engineering
+     * session. TODO: We want a stronger type here, but ArgoUML treats all
+     * elements as just simple Objects.
+     */
+    private Collection&lt;Object&gt; newElements;
+    
+    /**
+     * 
+     */
+    private String settingLevel;
+    
+    
+    private Map&lt;String, TableDefinition&gt; tablesByName;
+    
+    /////////
+    public Modeller(Object theModel, Profile theSqlProfile,
+<span class="nc" id="L74">            String theFileName) {</span>
+<span class="nc" id="L75">        model = theModel;</span>
+        //sqlProfile = theSqlProfile;
+        
+<span class="nc" id="L78">        newElements = new HashSet&lt;Object&gt;();</span>
+<span class="nc" id="L79">        fileName = theFileName;</span>
+        
+<span class="nc" id="L81">        tablesByName = new HashMap&lt;String, TableDefinition&gt;();</span>
+        
+        
+<span class="nc" id="L84">    }</span>
+    
+    public String getMappingDataTypeSQLToUML(final String typeSQL) {
+<span class="nc" id="L87">    	String typeUML = &quot;String&quot;;</span>
+<span class="nc bnc" id="L88" title="All 2 branches missed.">		if (typeSQL.toLowerCase().indexOf(&quot;char&quot;) &gt; 0) {</span>
+			// char, varchar, nvarchar [oracle], ...
+<span class="nc" id="L90">			typeUML = &quot;String&quot;;</span>
+<span class="nc bnc" id="L91" title="All 2 branches missed.">		} else if (typeSQL.toLowerCase().indexOf(&quot;int&quot;) &gt; 0) {</span>
+			// integer , *int,
+<span class="nc" id="L93">			typeUML = &quot;Integer&quot;;</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">		} else if (typeSQL.toLowerCase().indexOf(&quot;Boolean&quot;) &gt; 0) {</span>
+<span class="nc" id="L95">			typeUML = &quot;Boolean&quot;;</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">		} else if (typeSQL.toLowerCase().indexOf(&quot;text&quot;) &gt; 0) {</span>
+<span class="nc" id="L97">			typeUML = &quot;String&quot;;</span>
+		}
+    	
+<span class="nc" id="L100">    	return typeUML;</span>
+	}
+
+	/**
+     * Get the elements which were created while reverse engineering this file.
+     * 
+     * @return the collection of elements
+     */
+    public Collection&lt;Object&gt; getNewElements() {
+<span class="nc" id="L109">        return newElements;</span>
+    }
+    
+	//////////////////////////
+	/**
+	* Call by the SqlParser
+	* Build all elements
+	*/
+	public void generateModele() {
+		
+<span class="nc" id="L119">		ModellerLevel generation = null;</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">		if (this.settingLevel.equals(SqlImportSettings.LEVEL_MCD)) {</span>
+<span class="nc" id="L121">			generation =new ModellerC(this);</span>
+		} else {
+			// default : this.settingLevel.equals(SqlImportSettings.LEVEL_MPD)
+<span class="nc" id="L124">			generation =new ModellerP(this);</span>
+		}
+		
+<span class="nc" id="L127">		generation.genereInModele();</span>
+		
+		
+<span class="nc" id="L130">	}</span>
+	
+	/**
+	 * 
+	 * @param name : TODO can be null, not done.
+	 * @param mClassifier
+	 * @param mClassifierEnd
+	 * @return
+	 */
+	public Object getAssociationEnd(String name, Object mClassifier, Object mClassifierEnd) {
+<span class="nc" id="L140">        Object mAssociationEnd = null;</span>
+<span class="nc" id="L141">        for (Iterator&lt;Object&gt; i = Model.getFacade().getAssociationEnds(mClassifier)</span>
+<span class="nc bnc" id="L142" title="All 2 branches missed.">                .iterator(); i.hasNext();) {</span>
+<span class="nc" id="L143">			Object ae = i.next();</span>
+<span class="nc" id="L144">			Object assoc = Model.getFacade().getAssociation(ae);</span>
+<span class="nc bnc" id="L145" title="All 2 branches missed.">			if (name.equals(Model.getFacade().getName(ae))</span>
+<span class="nc bnc" id="L146" title="All 2 branches missed.">					&amp;&amp; Model.getFacade().getConnections(assoc).size() == 2</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">					&amp;&amp; Model.getFacade().getType(Model.getFacade().getNextEnd(ae)) == mClassifierEnd) {</span>
+<span class="nc" id="L148">				mAssociationEnd = ae;</span>
+			}
+<span class="nc" id="L150">        }</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        if (mAssociationEnd == null) {</span>
+<span class="nc" id="L152">            Object mAssociation = buildDirectedAssociation(name, mClassifierEnd, mClassifier);</span>
+            // this causes a problem when mClassifier is not only 
+            // at one assoc end: (which one is the right one?)
+            mAssociationEnd =
+<span class="nc" id="L156">                Model.getFacade().getAssociationEnd(</span>
+                        mClassifier,
+                        mAssociation);
+        }
+<span class="nc" id="L160">        return mAssociationEnd;</span>
+    }
+	
+	/**
+     * Build a unidirectional association between two Classifiers.(From SQL/JAVA)
+     * 
+     * @param name name of the association
+     * @param sourceClassifier source classifier (end which is non-navigable)
+     * @param destClassifier destination classifier (end which is navigable)
+     * @return newly created Association
+     */
+    public static Object buildDirectedAssociation(String name,
+            Object sourceClassifier, Object destClassifier) {
+<span class="nc" id="L173">        return Model.getCoreFactory().buildAssociation(destClassifier, true,</span>
+                sourceClassifier, false, name);
+    }
+	
+	/**
+	 * Call by the SqlParser
+	 * Must be call before the end of pasring a table (so, only when then name is known), because a FK can reference himself.
+	 */
+	public void addTable(final TableDefinition table) {
+<span class="nc" id="L182">		tablesByName.put(table.getName(), table);</span>
+<span class="nc" id="L183">	}</span>
+   
+	public TableDefinition getTableFromName(final String nameTable) {
+<span class="nc" id="L186">		TableDefinition ret = tablesByName.get(nameTable);</span>
+<span class="nc bnc" id="L187" title="All 2 branches missed.">		if (ret == null) {</span>
+<span class="nc" id="L188">			ret = new TableDefinition();</span>
+<span class="nc" id="L189">			ret.setName(nameTable);</span>
+<span class="nc" id="L190">			addTable(ret);</span>
+		}
+<span class="nc" id="L192">		return ret;</span>
+	}
+
+    
+	public Map&lt;String, TableDefinition&gt; getTablesByName() {
+<span class="nc" id="L197">		return tablesByName;</span>
+	}
+	
+    public Object addClass(final TableDefinition table) {
+        
+<span class="nc" id="L202">        Object mClass = addClassifier(Model.getCoreFactory().createClass(),</span>
+<span class="nc" id="L203">        		table.getName(), table.getComment(), null);</span>
+
+        /*Model.getCoreHelper().setAbstract(mClass,
+                (modifiers &amp; JavaParser.ACC_ABSTRACT) &gt; 0);
+        Model.getCoreHelper().setLeaf(mClass,
+                (modifiers &amp; JavaParser.ACC_FINAL) &gt; 0);
+        */
+<span class="nc bnc" id="L210" title="All 2 branches missed.">        if (Model.getFacade().getUmlVersion().charAt(0) == '1') {</span>
+<span class="nc" id="L211">            Model.getCoreHelper().setRoot(mClass, false);</span>
+        }
+<span class="nc" id="L213">        newElements.add(mClass);</span>
+<span class="nc" id="L214">        return mClass;</span>
+    }
+    
+    
+    public Object getOrAddDatatype(Object packageOfType, String typeSpec) {
+<span class="nc" id="L219">    	Object mClassifierType = Model.getFacade().lookupIn(packageOfType, typeSpec);</span>
+<span class="nc bnc" id="L220" title="All 2 branches missed.">		if (mClassifierType == null) {</span>
+<span class="nc" id="L221">			mClassifierType = Model.getCoreFactory().buildDataType(typeSpec, packageOfType);</span>
+<span class="nc" id="L222">			newElements.add(mClassifierType);</span>
+		}
+<span class="nc" id="L224">		return mClassifierType;</span>
+    }
+    
+    private Object addClassifier(Object newClassifier, String name,
+            String documentation, List&lt;String&gt; typeParameters) {
+        Object mClassifier;
+        Object mNamespace;
+
+<span class="nc" id="L232">        Object currentPackage = this.model;</span>
+        
+        
+<span class="nc" id="L235">        mClassifier = Model.getFacade().lookupIn(currentPackage, name);</span>
+<span class="nc" id="L236">        mNamespace = currentPackage;</span>
+
+<span class="nc bnc" id="L238" title="All 2 branches missed.">        if (mClassifier == null) {</span>
+            // if the classifier could not be found in the model
+            //if (LOG.isInfoEnabled()) {
+            //    LOG.info(&quot;Created new classifier for &quot; + name);
+            //}
+<span class="nc" id="L243">            mClassifier = newClassifier;</span>
+<span class="nc" id="L244">            Model.getCoreHelper().setName(mClassifier, name);</span>
+<span class="nc" id="L245">            Model.getCoreHelper().setNamespace(mClassifier, mNamespace);</span>
+<span class="nc" id="L246">            newElements.add(mClassifier);</span>
+        }/* else {
+            // it was found and we delete any existing tagged values.
+            if (LOG.isInfoEnabled()) {
+                LOG.info(&quot;Found existing classifier for &quot; + name);
+            }
+            // TODO: Rewrite existing elements instead? - tfm
+            cleanModelElement(mClassifier);
+        } */
+
+        /*
+        // set up the artifact manifestation (only for top level classes)
+        if (parseState.getClassifier() == null) {
+            if (Model.getFacade().getUmlVersion().charAt(0) == '1') {
+                // set the classifier to be a resident in its component:
+                // (before we push a new parse state on the stack)
+    
+                // This test is carried over from a previous implementation,
+                // but I'm not sure why it would already be set - tfm
+                if (Model.getFacade()
+                        .getElementResidences(mClassifier).isEmpty()) {
+                    Object resident = Model.getCoreFactory()
+                            .createElementResidence();
+                    Model.getCoreHelper().setResident(resident, mClassifier);
+                    Model.getCoreHelper().setContainer(resident,
+                            parseState.getArtifact());
+                }
+            } else {
+                Object artifact = parseState.getArtifact();
+                Collection c =
+                    Model.getCoreHelper().getUtilizedElements(artifact);
+                if (!c.contains(mClassifier)) {
+                    Object manifestation = Model.getCoreFactory()
+                            .buildManifestation(mClassifier);
+                    Model.getCoreHelper()
+                            .addManifestation(artifact, manifestation);
+                }
+            }
+        }*/
+
+        /*
+        // change the parse state to a classifier parse state
+        parseStateStack.push(parseState);
+        parseState = new ParseState(parseState, mClassifier, currentPackage);
+		*/
+        
+
+        // Add classifier documentation tags during first (or only) pass only
+        //if (getLevel() &lt;= 0) {
+<span class="nc" id="L295">            addDocumentationTag(mClassifier, documentation);</span>
+        //}
+        // addTypeParameters(mClassifier, typeParameters);
+<span class="nc" id="L298">        return mClassifier;</span>
+    }
+    
+    
+    private void addDocumentationTag(Object modelElement, String sDocumentation) {
+<span class="nc bnc" id="L303" title="All 4 branches missed.">        if ((sDocumentation != null) &amp;&amp; (sDocumentation.trim().length() &gt;= 1)) {</span>
+        	//Now store documentation text in a tagged value
+<span class="nc" id="L305">            String[] docs = {</span>
+            		sDocumentation
+            };
+<span class="nc" id="L308">            buildTaggedValue(modelElement, Argo.DOCUMENTATION_TAG, docs);</span>
+<span class="nc" id="L309">            addStereotypes(modelElement);</span>
+        }
+<span class="nc" id="L311">    }</span>
+    
+    private void buildTaggedValue(Object me, 
+            String sTagName, 
+            String[] sTagData) {
+<span class="nc" id="L316">        Object tv = Model.getFacade().getTaggedValue(me, sTagName);</span>
+<span class="nc bnc" id="L317" title="All 2 branches missed.">        if (tv == null) {</span>
+            // using deprecated buildTaggedValue here, because getting the tag
+            // definition from a tag name is the critical step, and this is
+            // implemented in ExtensionMechanismsFactory in a central place,
+            // but not as a public method:
+<span class="nc" id="L322">            Model.getExtensionMechanismsHelper().addTaggedValue(</span>
+                    me,
+<span class="nc" id="L324">                    Model.getExtensionMechanismsFactory()</span>
+<span class="nc" id="L325">                    .buildTaggedValue(sTagName, sTagData[0]));</span>
+        } else {
+<span class="nc" id="L327">            Model.getExtensionMechanismsHelper().setDataValues(tv, sTagData);</span>
+        }
+<span class="nc" id="L329">    }</span>
+    
+    private void addStereotypes(Object modelElement) {
+        // TODO: What we do here is allowed for UML 1.x only!
+<span class="nc bnc" id="L333" title="All 2 branches missed.">        if (Model.getFacade().getUmlVersion().charAt(0) == '1') {</span>
+<span class="nc" id="L334">            Object tv = Model.getFacade()</span>
+<span class="nc" id="L335">                    .getTaggedValue(modelElement, &quot;stereotype&quot;);</span>
+<span class="nc bnc" id="L336" title="All 2 branches missed.">            if (tv != null) {</span>
+<span class="nc" id="L337">                String stereo = Model.getFacade().getValueOfTag(tv);</span>
+<span class="nc bnc" id="L338" title="All 4 branches missed.">                if (stereo != null &amp;&amp; stereo.length() &gt; 0) {</span>
+<span class="nc" id="L339">                    StringTokenizer st = new StringTokenizer(stereo, &quot;, &quot;);</span>
+<span class="nc bnc" id="L340" title="All 2 branches missed.">                    while (st.hasMoreTokens()) {</span>
+<span class="nc" id="L341">                        Model.getCoreHelper().addStereotype(modelElement,</span>
+<span class="nc" id="L342">                                getUML1Stereotype(st.nextToken().trim()));</span>
+                    }
+<span class="nc" id="L344">                    ProjectManager.getManager().updateRoots();</span>
+                }
+<span class="nc" id="L346">                Model.getUmlFactory().delete(tv);</span>
+            }
+        }
+<span class="nc" id="L349">    }</span>
+    
+    /**
+     * Get the stereotype with a specific name. UML 1.x only.
+     * 
+     * @param name The name of the stereotype.
+     * @return The stereotype.
+     */
+    private Object getUML1Stereotype(String name) {
+        //LOG.debug(&quot;Trying to find a stereotype of name &lt;&lt;&quot; + name + &quot;&gt;&gt;&quot;);
+        // Is this line really safe wouldn't it just return the first
+        // model element of the same name whether or not it is a stereotype
+<span class="nc" id="L361">        Object stereotype = Model.getFacade().lookupIn(model, name);</span>
+
+<span class="nc bnc" id="L363" title="All 2 branches missed.">        if (stereotype == null) {</span>
+            //LOG.debug(&quot;Couldn't find so creating it&quot;);
+<span class="nc" id="L365">            return Model.getExtensionMechanismsFactory().buildStereotype(name,</span>
+                    model);
+        }
+
+<span class="nc bnc" id="L369" title="All 2 branches missed.">        if (!Model.getFacade().isAStereotype(stereotype)) {</span>
+            // and so this piece of code may create an existing stereotype
+            // in error.
+            //LOG.debug(&quot;Found something that isn't a stereotype so creating it&quot;);
+<span class="nc" id="L373">            return Model.getExtensionMechanismsFactory().buildStereotype(name,</span>
+                    model);
+        }
+
+        //LOG.debug(&quot;Found it&quot;);
+<span class="nc" id="L378">        return stereotype;</span>
+    }
+    
+    public Object buildAttribute(Object classifier, Object type, String name) {
+<span class="nc" id="L382">        Object mAttribute = Model.getCoreFactory().buildAttribute2(classifier,</span>
+                type);
+        
+<span class="nc" id="L385">        newElements.add(mAttribute);</span>
+        
+<span class="nc" id="L387">        Model.getCoreHelper().setName(mAttribute, name);</span>
+<span class="nc" id="L388">        return mAttribute;</span>
+    }
+
+	public void setLevel(final String level) {
+<span class="nc" id="L392">		this.settingLevel = level;</span>
+<span class="nc" id="L393">	}</span>
+    
+	public Object getGeneralization(Object mPackage,
+            Object parent,
+            Object child) {
+<span class="nc" id="L398">		Object mGeneralization = Model.getFacade().getGeneralization(child,</span>
+				parent);
+<span class="nc bnc" id="L400" title="All 2 branches missed.">		if (mGeneralization == null) {</span>
+<span class="nc" id="L401">			mGeneralization = Model.getCoreFactory().buildGeneralization(child,</span>
+					parent);
+<span class="nc" id="L403">			newElements.add(mGeneralization);</span>
+		}
+<span class="nc bnc" id="L405" title="All 2 branches missed.">		if (mGeneralization != null) {</span>
+<span class="nc" id="L406">			Model.getCoreHelper().setNamespace(mGeneralization, mPackage);</span>
+		}
+<span class="nc" id="L408">		return mGeneralization;</span>
+	}
+	
+	
+	public Object getModel() {
+<span class="nc" id="L413">		return this.model;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

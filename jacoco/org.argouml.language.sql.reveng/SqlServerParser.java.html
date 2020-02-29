@@ -1,0 +1,2615 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlServerParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql.reveng</a> &gt; <span class="el_source">SqlServerParser.java</span></div><h1>SqlServerParser.java</h1><pre class="source lang-java linenums">// $ANTLR 3.5.2 org/argouml/language/sql/reveng/SqlServer.g 2020-02-29 13:39:53
+
+package org.argouml.language.sql.reveng;
+
+import org.argouml.language.sql.TableDefinition;
+import org.argouml.language.sql.ColumnDefinition;
+import org.argouml.language.sql.ForeignKeyDefinition;
+
+
+
+import org.antlr.runtime.*;
+import java.util.Stack;
+import java.util.List;
+import java.util.ArrayList;
+
+@SuppressWarnings(&quot;all&quot;)
+public class SqlServerParser extends Parser {
+<span class="nc" id="L18">	public static final String[] tokenNames = new String[] {</span>
+		&quot;&lt;invalid&gt;&quot;, &quot;&lt;EOR&gt;&quot;, &quot;&lt;DOWN&gt;&quot;, &quot;&lt;UP&gt;&quot;, &quot;COMMA&quot;, &quot;DIGIT&quot;, &quot;DOT&quot;, &quot;ID&quot;, 
+		&quot;LEFT_PAREN&quot;, &quot;LETTER&quot;, &quot;ML_COMMENT&quot;, &quot;NUMBER&quot;, &quot;QUOTED_TEXT&quot;, &quot;RIGHT_PAREN&quot;, 
+		&quot;SL_COMMENT&quot;, &quot;WS&quot;, &quot;';'&quot;, &quot;'='&quot;, &quot;'ACTION'&quot;, &quot;'ADD'&quot;, &quot;'ALLOW_PAGE_LOCKS'&quot;, 
+		&quot;'ALLOW_ROW_LOCKS'&quot;, &quot;'ALTER'&quot;, &quot;'ANSI_NULLS'&quot;, &quot;'ANSI_PADDING'&quot;, &quot;'ASC'&quot;, 
+		&quot;'BTREE'&quot;, &quot;'CASCADE'&quot;, &quot;'CHECK'&quot;, &quot;'CLUSTERED'&quot;, &quot;'CONSTRAINT'&quot;, &quot;'CREATE'&quot;, 
+		&quot;'DATA_COMPRESSION'&quot;, &quot;'DEFAULT'&quot;, &quot;'DELETE'&quot;, &quot;'DESC'&quot;, &quot;'FILLFACTOR'&quot;, 
+		&quot;'FOR'&quot;, &quot;'FOREIGN'&quot;, &quot;'FULL'&quot;, &quot;'GO'&quot;, &quot;'HASH'&quot;, &quot;'IGNORE_DUP_KEY'&quot;, 
+		&quot;'INDEX'&quot;, &quot;'KEY'&quot;, &quot;'MATCH'&quot;, &quot;'NO'&quot;, &quot;'NONCLUSTERED'&quot;, &quot;'NONE'&quot;, &quot;'NOT'&quot;, 
+		&quot;'NULL'&quot;, &quot;'OFF'&quot;, &quot;'ON'&quot;, &quot;'PAD_INDEX'&quot;, &quot;'PAGE'&quot;, &quot;'PARTIAL'&quot;, &quot;'PRIMARY'&quot;, 
+		&quot;'QUOTED_IDENTIFIER'&quot;, &quot;'REFERENCES'&quot;, &quot;'RESTRICT'&quot;, &quot;'ROW'&quot;, &quot;'SET'&quot;, 
+		&quot;'STATISTICS_NORECOMPUTE'&quot;, &quot;'TABLE'&quot;, &quot;'UNIQUE'&quot;, &quot;'UPDATE'&quot;, &quot;'USE'&quot;, 
+		&quot;'WITH'&quot;, &quot;'['&quot;, &quot;']'&quot;
+	};
+	public static final int EOF=-1;
+	public static final int T__16=16;
+	public static final int T__17=17;
+	public static final int T__18=18;
+	public static final int T__19=19;
+	public static final int T__20=20;
+	public static final int T__21=21;
+	public static final int T__22=22;
+	public static final int T__23=23;
+	public static final int T__24=24;
+	public static final int T__25=25;
+	public static final int T__26=26;
+	public static final int T__27=27;
+	public static final int T__28=28;
+	public static final int T__29=29;
+	public static final int T__30=30;
+	public static final int T__31=31;
+	public static final int T__32=32;
+	public static final int T__33=33;
+	public static final int T__34=34;
+	public static final int T__35=35;
+	public static final int T__36=36;
+	public static final int T__37=37;
+	public static final int T__38=38;
+	public static final int T__39=39;
+	public static final int T__40=40;
+	public static final int T__41=41;
+	public static final int T__42=42;
+	public static final int T__43=43;
+	public static final int T__44=44;
+	public static final int T__45=45;
+	public static final int T__46=46;
+	public static final int T__47=47;
+	public static final int T__48=48;
+	public static final int T__49=49;
+	public static final int T__50=50;
+	public static final int T__51=51;
+	public static final int T__52=52;
+	public static final int T__53=53;
+	public static final int T__54=54;
+	public static final int T__55=55;
+	public static final int T__56=56;
+	public static final int T__57=57;
+	public static final int T__58=58;
+	public static final int T__59=59;
+	public static final int T__60=60;
+	public static final int T__61=61;
+	public static final int T__62=62;
+	public static final int T__63=63;
+	public static final int T__64=64;
+	public static final int T__65=65;
+	public static final int T__66=66;
+	public static final int T__67=67;
+	public static final int T__68=68;
+	public static final int T__69=69;
+	public static final int COMMA=4;
+	public static final int DIGIT=5;
+	public static final int DOT=6;
+	public static final int ID=7;
+	public static final int LEFT_PAREN=8;
+	public static final int LETTER=9;
+	public static final int ML_COMMENT=10;
+	public static final int NUMBER=11;
+	public static final int QUOTED_TEXT=12;
+	public static final int RIGHT_PAREN=13;
+	public static final int SL_COMMENT=14;
+	public static final int WS=15;
+
+	// delegates
+	public Parser[] getDelegates() {
+<span class="nc" id="L102">		return new Parser[] {};</span>
+	}
+
+	// delegators
+
+
+	public SqlServerParser(TokenStream input) {
+<span class="nc" id="L109">		this(input, new RecognizerSharedState());</span>
+<span class="nc" id="L110">	}</span>
+	public SqlServerParser(TokenStream input, RecognizerSharedState state) {
+<span class="nc" id="L112">		super(input, state);</span>
+<span class="nc" id="L113">	}</span>
+
+<span class="nc" id="L115">	@Override public String[] getTokenNames() { return SqlServerParser.tokenNames; }</span>
+<span class="nc" id="L116">	@Override public String getGrammarFileName() { return &quot;org/argouml/language/sql/reveng/SqlServer.g&quot;; }</span>
+
+
+<span class="nc" id="L119">		private Lexer _lexer = null;</span>
+
+		private Modeller _modeller;
+
+<span class="nc" id="L123">		boolean readSpace = false;</span>
+		public Modeller getModeller() {
+<span class="nc" id="L125">	        return _modeller;</span>
+	    }
+	    
+	    public void setModeller(Modeller modeller) {
+<span class="nc" id="L129">	        _modeller = modeller;</span>
+<span class="nc" id="L130">	    }</span>
+
+
+
+	// $ANTLR start &quot;dump_read&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:50:1: dump_read[Modeller modeller, Lexer lexer] : 'USE' name_with_esc ( instr )* ;
+	public final void dump_read(Modeller modeller, Lexer lexer) throws RecognitionException {
+
+<span class="nc" id="L138">		        setModeller(modeller);</span>
+<span class="nc" id="L139">		        _lexer = lexer;</span>
+		        
+		    
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:56:5: ( 'USE' name_with_esc ( instr )* )
+			// org/argouml/language/sql/reveng/SqlServer.g:57:5: 'USE' name_with_esc ( instr )*
+			{
+<span class="nc" id="L146">			match(input,66,FOLLOW_66_in_dump_read55); </span>
+<span class="nc" id="L147">			pushFollow(FOLLOW_name_with_esc_in_dump_read57);</span>
+<span class="nc" id="L148">			name_with_esc();</span>
+<span class="nc" id="L149">			state._fsp--;</span>
+
+			// org/argouml/language/sql/reveng/SqlServer.g:58:5: ( instr )*
+			loop1:
+			while (true) {
+<span class="nc" id="L154">				int alt1=2;</span>
+<span class="nc" id="L155">				int LA1_0 = input.LA(1);</span>
+<span class="nc bnc" id="L156" title="All 12 branches missed.">				if ( (LA1_0==ML_COMMENT||LA1_0==SL_COMMENT||LA1_0==22||LA1_0==31||LA1_0==40||LA1_0==61) ) {</span>
+<span class="nc" id="L157">					alt1=1;</span>
+				}
+
+<span class="nc bnc" id="L160" title="All 2 branches missed.">				switch (alt1) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:58:6: instr
+					{
+<span class="nc" id="L164">					pushFollow(FOLLOW_instr_in_dump_read64);</span>
+<span class="nc" id="L165">					instr();</span>
+<span class="nc" id="L166">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L169">					break;</span>
+
+				default :
+<span class="nc" id="L172">					break loop1;</span>
+				}
+<span class="nc" id="L174">			}</span>
+
+
+<span class="nc" id="L177">					getModeller().generateModele();</span>
+				
+			}
+
+		}
+<span class="nc" id="L182">		catch (RecognitionException re) {</span>
+<span class="nc" id="L183">			reportError(re);</span>
+<span class="nc" id="L184">			recover(input,re);</span>
+		}
+<span class="nc" id="L186">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L188">		}</span>
+<span class="nc" id="L189">	}</span>
+	// $ANTLR end &quot;dump_read&quot;
+
+
+
+	// $ANTLR start &quot;instr&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:64:1: instr : ( dumpComment | 'GO' | set_instr | create_table_statement | alter_table_statement );
+	public final void instr() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:64:7: ( dumpComment | 'GO' | set_instr | create_table_statement | alter_table_statement )
+<span class="nc" id="L199">			int alt2=5;</span>
+<span class="nc bnc" id="L200" title="All 6 branches missed.">			switch ( input.LA(1) ) {</span>
+			case ML_COMMENT:
+			case SL_COMMENT:
+				{
+<span class="nc" id="L204">				alt2=1;</span>
+				}
+<span class="nc" id="L206">				break;</span>
+			case 40:
+				{
+<span class="nc" id="L209">				alt2=2;</span>
+				}
+<span class="nc" id="L211">				break;</span>
+			case 61:
+				{
+<span class="nc" id="L214">				alt2=3;</span>
+				}
+<span class="nc" id="L216">				break;</span>
+			case 31:
+				{
+<span class="nc" id="L219">				alt2=4;</span>
+				}
+<span class="nc" id="L221">				break;</span>
+			case 22:
+				{
+<span class="nc" id="L224">				alt2=5;</span>
+				}
+<span class="nc" id="L226">				break;</span>
+			default:
+<span class="nc" id="L228">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 2, 0, input);
+<span class="nc" id="L230">				throw nvae;</span>
+			}
+<span class="nc bnc" id="L232" title="All 6 branches missed.">			switch (alt2) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:65:3: dumpComment
+					{
+<span class="nc" id="L236">					pushFollow(FOLLOW_dumpComment_in_instr84);</span>
+<span class="nc" id="L237">					dumpComment();</span>
+<span class="nc" id="L238">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L241">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/SqlServer.g:66:5: 'GO'
+					{
+<span class="nc" id="L245">					match(input,40,FOLLOW_40_in_instr90); </span>
+					}
+<span class="nc" id="L247">					break;</span>
+				case 3 :
+					// org/argouml/language/sql/reveng/SqlServer.g:67:5: set_instr
+					{
+<span class="nc" id="L251">					pushFollow(FOLLOW_set_instr_in_instr96);</span>
+<span class="nc" id="L252">					set_instr();</span>
+<span class="nc" id="L253">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L256">					break;</span>
+				case 4 :
+					// org/argouml/language/sql/reveng/SqlServer.g:68:4: create_table_statement
+					{
+<span class="nc" id="L260">					pushFollow(FOLLOW_create_table_statement_in_instr101);</span>
+<span class="nc" id="L261">					create_table_statement();</span>
+<span class="nc" id="L262">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L265">					break;</span>
+				case 5 :
+					// org/argouml/language/sql/reveng/SqlServer.g:69:4: alter_table_statement
+					{
+<span class="nc" id="L269">					pushFollow(FOLLOW_alter_table_statement_in_instr106);</span>
+<span class="nc" id="L270">					alter_table_statement();</span>
+<span class="nc" id="L271">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+		}
+<span class="nc" id="L278">		catch (RecognitionException re) {</span>
+<span class="nc" id="L279">			reportError(re);</span>
+<span class="nc" id="L280">			recover(input,re);</span>
+		}
+<span class="nc" id="L282">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L284">		}</span>
+<span class="nc" id="L285">	}</span>
+	// $ANTLR end &quot;instr&quot;
+
+
+
+	// $ANTLR start &quot;set_instr&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:73:1: set_instr : 'SET' ( 'ANSI_NULLS' | 'QUOTED_IDENTIFIER' | 'ANSI_PADDING' ) ( 'ON' | 'OFF' ) ;
+	public final void set_instr() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:73:11: ( 'SET' ( 'ANSI_NULLS' | 'QUOTED_IDENTIFIER' | 'ANSI_PADDING' ) ( 'ON' | 'OFF' ) )
+			// org/argouml/language/sql/reveng/SqlServer.g:74:2: 'SET' ( 'ANSI_NULLS' | 'QUOTED_IDENTIFIER' | 'ANSI_PADDING' ) ( 'ON' | 'OFF' )
+			{
+<span class="nc" id="L297">			match(input,61,FOLLOW_61_in_set_instr118); </span>
+<span class="nc bnc" id="L298" title="All 6 branches missed.">			if ( (input.LA(1) &gt;= 23 &amp;&amp; input.LA(1) &lt;= 24)||input.LA(1)==57 ) {</span>
+<span class="nc" id="L299">				input.consume();</span>
+<span class="nc" id="L300">				state.errorRecovery=false;</span>
+			}
+			else {
+<span class="nc" id="L303">				MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L304">				throw mse;</span>
+			}
+<span class="nc bnc" id="L306" title="All 4 branches missed.">			if ( (input.LA(1) &gt;= 51 &amp;&amp; input.LA(1) &lt;= 52) ) {</span>
+<span class="nc" id="L307">				input.consume();</span>
+<span class="nc" id="L308">				state.errorRecovery=false;</span>
+			}
+			else {
+<span class="nc" id="L311">				MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L312">				throw mse;</span>
+			}
+			}
+
+		}
+<span class="nc" id="L317">		catch (RecognitionException re) {</span>
+<span class="nc" id="L318">			reportError(re);</span>
+<span class="nc" id="L319">			recover(input,re);</span>
+		}
+<span class="nc" id="L321">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L323">		}</span>
+<span class="nc" id="L324">	}</span>
+	// $ANTLR end &quot;set_instr&quot;
+
+
+
+	// $ANTLR start &quot;dumpComment&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:85:1: dumpComment : ( SL_COMMENT | ML_COMMENT ( ';' )? );
+	public final void dumpComment() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:85:12: ( SL_COMMENT | ML_COMMENT ( ';' )? )
+<span class="nc" id="L334">			int alt4=2;</span>
+<span class="nc" id="L335">			int LA4_0 = input.LA(1);</span>
+<span class="nc bnc" id="L336" title="All 2 branches missed.">			if ( (LA4_0==SL_COMMENT) ) {</span>
+<span class="nc" id="L337">				alt4=1;</span>
+			}
+<span class="nc bnc" id="L339" title="All 2 branches missed.">			else if ( (LA4_0==ML_COMMENT) ) {</span>
+<span class="nc" id="L340">				alt4=2;</span>
+			}
+
+			else {
+<span class="nc" id="L344">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 4, 0, input);
+<span class="nc" id="L346">				throw nvae;</span>
+			}
+
+<span class="nc bnc" id="L349" title="All 3 branches missed.">			switch (alt4) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:86:2: SL_COMMENT
+					{
+<span class="nc" id="L353">					match(input,SL_COMMENT,FOLLOW_SL_COMMENT_in_dumpComment164); </span>
+					}
+<span class="nc" id="L355">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/SqlServer.g:87:4: ML_COMMENT ( ';' )?
+					{
+<span class="nc" id="L359">					match(input,ML_COMMENT,FOLLOW_ML_COMMENT_in_dumpComment169); </span>
+					// org/argouml/language/sql/reveng/SqlServer.g:87:15: ( ';' )?
+<span class="nc" id="L361">					int alt3=2;</span>
+<span class="nc" id="L362">					int LA3_0 = input.LA(1);</span>
+<span class="nc bnc" id="L363" title="All 2 branches missed.">					if ( (LA3_0==16) ) {</span>
+<span class="nc" id="L364">						alt3=1;</span>
+					}
+<span class="nc bnc" id="L366" title="All 2 branches missed.">					switch (alt3) {</span>
+						case 1 :
+							// org/argouml/language/sql/reveng/SqlServer.g:87:16: ';'
+							{
+<span class="nc" id="L370">							match(input,16,FOLLOW_16_in_dumpComment172); </span>
+							}
+							break;
+
+					}
+
+					}
+					break;
+
+			}
+		}
+<span class="nc" id="L381">		catch (RecognitionException re) {</span>
+<span class="nc" id="L382">			reportError(re);</span>
+<span class="nc" id="L383">			recover(input,re);</span>
+		}
+<span class="nc" id="L385">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L387">		}</span>
+<span class="nc" id="L388">	}</span>
+	// $ANTLR end &quot;dumpComment&quot;
+
+
+
+	// $ANTLR start &quot;create_table_statement&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:90:1: create_table_statement : 'CREATE' 'TABLE' name_with_esc DOT table_name create_definition_list[table] table_store ;
+	public final void create_table_statement() throws RecognitionException {
+<span class="nc" id="L396">		String table_name1 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:90:24: ( 'CREATE' 'TABLE' name_with_esc DOT table_name create_definition_list[table] table_store )
+			// org/argouml/language/sql/reveng/SqlServer.g:91:2: 'CREATE' 'TABLE' name_with_esc DOT table_name create_definition_list[table] table_store
+			{
+<span class="nc" id="L402">			match(input,31,FOLLOW_31_in_create_table_statement186); </span>
+<span class="nc" id="L403">			match(input,63,FOLLOW_63_in_create_table_statement188); </span>
+<span class="nc" id="L404">			pushFollow(FOLLOW_name_with_esc_in_create_table_statement193);</span>
+<span class="nc" id="L405">			name_with_esc();</span>
+<span class="nc" id="L406">			state._fsp--;</span>
+
+<span class="nc" id="L408">			match(input,DOT,FOLLOW_DOT_in_create_table_statement195); </span>
+<span class="nc" id="L409">			pushFollow(FOLLOW_table_name_in_create_table_statement197);</span>
+<span class="nc" id="L410">			table_name1=table_name();</span>
+<span class="nc" id="L411">			state._fsp--;</span>
+
+
+<span class="nc" id="L414">			    		 	TableDefinition table = getModeller().getTableFromName(table_name1);</span>
+						
+<span class="nc" id="L416">			pushFollow(FOLLOW_create_definition_list_in_create_table_statement221);</span>
+<span class="nc" id="L417">			create_definition_list(table);</span>
+<span class="nc" id="L418">			state._fsp--;</span>
+
+<span class="nc" id="L420">			pushFollow(FOLLOW_table_store_in_create_table_statement237);</span>
+<span class="nc" id="L421">			table_store();</span>
+<span class="nc" id="L422">			state._fsp--;</span>
+
+			}
+
+		}
+<span class="nc" id="L427">		catch (RecognitionException re) {</span>
+<span class="nc" id="L428">			reportError(re);</span>
+<span class="nc" id="L429">			recover(input,re);</span>
+		}
+<span class="nc" id="L431">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L433">		}</span>
+<span class="nc" id="L434">	}</span>
+	// $ANTLR end &quot;create_table_statement&quot;
+
+
+
+	// $ANTLR start &quot;alter_table_statement&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:101:1: alter_table_statement : 'ALTER' 'TABLE' name_with_esc DOT table_name ( 'WITH' 'CHECK' )? ( 'ADD' constraint_def[table] | 'CHECK' 'CONSTRAINT' ( symbol )? ) ;
+	public final void alter_table_statement() throws RecognitionException {
+<span class="nc" id="L442">		String table_name2 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:101:23: ( 'ALTER' 'TABLE' name_with_esc DOT table_name ( 'WITH' 'CHECK' )? ( 'ADD' constraint_def[table] | 'CHECK' 'CONSTRAINT' ( symbol )? ) )
+			// org/argouml/language/sql/reveng/SqlServer.g:102:2: 'ALTER' 'TABLE' name_with_esc DOT table_name ( 'WITH' 'CHECK' )? ( 'ADD' constraint_def[table] | 'CHECK' 'CONSTRAINT' ( symbol )? )
+			{
+<span class="nc" id="L448">			match(input,22,FOLLOW_22_in_alter_table_statement248); </span>
+<span class="nc" id="L449">			match(input,63,FOLLOW_63_in_alter_table_statement250); </span>
+<span class="nc" id="L450">			pushFollow(FOLLOW_name_with_esc_in_alter_table_statement254);</span>
+<span class="nc" id="L451">			name_with_esc();</span>
+<span class="nc" id="L452">			state._fsp--;</span>
+
+<span class="nc" id="L454">			match(input,DOT,FOLLOW_DOT_in_alter_table_statement256); </span>
+<span class="nc" id="L455">			pushFollow(FOLLOW_table_name_in_alter_table_statement258);</span>
+<span class="nc" id="L456">			table_name2=table_name();</span>
+<span class="nc" id="L457">			state._fsp--;</span>
+
+
+<span class="nc" id="L460">			    		 TableDefinition table = getModeller().getTableFromName(table_name2);</span>
+					
+			// org/argouml/language/sql/reveng/SqlServer.g:106:3: ( 'WITH' 'CHECK' )?
+<span class="nc" id="L463">			int alt5=2;</span>
+<span class="nc" id="L464">			int LA5_0 = input.LA(1);</span>
+<span class="nc bnc" id="L465" title="All 2 branches missed.">			if ( (LA5_0==67) ) {</span>
+<span class="nc" id="L466">				alt5=1;</span>
+			}
+<span class="nc bnc" id="L468" title="All 2 branches missed.">			switch (alt5) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:106:4: 'WITH' 'CHECK'
+					{
+<span class="nc" id="L472">					match(input,67,FOLLOW_67_in_alter_table_statement265); </span>
+<span class="nc" id="L473">					match(input,28,FOLLOW_28_in_alter_table_statement267); </span>
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/SqlServer.g:108:3: ( 'ADD' constraint_def[table] | 'CHECK' 'CONSTRAINT' ( symbol )? )
+<span class="nc" id="L480">			int alt7=2;</span>
+<span class="nc" id="L481">			int LA7_0 = input.LA(1);</span>
+<span class="nc bnc" id="L482" title="All 2 branches missed.">			if ( (LA7_0==19) ) {</span>
+<span class="nc" id="L483">				alt7=1;</span>
+			}
+<span class="nc bnc" id="L485" title="All 2 branches missed.">			else if ( (LA7_0==28) ) {</span>
+<span class="nc" id="L486">				alt7=2;</span>
+			}
+
+			else {
+<span class="nc" id="L490">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 7, 0, input);
+<span class="nc" id="L492">				throw nvae;</span>
+			}
+
+<span class="nc bnc" id="L495" title="All 3 branches missed.">			switch (alt7) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:109:3: 'ADD' constraint_def[table]
+					{
+<span class="nc" id="L499">					match(input,19,FOLLOW_19_in_alter_table_statement280); </span>
+<span class="nc" id="L500">					pushFollow(FOLLOW_constraint_def_in_alter_table_statement282);</span>
+<span class="nc" id="L501">					constraint_def(table);</span>
+<span class="nc" id="L502">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L505">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/SqlServer.g:110:5: 'CHECK' 'CONSTRAINT' ( symbol )?
+					{
+<span class="nc" id="L509">					match(input,28,FOLLOW_28_in_alter_table_statement289); </span>
+<span class="nc" id="L510">					match(input,30,FOLLOW_30_in_alter_table_statement291); </span>
+					// org/argouml/language/sql/reveng/SqlServer.g:110:26: ( symbol )?
+<span class="nc" id="L512">					int alt6=2;</span>
+<span class="nc" id="L513">					int LA6_0 = input.LA(1);</span>
+<span class="nc bnc" id="L514" title="All 2 branches missed.">					if ( (LA6_0==68) ) {</span>
+<span class="nc" id="L515">						alt6=1;</span>
+					}
+<span class="nc bnc" id="L517" title="All 2 branches missed.">					switch (alt6) {</span>
+						case 1 :
+							// org/argouml/language/sql/reveng/SqlServer.g:110:27: symbol
+							{
+<span class="nc" id="L521">							pushFollow(FOLLOW_symbol_in_alter_table_statement294);</span>
+<span class="nc" id="L522">							symbol();</span>
+<span class="nc" id="L523">							state._fsp--;</span>
+
+							}
+							break;
+
+					}
+
+					}
+					break;
+
+			}
+
+			}
+
+		}
+<span class="nc" id="L538">		catch (RecognitionException re) {</span>
+<span class="nc" id="L539">			reportError(re);</span>
+<span class="nc" id="L540">			recover(input,re);</span>
+		}
+<span class="nc" id="L542">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L544">		}</span>
+<span class="nc" id="L545">	}</span>
+	// $ANTLR end &quot;alter_table_statement&quot;
+
+
+
+	// $ANTLR start &quot;create_definition_list&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:116:1: create_definition_list[TableDefinition table] : LEFT_PAREN create_definition[table] ( COMMA create_definition[table] )* RIGHT_PAREN ;
+	public final void create_definition_list(TableDefinition table) throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:117:5: ( LEFT_PAREN create_definition[table] ( COMMA create_definition[table] )* RIGHT_PAREN )
+			// org/argouml/language/sql/reveng/SqlServer.g:117:7: LEFT_PAREN create_definition[table] ( COMMA create_definition[table] )* RIGHT_PAREN
+			{
+<span class="nc" id="L557">			match(input,LEFT_PAREN,FOLLOW_LEFT_PAREN_in_create_definition_list317); </span>
+<span class="nc" id="L558">			pushFollow(FOLLOW_create_definition_in_create_definition_list319);</span>
+<span class="nc" id="L559">			create_definition(table);</span>
+<span class="nc" id="L560">			state._fsp--;</span>
+
+			// org/argouml/language/sql/reveng/SqlServer.g:117:43: ( COMMA create_definition[table] )*
+			loop8:
+			while (true) {
+<span class="nc" id="L565">				int alt8=2;</span>
+<span class="nc" id="L566">				int LA8_0 = input.LA(1);</span>
+<span class="nc bnc" id="L567" title="All 2 branches missed.">				if ( (LA8_0==COMMA) ) {</span>
+<span class="nc" id="L568">					alt8=1;</span>
+				}
+
+<span class="nc bnc" id="L571" title="All 2 branches missed.">				switch (alt8) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:117:44: COMMA create_definition[table]
+					{
+<span class="nc" id="L575">					match(input,COMMA,FOLLOW_COMMA_in_create_definition_list323); </span>
+<span class="nc" id="L576">					pushFollow(FOLLOW_create_definition_in_create_definition_list325);</span>
+<span class="nc" id="L577">					create_definition(table);</span>
+<span class="nc" id="L578">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L581">					break;</span>
+
+				default :
+<span class="nc" id="L584">					break loop8;</span>
+				}
+<span class="nc" id="L586">			}</span>
+
+<span class="nc" id="L588">			match(input,RIGHT_PAREN,FOLLOW_RIGHT_PAREN_in_create_definition_list332); </span>
+			}
+
+		}
+<span class="nc" id="L592">		catch (RecognitionException re) {</span>
+<span class="nc" id="L593">			reportError(re);</span>
+<span class="nc" id="L594">			recover(input,re);</span>
+		}
+<span class="nc" id="L596">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L598">		}</span>
+<span class="nc" id="L599">	}</span>
+	// $ANTLR end &quot;create_definition_list&quot;
+
+
+
+	// $ANTLR start &quot;table_store&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:121:1: table_store : misc_store ;
+	public final void table_store() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:121:13: ( misc_store )
+			// org/argouml/language/sql/reveng/SqlServer.g:122:2: misc_store
+			{
+<span class="nc" id="L611">			pushFollow(FOLLOW_misc_store_in_table_store344);</span>
+<span class="nc" id="L612">			misc_store();</span>
+<span class="nc" id="L613">			state._fsp--;</span>
+
+			}
+
+		}
+<span class="nc" id="L618">		catch (RecognitionException re) {</span>
+<span class="nc" id="L619">			reportError(re);</span>
+<span class="nc" id="L620">			recover(input,re);</span>
+		}
+<span class="nc" id="L622">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L624">		}</span>
+<span class="nc" id="L625">	}</span>
+	// $ANTLR end &quot;table_store&quot;
+
+
+
+	// $ANTLR start &quot;misc_store&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:126:1: misc_store : 'ON' ( '[' 'PRIMARY' ']' ) ;
+	public final void misc_store() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:126:12: ( 'ON' ( '[' 'PRIMARY' ']' ) )
+			// org/argouml/language/sql/reveng/SqlServer.g:127:2: 'ON' ( '[' 'PRIMARY' ']' )
+			{
+<span class="nc" id="L637">			match(input,52,FOLLOW_52_in_misc_store356); </span>
+			// org/argouml/language/sql/reveng/SqlServer.g:128:2: ( '[' 'PRIMARY' ']' )
+			// org/argouml/language/sql/reveng/SqlServer.g:129:3: '[' 'PRIMARY' ']'
+			{
+<span class="nc" id="L641">			match(input,68,FOLLOW_68_in_misc_store364); </span>
+<span class="nc" id="L642">			match(input,56,FOLLOW_56_in_misc_store366); </span>
+<span class="nc" id="L643">			match(input,69,FOLLOW_69_in_misc_store368); </span>
+			}
+
+			}
+
+		}
+<span class="nc" id="L649">		catch (RecognitionException re) {</span>
+<span class="nc" id="L650">			reportError(re);</span>
+<span class="nc" id="L651">			recover(input,re);</span>
+		}
+<span class="nc" id="L653">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L655">		}</span>
+<span class="nc" id="L656">	}</span>
+	// $ANTLR end &quot;misc_store&quot;
+
+
+
+	// $ANTLR start &quot;create_definition&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:132:1: create_definition[TableDefinition table] : ( constraint_def[table] | column_name data_type_def[col] );
+	public final void create_definition(TableDefinition table) throws RecognitionException {
+<span class="nc" id="L664">		String column_name3 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:132:42: ( constraint_def[table] | column_name data_type_def[col] )
+<span class="nc" id="L668">			int alt9=2;</span>
+<span class="nc" id="L669">			int LA9_0 = input.LA(1);</span>
+<span class="nc bnc" id="L670" title="All 10 branches missed.">			if ( (LA9_0==30||LA9_0==33||LA9_0==38||LA9_0==56||LA9_0==64) ) {</span>
+<span class="nc" id="L671">				alt9=1;</span>
+			}
+<span class="nc bnc" id="L673" title="All 2 branches missed.">			else if ( (LA9_0==68) ) {</span>
+<span class="nc" id="L674">				alt9=2;</span>
+			}
+
+			else {
+<span class="nc" id="L678">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 9, 0, input);
+<span class="nc" id="L680">				throw nvae;</span>
+			}
+
+<span class="nc bnc" id="L683" title="All 3 branches missed.">			switch (alt9) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:133:9: constraint_def[table]
+					{
+<span class="nc" id="L687">					pushFollow(FOLLOW_constraint_def_in_create_definition389);</span>
+<span class="nc" id="L688">					constraint_def(table);</span>
+<span class="nc" id="L689">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L692">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/SqlServer.g:135:10: column_name data_type_def[col]
+					{
+<span class="nc" id="L696">					pushFollow(FOLLOW_column_name_in_create_definition411);</span>
+<span class="nc" id="L697">					column_name3=column_name();</span>
+<span class="nc" id="L698">					state._fsp--;</span>
+
+
+<span class="nc" id="L701">					         	ColumnDefinition col = ColumnDefinition.findOrCreateColumnDefinition(table, column_name3);</span>
+					         
+<span class="nc" id="L703">					pushFollow(FOLLOW_data_type_def_in_create_definition415);</span>
+<span class="nc" id="L704">					data_type_def(col);</span>
+<span class="nc" id="L705">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+		}
+<span class="nc" id="L712">		catch (RecognitionException re) {</span>
+<span class="nc" id="L713">			reportError(re);</span>
+<span class="nc" id="L714">			recover(input,re);</span>
+		}
+<span class="nc" id="L716">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L718">		}</span>
+<span class="nc" id="L719">	}</span>
+	// $ANTLR end &quot;create_definition&quot;
+
+
+
+	// $ANTLR start &quot;constraint_def&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:141:1: constraint_def[TableDefinition table] returns [String constrName] : ( 'CONSTRAINT' symbol )? ( constraint_unique | constraint_fk[table, constrName] | constraint_pk | constraint_df[table] ) ;
+	public final String constraint_def(TableDefinition table) throws RecognitionException {
+<span class="nc" id="L727">		String constrName = null;</span>
+
+
+<span class="nc" id="L730">		String symbol4 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:141:68: ( ( 'CONSTRAINT' symbol )? ( constraint_unique | constraint_fk[table, constrName] | constraint_pk | constraint_df[table] ) )
+			// org/argouml/language/sql/reveng/SqlServer.g:142:3: ( 'CONSTRAINT' symbol )? ( constraint_unique | constraint_fk[table, constrName] | constraint_pk | constraint_df[table] )
+			{
+			// org/argouml/language/sql/reveng/SqlServer.g:142:3: ( 'CONSTRAINT' symbol )?
+<span class="nc" id="L737">			int alt10=2;</span>
+<span class="nc" id="L738">			int LA10_0 = input.LA(1);</span>
+<span class="nc bnc" id="L739" title="All 2 branches missed.">			if ( (LA10_0==30) ) {</span>
+<span class="nc" id="L740">				alt10=1;</span>
+			}
+<span class="nc bnc" id="L742" title="All 2 branches missed.">			switch (alt10) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:142:4: 'CONSTRAINT' symbol
+					{
+<span class="nc" id="L746">					match(input,30,FOLLOW_30_in_constraint_def445); </span>
+<span class="nc" id="L747">					pushFollow(FOLLOW_symbol_in_constraint_def447);</span>
+<span class="nc" id="L748">					symbol4=symbol();</span>
+<span class="nc" id="L749">					state._fsp--;</span>
+
+
+<span class="nc" id="L752">						 		constrName =  symbol4;</span>
+						 	
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/SqlServer.g:148:3: ( constraint_unique | constraint_fk[table, constrName] | constraint_pk | constraint_df[table] )
+<span class="nc" id="L760">			int alt11=4;</span>
+<span class="nc bnc" id="L761" title="All 5 branches missed.">			switch ( input.LA(1) ) {</span>
+			case 64:
+				{
+<span class="nc" id="L764">				alt11=1;</span>
+				}
+<span class="nc" id="L766">				break;</span>
+			case 38:
+				{
+<span class="nc" id="L769">				alt11=2;</span>
+				}
+<span class="nc" id="L771">				break;</span>
+			case 56:
+				{
+<span class="nc" id="L774">				alt11=3;</span>
+				}
+<span class="nc" id="L776">				break;</span>
+			case 33:
+				{
+<span class="nc" id="L779">				alt11=4;</span>
+				}
+<span class="nc" id="L781">				break;</span>
+			default:
+<span class="nc" id="L783">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 11, 0, input);
+<span class="nc" id="L785">				throw nvae;</span>
+			}
+<span class="nc bnc" id="L787" title="All 5 branches missed.">			switch (alt11) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:149:3: constraint_unique
+					{
+<span class="nc" id="L791">					pushFollow(FOLLOW_constraint_unique_in_constraint_def470);</span>
+<span class="nc" id="L792">					constraint_unique();</span>
+<span class="nc" id="L793">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L796">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/SqlServer.g:150:5: constraint_fk[table, constrName]
+					{
+<span class="nc" id="L800">					pushFollow(FOLLOW_constraint_fk_in_constraint_def477);</span>
+<span class="nc" id="L801">					constraint_fk(table, constrName);</span>
+<span class="nc" id="L802">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L805">					break;</span>
+				case 3 :
+					// org/argouml/language/sql/reveng/SqlServer.g:151:5: constraint_pk
+					{
+<span class="nc" id="L809">					pushFollow(FOLLOW_constraint_pk_in_constraint_def484);</span>
+<span class="nc" id="L810">					constraint_pk();</span>
+<span class="nc" id="L811">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L814">					break;</span>
+				case 4 :
+					// org/argouml/language/sql/reveng/SqlServer.g:152:5: constraint_df[table]
+					{
+<span class="nc" id="L818">					pushFollow(FOLLOW_constraint_df_in_constraint_def491);</span>
+<span class="nc" id="L819">					constraint_df(table);</span>
+<span class="nc" id="L820">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+			}
+
+		}
+<span class="nc" id="L830">		catch (RecognitionException re) {</span>
+<span class="nc" id="L831">			reportError(re);</span>
+<span class="nc" id="L832">			recover(input,re);</span>
+		}
+<span class="nc" id="L834">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L836">		}</span>
+<span class="nc" id="L837">		return constrName;</span>
+	}
+	// $ANTLR end &quot;constraint_def&quot;
+
+
+
+	// $ANTLR start &quot;constraint_df&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:158:1: constraint_df[TableDefinition table] : 'DEFAULT' default_statement[col1] 'FOR' column_name ;
+	public final void constraint_df(TableDefinition table) throws RecognitionException {
+<span class="nc" id="L846">		String column_name5 =null;</span>
+
+
+<span class="nc" id="L849">			ColumnDefinition col1 = new ColumnDefinition();</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:161:3: ( 'DEFAULT' default_statement[col1] 'FOR' column_name )
+			// org/argouml/language/sql/reveng/SqlServer.g:162:2: 'DEFAULT' default_statement[col1] 'FOR' column_name
+			{
+<span class="nc" id="L855">			match(input,33,FOLLOW_33_in_constraint_df518); </span>
+<span class="nc" id="L856">			pushFollow(FOLLOW_default_statement_in_constraint_df520);</span>
+<span class="nc" id="L857">			default_statement(col1);</span>
+<span class="nc" id="L858">			state._fsp--;</span>
+
+<span class="nc" id="L860">			match(input,37,FOLLOW_37_in_constraint_df524); </span>
+<span class="nc" id="L861">			pushFollow(FOLLOW_column_name_in_constraint_df526);</span>
+<span class="nc" id="L862">			column_name5=column_name();</span>
+<span class="nc" id="L863">			state._fsp--;</span>
+
+
+<span class="nc" id="L866">					ColumnDefinition col = ColumnDefinition.findOrCreateColumnDefinition(table, column_name5);</span>
+<span class="nc" id="L867">					col.setDefaultValue(col1.getDefaultValue());</span>
+				
+			}
+
+		}
+<span class="nc" id="L872">		catch (RecognitionException re) {</span>
+<span class="nc" id="L873">			reportError(re);</span>
+<span class="nc" id="L874">			recover(input,re);</span>
+		}
+<span class="nc" id="L876">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L878">		}</span>
+<span class="nc" id="L879">	}</span>
+	// $ANTLR end &quot;constraint_df&quot;
+
+
+
+	// $ANTLR start &quot;constraint_unique&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:171:1: constraint_unique : 'UNIQUE' ( 'INDEX' | 'KEY' )? ( index_name )? ( index_type )? columns_list_name ;
+	public final void constraint_unique() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:171:19: ( 'UNIQUE' ( 'INDEX' | 'KEY' )? ( index_name )? ( index_type )? columns_list_name )
+			// org/argouml/language/sql/reveng/SqlServer.g:172:2: 'UNIQUE' ( 'INDEX' | 'KEY' )? ( index_name )? ( index_type )? columns_list_name
+			{
+<span class="nc" id="L891">			match(input,64,FOLLOW_64_in_constraint_unique543); </span>
+			// org/argouml/language/sql/reveng/SqlServer.g:172:11: ( 'INDEX' | 'KEY' )?
+<span class="nc" id="L893">			int alt12=2;</span>
+<span class="nc" id="L894">			int LA12_0 = input.LA(1);</span>
+<span class="nc bnc" id="L895" title="All 4 branches missed.">			if ( ((LA12_0 &gt;= 43 &amp;&amp; LA12_0 &lt;= 44)) ) {</span>
+<span class="nc" id="L896">				alt12=1;</span>
+			}
+<span class="nc bnc" id="L898" title="All 2 branches missed.">			switch (alt12) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:
+					{
+<span class="nc bnc" id="L902" title="All 4 branches missed.">					if ( (input.LA(1) &gt;= 43 &amp;&amp; input.LA(1) &lt;= 44) ) {</span>
+<span class="nc" id="L903">						input.consume();</span>
+<span class="nc" id="L904">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L907">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L908">						throw mse;</span>
+					}
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/SqlServer.g:172:30: ( index_name )?
+<span class="nc" id="L916">			int alt13=2;</span>
+<span class="nc" id="L917">			int LA13_0 = input.LA(1);</span>
+<span class="nc bnc" id="L918" title="All 2 branches missed.">			if ( (LA13_0==LEFT_PAREN) ) {</span>
+<span class="nc" id="L919">				int LA13_1 = input.LA(2);</span>
+<span class="nc bnc" id="L920" title="All 2 branches missed.">				if ( (LA13_1==68) ) {</span>
+<span class="nc" id="L921">					int LA13_4 = input.LA(3);</span>
+<span class="nc bnc" id="L922" title="All 2 branches missed.">					if ( (LA13_4==ID) ) {</span>
+<span class="nc" id="L923">						int LA13_5 = input.LA(4);</span>
+<span class="nc bnc" id="L924" title="All 2 branches missed.">						if ( (LA13_5==69) ) {</span>
+<span class="nc" id="L925">							int LA13_6 = input.LA(5);</span>
+<span class="nc bnc" id="L926" title="All 2 branches missed.">							if ( (LA13_6==RIGHT_PAREN) ) {</span>
+<span class="nc" id="L927">								int LA13_7 = input.LA(6);</span>
+<span class="nc bnc" id="L928" title="All 6 branches missed.">								if ( (LA13_7==LEFT_PAREN||LA13_7==26||LA13_7==41) ) {</span>
+<span class="nc" id="L929">									alt13=1;</span>
+								}
+<span class="nc" id="L931">							}</span>
+<span class="nc bnc" id="L932" title="All 6 branches missed.">							else if ( (LA13_6==LEFT_PAREN||LA13_6==26||LA13_6==41) ) {</span>
+<span class="nc" id="L933">								alt13=1;</span>
+							}
+						}
+					}
+				}
+<span class="nc" id="L938">			}</span>
+<span class="nc bnc" id="L939" title="All 2 branches missed.">			else if ( (LA13_0==68) ) {</span>
+<span class="nc" id="L940">				alt13=1;</span>
+			}
+<span class="nc bnc" id="L942" title="All 2 branches missed.">			switch (alt13) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:172:31: index_name
+					{
+<span class="nc" id="L946">					pushFollow(FOLLOW_index_name_in_constraint_unique555);</span>
+<span class="nc" id="L947">					index_name();</span>
+<span class="nc" id="L948">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/SqlServer.g:172:44: ( index_type )?
+<span class="nc" id="L956">			int alt14=2;</span>
+<span class="nc" id="L957">			int LA14_0 = input.LA(1);</span>
+<span class="nc bnc" id="L958" title="All 4 branches missed.">			if ( (LA14_0==26||LA14_0==41) ) {</span>
+<span class="nc" id="L959">				alt14=1;</span>
+			}
+<span class="nc bnc" id="L961" title="All 2 branches missed.">			switch (alt14) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:172:45: index_type
+					{
+<span class="nc" id="L965">					pushFollow(FOLLOW_index_type_in_constraint_unique560);</span>
+<span class="nc" id="L966">					index_type();</span>
+<span class="nc" id="L967">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+<span class="nc" id="L974">			pushFollow(FOLLOW_columns_list_name_in_constraint_unique565);</span>
+<span class="nc" id="L975">			columns_list_name();</span>
+<span class="nc" id="L976">			state._fsp--;</span>
+
+			}
+
+		}
+<span class="nc" id="L981">		catch (RecognitionException re) {</span>
+<span class="nc" id="L982">			reportError(re);</span>
+<span class="nc" id="L983">			recover(input,re);</span>
+		}
+<span class="nc" id="L985">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L987">		}</span>
+<span class="nc" id="L988">	}</span>
+	// $ANTLR end &quot;constraint_unique&quot;
+
+
+
+	// $ANTLR start &quot;constraint_fk&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:174:1: constraint_fk[TableDefinition table, String constrName] : 'FOREIGN' 'KEY' ( symbol )? columns_list_name reference_definition[fk] ;
+	public final void constraint_fk(TableDefinition table, String constrName) throws RecognitionException {
+<span class="nc" id="L996">		List&lt;String&gt; columns_list_name6 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:174:58: ( 'FOREIGN' 'KEY' ( symbol )? columns_list_name reference_definition[fk] )
+			// org/argouml/language/sql/reveng/SqlServer.g:175:2: 'FOREIGN' 'KEY' ( symbol )? columns_list_name reference_definition[fk]
+			{
+<span class="nc" id="L1002">			match(input,38,FOLLOW_38_in_constraint_fk576); </span>
+<span class="nc" id="L1003">			match(input,44,FOLLOW_44_in_constraint_fk578); </span>
+			// org/argouml/language/sql/reveng/SqlServer.g:175:18: ( symbol )?
+<span class="nc" id="L1005">			int alt15=2;</span>
+<span class="nc" id="L1006">			int LA15_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1007" title="All 2 branches missed.">			if ( (LA15_0==68) ) {</span>
+<span class="nc" id="L1008">				alt15=1;</span>
+			}
+<span class="nc bnc" id="L1010" title="All 2 branches missed.">			switch (alt15) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:175:19: symbol
+					{
+<span class="nc" id="L1014">					pushFollow(FOLLOW_symbol_in_constraint_fk581);</span>
+<span class="nc" id="L1015">					symbol();</span>
+<span class="nc" id="L1016">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+
+<span class="nc" id="L1024">					ForeignKeyDefinition fk = new ForeignKeyDefinition(table);</span>
+<span class="nc" id="L1025">					fk.setForeignKeyName(constrName);</span>
+				
+<span class="nc" id="L1027">			pushFollow(FOLLOW_columns_list_name_in_constraint_fk589);</span>
+<span class="nc" id="L1028">			columns_list_name6=columns_list_name();</span>
+<span class="nc" id="L1029">			state._fsp--;</span>
+
+
+<span class="nc bnc" id="L1032" title="All 2 branches missed.">					for(String colName : columns_list_name6) {</span>
+<span class="nc" id="L1033">						fk.addColumnDefinition(colName);</span>
+<span class="nc" id="L1034">					}</span>
+				
+<span class="nc" id="L1036">			pushFollow(FOLLOW_reference_definition_in_constraint_fk595);</span>
+<span class="nc" id="L1037">			reference_definition(fk);</span>
+<span class="nc" id="L1038">			state._fsp--;</span>
+
+			}
+
+		}
+<span class="nc" id="L1043">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1044">			reportError(re);</span>
+<span class="nc" id="L1045">			recover(input,re);</span>
+		}
+<span class="nc" id="L1047">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1049">		}</span>
+<span class="nc" id="L1050">	}</span>
+	// $ANTLR end &quot;constraint_fk&quot;
+
+
+
+	// $ANTLR start &quot;constraint_pk&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:189:1: constraint_pk : 'PRIMARY' 'KEY' ( 'CLUSTERED' | 'NONCLUSTERED' )? columns_list_name_order ( pk_with_option )? ( misc_store )? ;
+	public final void constraint_pk() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:189:15: ( 'PRIMARY' 'KEY' ( 'CLUSTERED' | 'NONCLUSTERED' )? columns_list_name_order ( pk_with_option )? ( misc_store )? )
+			// org/argouml/language/sql/reveng/SqlServer.g:190:2: 'PRIMARY' 'KEY' ( 'CLUSTERED' | 'NONCLUSTERED' )? columns_list_name_order ( pk_with_option )? ( misc_store )?
+			{
+<span class="nc" id="L1062">			match(input,56,FOLLOW_56_in_constraint_pk606); </span>
+<span class="nc" id="L1063">			match(input,44,FOLLOW_44_in_constraint_pk608); </span>
+			// org/argouml/language/sql/reveng/SqlServer.g:191:2: ( 'CLUSTERED' | 'NONCLUSTERED' )?
+<span class="nc" id="L1065">			int alt16=2;</span>
+<span class="nc" id="L1066">			int LA16_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1067" title="All 4 branches missed.">			if ( (LA16_0==29||LA16_0==47) ) {</span>
+<span class="nc" id="L1068">				alt16=1;</span>
+			}
+<span class="nc bnc" id="L1070" title="All 2 branches missed.">			switch (alt16) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:
+					{
+<span class="nc bnc" id="L1074" title="All 4 branches missed.">					if ( input.LA(1)==29||input.LA(1)==47 ) {</span>
+<span class="nc" id="L1075">						input.consume();</span>
+<span class="nc" id="L1076">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L1079">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1080">						throw mse;</span>
+					}
+					}
+					break;
+
+			}
+
+<span class="nc" id="L1087">			pushFollow(FOLLOW_columns_list_name_order_in_constraint_pk625);</span>
+<span class="nc" id="L1088">			columns_list_name_order();</span>
+<span class="nc" id="L1089">			state._fsp--;</span>
+
+			// org/argouml/language/sql/reveng/SqlServer.g:193:2: ( pk_with_option )?
+<span class="nc" id="L1092">			int alt17=2;</span>
+<span class="nc" id="L1093">			int LA17_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1094" title="All 2 branches missed.">			if ( (LA17_0==67) ) {</span>
+<span class="nc" id="L1095">				alt17=1;</span>
+			}
+<span class="nc bnc" id="L1097" title="All 2 branches missed.">			switch (alt17) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:193:3: pk_with_option
+					{
+<span class="nc" id="L1101">					pushFollow(FOLLOW_pk_with_option_in_constraint_pk629);</span>
+<span class="nc" id="L1102">					pk_with_option();</span>
+<span class="nc" id="L1103">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/SqlServer.g:194:2: ( misc_store )?
+<span class="nc" id="L1111">			int alt18=2;</span>
+<span class="nc" id="L1112">			int LA18_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1113" title="All 2 branches missed.">			if ( (LA18_0==52) ) {</span>
+<span class="nc" id="L1114">				alt18=1;</span>
+			}
+<span class="nc bnc" id="L1116" title="All 2 branches missed.">			switch (alt18) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:194:3: misc_store
+					{
+<span class="nc" id="L1120">					pushFollow(FOLLOW_misc_store_in_constraint_pk635);</span>
+<span class="nc" id="L1121">					misc_store();</span>
+<span class="nc" id="L1122">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+			}
+
+		}
+<span class="nc" id="L1132">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1133">			reportError(re);</span>
+<span class="nc" id="L1134">			recover(input,re);</span>
+		}
+<span class="nc" id="L1136">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1138">		}</span>
+<span class="nc" id="L1139">	}</span>
+	// $ANTLR end &quot;constraint_pk&quot;
+
+
+
+	// $ANTLR start &quot;pk_with_option&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:197:1: pk_with_option : 'WITH' LEFT_PAREN index_option ( COMMA index_option )* RIGHT_PAREN ;
+	public final void pk_with_option() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:197:16: ( 'WITH' LEFT_PAREN index_option ( COMMA index_option )* RIGHT_PAREN )
+			// org/argouml/language/sql/reveng/SqlServer.g:198:2: 'WITH' LEFT_PAREN index_option ( COMMA index_option )* RIGHT_PAREN
+			{
+<span class="nc" id="L1151">			match(input,67,FOLLOW_67_in_pk_with_option647); </span>
+<span class="nc" id="L1152">			match(input,LEFT_PAREN,FOLLOW_LEFT_PAREN_in_pk_with_option649); </span>
+<span class="nc" id="L1153">			pushFollow(FOLLOW_index_option_in_pk_with_option651);</span>
+<span class="nc" id="L1154">			index_option();</span>
+<span class="nc" id="L1155">			state._fsp--;</span>
+
+			// org/argouml/language/sql/reveng/SqlServer.g:198:33: ( COMMA index_option )*
+			loop19:
+			while (true) {
+<span class="nc" id="L1160">				int alt19=2;</span>
+<span class="nc" id="L1161">				int LA19_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1162" title="All 2 branches missed.">				if ( (LA19_0==COMMA) ) {</span>
+<span class="nc" id="L1163">					alt19=1;</span>
+				}
+
+<span class="nc bnc" id="L1166" title="All 2 branches missed.">				switch (alt19) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:198:34: COMMA index_option
+					{
+<span class="nc" id="L1170">					match(input,COMMA,FOLLOW_COMMA_in_pk_with_option654); </span>
+<span class="nc" id="L1171">					pushFollow(FOLLOW_index_option_in_pk_with_option656);</span>
+<span class="nc" id="L1172">					index_option();</span>
+<span class="nc" id="L1173">					state._fsp--;</span>
+
+					}
+<span class="nc" id="L1176">					break;</span>
+
+				default :
+<span class="nc" id="L1179">					break loop19;</span>
+				}
+<span class="nc" id="L1181">			}</span>
+
+<span class="nc" id="L1183">			match(input,RIGHT_PAREN,FOLLOW_RIGHT_PAREN_in_pk_with_option660); </span>
+			}
+
+		}
+<span class="nc" id="L1187">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1188">			reportError(re);</span>
+<span class="nc" id="L1189">			recover(input,re);</span>
+		}
+<span class="nc" id="L1191">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1193">		}</span>
+<span class="nc" id="L1194">	}</span>
+	// $ANTLR end &quot;pk_with_option&quot;
+
+
+
+	// $ANTLR start &quot;index_option&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:201:1: index_option : ( 'PAD_INDEX' '=' ( 'ON' | 'OFF' ) | 'FILLFACTOR' '=' ( ID | NUMBER | text_quoted ) | 'IGNORE_DUP_KEY' '=' ( 'ON' | 'OFF' ) | 'STATISTICS_NORECOMPUTE' '=' ( 'ON' | 'OFF' ) | 'ALLOW_ROW_LOCKS' '=' ( 'ON' | 'OFF' ) | 'ALLOW_PAGE_LOCKS' '=' ( 'ON' | 'OFF' ) | 'DATA_COMPRESSION' '=' ( 'NONE' | 'ROW' | 'PAGE' ) );
+	public final void index_option() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:201:14: ( 'PAD_INDEX' '=' ( 'ON' | 'OFF' ) | 'FILLFACTOR' '=' ( ID | NUMBER | text_quoted ) | 'IGNORE_DUP_KEY' '=' ( 'ON' | 'OFF' ) | 'STATISTICS_NORECOMPUTE' '=' ( 'ON' | 'OFF' ) | 'ALLOW_ROW_LOCKS' '=' ( 'ON' | 'OFF' ) | 'ALLOW_PAGE_LOCKS' '=' ( 'ON' | 'OFF' ) | 'DATA_COMPRESSION' '=' ( 'NONE' | 'ROW' | 'PAGE' ) )
+<span class="nc" id="L1204">			int alt21=7;</span>
+<span class="nc bnc" id="L1205" title="All 8 branches missed.">			switch ( input.LA(1) ) {</span>
+			case 53:
+				{
+<span class="nc" id="L1208">				alt21=1;</span>
+				}
+<span class="nc" id="L1210">				break;</span>
+			case 36:
+				{
+<span class="nc" id="L1213">				alt21=2;</span>
+				}
+<span class="nc" id="L1215">				break;</span>
+			case 42:
+				{
+<span class="nc" id="L1218">				alt21=3;</span>
+				}
+<span class="nc" id="L1220">				break;</span>
+			case 62:
+				{
+<span class="nc" id="L1223">				alt21=4;</span>
+				}
+<span class="nc" id="L1225">				break;</span>
+			case 21:
+				{
+<span class="nc" id="L1228">				alt21=5;</span>
+				}
+<span class="nc" id="L1230">				break;</span>
+			case 20:
+				{
+<span class="nc" id="L1233">				alt21=6;</span>
+				}
+<span class="nc" id="L1235">				break;</span>
+			case 32:
+				{
+<span class="nc" id="L1238">				alt21=7;</span>
+				}
+<span class="nc" id="L1240">				break;</span>
+			default:
+<span class="nc" id="L1242">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 21, 0, input);
+<span class="nc" id="L1244">				throw nvae;</span>
+			}
+<span class="nc bnc" id="L1246" title="All 8 branches missed.">			switch (alt21) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:202:2: 'PAD_INDEX' '=' ( 'ON' | 'OFF' )
+					{
+<span class="nc" id="L1250">					match(input,53,FOLLOW_53_in_index_option670); </span>
+<span class="nc" id="L1251">					match(input,17,FOLLOW_17_in_index_option672); </span>
+<span class="nc bnc" id="L1252" title="All 4 branches missed.">					if ( (input.LA(1) &gt;= 51 &amp;&amp; input.LA(1) &lt;= 52) ) {</span>
+<span class="nc" id="L1253">						input.consume();</span>
+<span class="nc" id="L1254">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L1257">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1258">						throw mse;</span>
+					}
+					}
+					break;
+				case 2 :
+					// org/argouml/language/sql/reveng/SqlServer.g:203:5: 'FILLFACTOR' '=' ( ID | NUMBER | text_quoted )
+					{
+<span class="nc" id="L1265">					match(input,36,FOLLOW_36_in_index_option687); </span>
+<span class="nc" id="L1266">					match(input,17,FOLLOW_17_in_index_option690); </span>
+					// org/argouml/language/sql/reveng/SqlServer.g:203:23: ( ID | NUMBER | text_quoted )
+<span class="nc" id="L1268">					int alt20=3;</span>
+<span class="nc bnc" id="L1269" title="All 4 branches missed.">					switch ( input.LA(1) ) {</span>
+					case ID:
+						{
+<span class="nc" id="L1272">						alt20=1;</span>
+						}
+<span class="nc" id="L1274">						break;</span>
+					case NUMBER:
+						{
+<span class="nc" id="L1277">						alt20=2;</span>
+						}
+<span class="nc" id="L1279">						break;</span>
+					case QUOTED_TEXT:
+						{
+<span class="nc" id="L1282">						alt20=3;</span>
+						}
+<span class="nc" id="L1284">						break;</span>
+					default:
+<span class="nc" id="L1286">						NoViableAltException nvae =</span>
+							new NoViableAltException(&quot;&quot;, 20, 0, input);
+<span class="nc" id="L1288">						throw nvae;</span>
+					}
+<span class="nc bnc" id="L1290" title="All 4 branches missed.">					switch (alt20) {</span>
+						case 1 :
+							// org/argouml/language/sql/reveng/SqlServer.g:203:25: ID
+							{
+<span class="nc" id="L1294">							match(input,ID,FOLLOW_ID_in_index_option694); </span>
+							}
+<span class="nc" id="L1296">							break;</span>
+						case 2 :
+							// org/argouml/language/sql/reveng/SqlServer.g:203:30: NUMBER
+							{
+<span class="nc" id="L1300">							match(input,NUMBER,FOLLOW_NUMBER_in_index_option698); </span>
+							}
+<span class="nc" id="L1302">							break;</span>
+						case 3 :
+							// org/argouml/language/sql/reveng/SqlServer.g:203:39: text_quoted
+							{
+<span class="nc" id="L1306">							pushFollow(FOLLOW_text_quoted_in_index_option702);</span>
+<span class="nc" id="L1307">							text_quoted();</span>
+<span class="nc" id="L1308">							state._fsp--;</span>
+
+							}
+							break;
+
+					}
+
+					}
+<span class="nc" id="L1316">					break;</span>
+				case 3 :
+					// org/argouml/language/sql/reveng/SqlServer.g:204:5: 'IGNORE_DUP_KEY' '=' ( 'ON' | 'OFF' )
+					{
+<span class="nc" id="L1320">					match(input,42,FOLLOW_42_in_index_option710); </span>
+<span class="nc" id="L1321">					match(input,17,FOLLOW_17_in_index_option712); </span>
+<span class="nc bnc" id="L1322" title="All 4 branches missed.">					if ( (input.LA(1) &gt;= 51 &amp;&amp; input.LA(1) &lt;= 52) ) {</span>
+<span class="nc" id="L1323">						input.consume();</span>
+<span class="nc" id="L1324">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L1327">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1328">						throw mse;</span>
+					}
+					}
+					break;
+				case 4 :
+					// org/argouml/language/sql/reveng/SqlServer.g:205:5: 'STATISTICS_NORECOMPUTE' '=' ( 'ON' | 'OFF' )
+					{
+<span class="nc" id="L1335">					match(input,62,FOLLOW_62_in_index_option727); </span>
+<span class="nc" id="L1336">					match(input,17,FOLLOW_17_in_index_option729); </span>
+<span class="nc bnc" id="L1337" title="All 4 branches missed.">					if ( (input.LA(1) &gt;= 51 &amp;&amp; input.LA(1) &lt;= 52) ) {</span>
+<span class="nc" id="L1338">						input.consume();</span>
+<span class="nc" id="L1339">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L1342">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1343">						throw mse;</span>
+					}
+					}
+					break;
+				case 5 :
+					// org/argouml/language/sql/reveng/SqlServer.g:206:5: 'ALLOW_ROW_LOCKS' '=' ( 'ON' | 'OFF' )
+					{
+<span class="nc" id="L1350">					match(input,21,FOLLOW_21_in_index_option744); </span>
+<span class="nc" id="L1351">					match(input,17,FOLLOW_17_in_index_option746); </span>
+<span class="nc bnc" id="L1352" title="All 4 branches missed.">					if ( (input.LA(1) &gt;= 51 &amp;&amp; input.LA(1) &lt;= 52) ) {</span>
+<span class="nc" id="L1353">						input.consume();</span>
+<span class="nc" id="L1354">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L1357">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1358">						throw mse;</span>
+					}
+					}
+					break;
+				case 6 :
+					// org/argouml/language/sql/reveng/SqlServer.g:207:5: 'ALLOW_PAGE_LOCKS' '=' ( 'ON' | 'OFF' )
+					{
+<span class="nc" id="L1365">					match(input,20,FOLLOW_20_in_index_option761); </span>
+<span class="nc" id="L1366">					match(input,17,FOLLOW_17_in_index_option763); </span>
+<span class="nc bnc" id="L1367" title="All 4 branches missed.">					if ( (input.LA(1) &gt;= 51 &amp;&amp; input.LA(1) &lt;= 52) ) {</span>
+<span class="nc" id="L1368">						input.consume();</span>
+<span class="nc" id="L1369">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L1372">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1373">						throw mse;</span>
+					}
+					}
+					break;
+				case 7 :
+					// org/argouml/language/sql/reveng/SqlServer.g:208:5: 'DATA_COMPRESSION' '=' ( 'NONE' | 'ROW' | 'PAGE' )
+					{
+<span class="nc" id="L1380">					match(input,32,FOLLOW_32_in_index_option778); </span>
+<span class="nc" id="L1381">					match(input,17,FOLLOW_17_in_index_option780); </span>
+<span class="nc bnc" id="L1382" title="All 6 branches missed.">					if ( input.LA(1)==48||input.LA(1)==54||input.LA(1)==60 ) {</span>
+<span class="nc" id="L1383">						input.consume();</span>
+<span class="nc" id="L1384">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L1387">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1388">						throw mse;</span>
+					}
+					}
+					break;
+
+			}
+		}
+<span class="nc" id="L1395">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1396">			reportError(re);</span>
+<span class="nc" id="L1397">			recover(input,re);</span>
+		}
+<span class="nc" id="L1399">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1401">		}</span>
+<span class="nc" id="L1402">	}</span>
+	// $ANTLR end &quot;index_option&quot;
+
+
+
+	// $ANTLR start &quot;reference_definition&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:211:1: reference_definition[ForeignKeyDefinition fk] : 'REFERENCES' name_with_esc DOT table_name columns_list_name ( 'MATCH' ( 'FULL' | 'PARTIAL' ) )? ( 'ON' ( 'DELETE' | 'UPDATE' ) reference_option )? ;
+	public final void reference_definition(ForeignKeyDefinition fk) throws RecognitionException {
+<span class="nc" id="L1410">		String table_name7 =null;</span>
+<span class="nc" id="L1411">		List&lt;String&gt; columns_list_name8 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:211:48: ( 'REFERENCES' name_with_esc DOT table_name columns_list_name ( 'MATCH' ( 'FULL' | 'PARTIAL' ) )? ( 'ON' ( 'DELETE' | 'UPDATE' ) reference_option )? )
+			// org/argouml/language/sql/reveng/SqlServer.g:212:2: 'REFERENCES' name_with_esc DOT table_name columns_list_name ( 'MATCH' ( 'FULL' | 'PARTIAL' ) )? ( 'ON' ( 'DELETE' | 'UPDATE' ) reference_option )?
+			{
+<span class="nc" id="L1417">			match(input,58,FOLLOW_58_in_reference_definition806); </span>
+<span class="nc" id="L1418">			pushFollow(FOLLOW_name_with_esc_in_reference_definition810);</span>
+<span class="nc" id="L1419">			name_with_esc();</span>
+<span class="nc" id="L1420">			state._fsp--;</span>
+
+<span class="nc" id="L1422">			match(input,DOT,FOLLOW_DOT_in_reference_definition812); </span>
+<span class="nc" id="L1423">			pushFollow(FOLLOW_table_name_in_reference_definition814);</span>
+<span class="nc" id="L1424">			table_name7=table_name();</span>
+<span class="nc" id="L1425">			state._fsp--;</span>
+
+
+<span class="nc" id="L1428">					TableDefinition tableRef = getModeller().getTableFromName(table_name7);</span>
+<span class="nc" id="L1429">					fk.setReferencesTable(tableRef);</span>
+					
+				
+<span class="nc" id="L1432">			pushFollow(FOLLOW_columns_list_name_in_reference_definition820);</span>
+<span class="nc" id="L1433">			columns_list_name8=columns_list_name();</span>
+<span class="nc" id="L1434">			state._fsp--;</span>
+
+
+<span class="nc bnc" id="L1437" title="All 2 branches missed.">					for(String colName : columns_list_name8) {</span>
+<span class="nc" id="L1438">						fk.addReferencesColumn(colName);</span>
+<span class="nc" id="L1439">					}</span>
+				
+			// org/argouml/language/sql/reveng/SqlServer.g:226:2: ( 'MATCH' ( 'FULL' | 'PARTIAL' ) )?
+<span class="nc" id="L1442">			int alt22=2;</span>
+<span class="nc" id="L1443">			int LA22_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1444" title="All 2 branches missed.">			if ( (LA22_0==45) ) {</span>
+<span class="nc" id="L1445">				alt22=1;</span>
+			}
+<span class="nc bnc" id="L1447" title="All 2 branches missed.">			switch (alt22) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:226:3: 'MATCH' ( 'FULL' | 'PARTIAL' )
+					{
+<span class="nc" id="L1451">					match(input,45,FOLLOW_45_in_reference_definition829); </span>
+<span class="nc bnc" id="L1452" title="All 4 branches missed.">					if ( input.LA(1)==39||input.LA(1)==55 ) {</span>
+<span class="nc" id="L1453">						input.consume();</span>
+<span class="nc" id="L1454">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L1457">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1458">						throw mse;</span>
+					}
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/SqlServer.g:227:2: ( 'ON' ( 'DELETE' | 'UPDATE' ) reference_option )?
+<span class="nc" id="L1466">			int alt23=2;</span>
+<span class="nc" id="L1467">			int LA23_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1468" title="All 2 branches missed.">			if ( (LA23_0==52) ) {</span>
+<span class="nc" id="L1469">				alt23=1;</span>
+			}
+<span class="nc bnc" id="L1471" title="All 2 branches missed.">			switch (alt23) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:227:3: 'ON' ( 'DELETE' | 'UPDATE' ) reference_option
+					{
+<span class="nc" id="L1475">					match(input,52,FOLLOW_52_in_reference_definition843); </span>
+<span class="nc bnc" id="L1476" title="All 4 branches missed.">					if ( input.LA(1)==34||input.LA(1)==65 ) {</span>
+<span class="nc" id="L1477">						input.consume();</span>
+<span class="nc" id="L1478">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L1481">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1482">						throw mse;</span>
+					}
+<span class="nc" id="L1484">					pushFollow(FOLLOW_reference_option_in_reference_definition853);</span>
+<span class="nc" id="L1485">					reference_option();</span>
+<span class="nc" id="L1486">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+			}
+
+		}
+<span class="nc" id="L1496">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1497">			reportError(re);</span>
+<span class="nc" id="L1498">			recover(input,re);</span>
+		}
+<span class="nc" id="L1500">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1502">		}</span>
+<span class="nc" id="L1503">	}</span>
+	// $ANTLR end &quot;reference_definition&quot;
+
+
+
+	// $ANTLR start &quot;reference_option&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:230:1: reference_option : ( 'RESTRICT' | 'CASCADE' | 'SET' 'NULL' | 'NO' 'ACTION' | 'SET' 'DEFAULT' );
+	public final void reference_option() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:230:18: ( 'RESTRICT' | 'CASCADE' | 'SET' 'NULL' | 'NO' 'ACTION' | 'SET' 'DEFAULT' )
+<span class="nc" id="L1513">			int alt24=5;</span>
+<span class="nc bnc" id="L1514" title="All 5 branches missed.">			switch ( input.LA(1) ) {</span>
+			case 59:
+				{
+<span class="nc" id="L1517">				alt24=1;</span>
+				}
+<span class="nc" id="L1519">				break;</span>
+			case 27:
+				{
+<span class="nc" id="L1522">				alt24=2;</span>
+				}
+<span class="nc" id="L1524">				break;</span>
+			case 61:
+				{
+<span class="nc" id="L1527">				int LA24_3 = input.LA(2);</span>
+<span class="nc bnc" id="L1528" title="All 2 branches missed.">				if ( (LA24_3==50) ) {</span>
+<span class="nc" id="L1529">					alt24=3;</span>
+				}
+<span class="nc bnc" id="L1531" title="All 2 branches missed.">				else if ( (LA24_3==33) ) {</span>
+<span class="nc" id="L1532">					alt24=5;</span>
+				}
+
+				else {
+<span class="nc" id="L1536">					int nvaeMark = input.mark();</span>
+					try {
+<span class="nc" id="L1538">						input.consume();</span>
+<span class="nc" id="L1539">						NoViableAltException nvae =</span>
+							new NoViableAltException(&quot;&quot;, 24, 3, input);
+<span class="nc" id="L1541">						throw nvae;</span>
+					} finally {
+<span class="nc" id="L1543">						input.rewind(nvaeMark);</span>
+					}
+				}
+
+				}
+<span class="nc" id="L1548">				break;</span>
+			case 46:
+				{
+<span class="nc" id="L1551">				alt24=4;</span>
+				}
+<span class="nc" id="L1553">				break;</span>
+			default:
+<span class="nc" id="L1555">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 24, 0, input);
+<span class="nc" id="L1557">				throw nvae;</span>
+			}
+<span class="nc bnc" id="L1559" title="All 6 branches missed.">			switch (alt24) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:231:2: 'RESTRICT'
+					{
+<span class="nc" id="L1563">					match(input,59,FOLLOW_59_in_reference_option866); </span>
+					}
+<span class="nc" id="L1565">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/SqlServer.g:231:15: 'CASCADE'
+					{
+<span class="nc" id="L1569">					match(input,27,FOLLOW_27_in_reference_option870); </span>
+					}
+<span class="nc" id="L1571">					break;</span>
+				case 3 :
+					// org/argouml/language/sql/reveng/SqlServer.g:231:27: 'SET' 'NULL'
+					{
+<span class="nc" id="L1575">					match(input,61,FOLLOW_61_in_reference_option874); </span>
+<span class="nc" id="L1576">					match(input,50,FOLLOW_50_in_reference_option876); </span>
+					}
+<span class="nc" id="L1578">					break;</span>
+				case 4 :
+					// org/argouml/language/sql/reveng/SqlServer.g:231:42: 'NO' 'ACTION'
+					{
+<span class="nc" id="L1582">					match(input,46,FOLLOW_46_in_reference_option880); </span>
+<span class="nc" id="L1583">					match(input,18,FOLLOW_18_in_reference_option882); </span>
+					}
+<span class="nc" id="L1585">					break;</span>
+				case 5 :
+					// org/argouml/language/sql/reveng/SqlServer.g:231:58: 'SET' 'DEFAULT'
+					{
+<span class="nc" id="L1589">					match(input,61,FOLLOW_61_in_reference_option886); </span>
+<span class="nc" id="L1590">					match(input,33,FOLLOW_33_in_reference_option888); </span>
+					}
+					break;
+
+			}
+		}
+<span class="nc" id="L1596">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1597">			reportError(re);</span>
+<span class="nc" id="L1598">			recover(input,re);</span>
+		}
+<span class="nc" id="L1600">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1602">		}</span>
+<span class="nc" id="L1603">	}</span>
+	// $ANTLR end &quot;reference_option&quot;
+
+
+
+	// $ANTLR start &quot;columns_list_name_order&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:234:1: columns_list_name_order returns [List&lt;String&gt; listColumn] : LEFT_PAREN c1= column_name ( 'ASC' | 'DESC' )? ( COMMA c2= column_name ( 'ASC' | 'DESC' )? )* RIGHT_PAREN ;
+	public final List&lt;String&gt; columns_list_name_order() throws RecognitionException {
+<span class="nc" id="L1611">		List&lt;String&gt; listColumn = null;</span>
+
+
+<span class="nc" id="L1614">		String c1 =null;</span>
+<span class="nc" id="L1615">		String c2 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:234:58: ( LEFT_PAREN c1= column_name ( 'ASC' | 'DESC' )? ( COMMA c2= column_name ( 'ASC' | 'DESC' )? )* RIGHT_PAREN )
+			// org/argouml/language/sql/reveng/SqlServer.g:236:2: LEFT_PAREN c1= column_name ( 'ASC' | 'DESC' )? ( COMMA c2= column_name ( 'ASC' | 'DESC' )? )* RIGHT_PAREN
+			{
+<span class="nc" id="L1621">			match(input,LEFT_PAREN,FOLLOW_LEFT_PAREN_in_columns_list_name_order902); </span>
+<span class="nc" id="L1622">			pushFollow(FOLLOW_column_name_in_columns_list_name_order906);</span>
+<span class="nc" id="L1623">			c1=column_name();</span>
+<span class="nc" id="L1624">			state._fsp--;</span>
+
+			// org/argouml/language/sql/reveng/SqlServer.g:236:28: ( 'ASC' | 'DESC' )?
+<span class="nc" id="L1627">			int alt25=2;</span>
+<span class="nc" id="L1628">			int LA25_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1629" title="All 4 branches missed.">			if ( (LA25_0==25||LA25_0==35) ) {</span>
+<span class="nc" id="L1630">				alt25=1;</span>
+			}
+<span class="nc bnc" id="L1632" title="All 2 branches missed.">			switch (alt25) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:
+					{
+<span class="nc bnc" id="L1636" title="All 4 branches missed.">					if ( input.LA(1)==25||input.LA(1)==35 ) {</span>
+<span class="nc" id="L1637">						input.consume();</span>
+<span class="nc" id="L1638">						state.errorRecovery=false;</span>
+					}
+					else {
+<span class="nc" id="L1641">						MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1642">						throw mse;</span>
+					}
+					}
+					break;
+
+			}
+
+
+<span class="nc" id="L1650">					listColumn = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L1651">					listColumn.add(c1);</span>
+				
+			// org/argouml/language/sql/reveng/SqlServer.g:241:2: ( COMMA c2= column_name ( 'ASC' | 'DESC' )? )*
+			loop27:
+			while (true) {
+<span class="nc" id="L1656">				int alt27=2;</span>
+<span class="nc" id="L1657">				int LA27_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1658" title="All 2 branches missed.">				if ( (LA27_0==COMMA) ) {</span>
+<span class="nc" id="L1659">					alt27=1;</span>
+				}
+
+<span class="nc bnc" id="L1662" title="All 2 branches missed.">				switch (alt27) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:242:3: COMMA c2= column_name ( 'ASC' | 'DESC' )?
+					{
+<span class="nc" id="L1666">					match(input,COMMA,FOLLOW_COMMA_in_columns_list_name_order925); </span>
+<span class="nc" id="L1667">					pushFollow(FOLLOW_column_name_in_columns_list_name_order929);</span>
+<span class="nc" id="L1668">					c2=column_name();</span>
+<span class="nc" id="L1669">					state._fsp--;</span>
+
+					// org/argouml/language/sql/reveng/SqlServer.g:242:24: ( 'ASC' | 'DESC' )?
+<span class="nc" id="L1672">					int alt26=2;</span>
+<span class="nc" id="L1673">					int LA26_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1674" title="All 4 branches missed.">					if ( (LA26_0==25||LA26_0==35) ) {</span>
+<span class="nc" id="L1675">						alt26=1;</span>
+					}
+<span class="nc bnc" id="L1677" title="All 2 branches missed.">					switch (alt26) {</span>
+						case 1 :
+							// org/argouml/language/sql/reveng/SqlServer.g:
+							{
+<span class="nc bnc" id="L1681" title="All 4 branches missed.">							if ( input.LA(1)==25||input.LA(1)==35 ) {</span>
+<span class="nc" id="L1682">								input.consume();</span>
+<span class="nc" id="L1683">								state.errorRecovery=false;</span>
+							}
+							else {
+<span class="nc" id="L1686">								MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L1687">								throw mse;</span>
+							}
+							}
+							break;
+
+					}
+
+
+<span class="nc" id="L1695">								listColumn.add(c2);</span>
+							
+					}
+<span class="nc" id="L1698">					break;</span>
+
+				default :
+<span class="nc" id="L1701">					break loop27;</span>
+				}
+<span class="nc" id="L1703">			}</span>
+
+<span class="nc" id="L1705">			match(input,RIGHT_PAREN,FOLLOW_RIGHT_PAREN_in_columns_list_name_order945); </span>
+			}
+
+		}
+<span class="nc" id="L1709">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1710">			reportError(re);</span>
+<span class="nc" id="L1711">			recover(input,re);</span>
+		}
+<span class="nc" id="L1713">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1715">		}</span>
+<span class="nc" id="L1716">		return listColumn;</span>
+	}
+	// $ANTLR end &quot;columns_list_name_order&quot;
+
+
+
+	// $ANTLR start &quot;columns_list_name&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:249:1: columns_list_name returns [List&lt;String&gt; listColumn] : LEFT_PAREN c1= column_name ( COMMA c2= column_name )* RIGHT_PAREN ;
+	public final List&lt;String&gt; columns_list_name() throws RecognitionException {
+<span class="nc" id="L1725">		List&lt;String&gt; listColumn = null;</span>
+
+
+<span class="nc" id="L1728">		String c1 =null;</span>
+<span class="nc" id="L1729">		String c2 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:249:52: ( LEFT_PAREN c1= column_name ( COMMA c2= column_name )* RIGHT_PAREN )
+			// org/argouml/language/sql/reveng/SqlServer.g:251:2: LEFT_PAREN c1= column_name ( COMMA c2= column_name )* RIGHT_PAREN
+			{
+<span class="nc" id="L1735">			match(input,LEFT_PAREN,FOLLOW_LEFT_PAREN_in_columns_list_name962); </span>
+<span class="nc" id="L1736">			pushFollow(FOLLOW_column_name_in_columns_list_name966);</span>
+<span class="nc" id="L1737">			c1=column_name();</span>
+<span class="nc" id="L1738">			state._fsp--;</span>
+
+
+<span class="nc" id="L1741">					listColumn = new ArrayList&lt;String&gt;();</span>
+<span class="nc" id="L1742">					listColumn.add(c1);</span>
+				
+			// org/argouml/language/sql/reveng/SqlServer.g:256:2: ( COMMA c2= column_name )*
+			loop28:
+			while (true) {
+<span class="nc" id="L1747">				int alt28=2;</span>
+<span class="nc" id="L1748">				int LA28_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1749" title="All 2 branches missed.">				if ( (LA28_0==COMMA) ) {</span>
+<span class="nc" id="L1750">					alt28=1;</span>
+				}
+
+<span class="nc bnc" id="L1753" title="All 2 branches missed.">				switch (alt28) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:257:3: COMMA c2= column_name
+					{
+<span class="nc" id="L1757">					match(input,COMMA,FOLLOW_COMMA_in_columns_list_name978); </span>
+<span class="nc" id="L1758">					pushFollow(FOLLOW_column_name_in_columns_list_name982);</span>
+<span class="nc" id="L1759">					c2=column_name();</span>
+<span class="nc" id="L1760">					state._fsp--;</span>
+
+
+<span class="nc" id="L1763">								listColumn.add(c2);</span>
+							
+					}
+<span class="nc" id="L1766">					break;</span>
+
+				default :
+<span class="nc" id="L1769">					break loop28;</span>
+				}
+<span class="nc" id="L1771">			}</span>
+
+<span class="nc" id="L1773">			match(input,RIGHT_PAREN,FOLLOW_RIGHT_PAREN_in_columns_list_name990); </span>
+			}
+
+		}
+<span class="nc" id="L1777">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1778">			reportError(re);</span>
+<span class="nc" id="L1779">			recover(input,re);</span>
+		}
+<span class="nc" id="L1781">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1783">		}</span>
+<span class="nc" id="L1784">		return listColumn;</span>
+	}
+	// $ANTLR end &quot;columns_list_name&quot;
+
+
+
+	// $ANTLR start &quot;column_name&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:263:1: column_name returns [String cn] : name_with_esc ;
+	public final String column_name() throws RecognitionException {
+<span class="nc" id="L1793">		String cn = null;</span>
+
+
+<span class="nc" id="L1796">		String name_with_esc9 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:263:33: ( name_with_esc )
+			// org/argouml/language/sql/reveng/SqlServer.g:264:2: name_with_esc
+			{
+<span class="nc" id="L1802">			pushFollow(FOLLOW_name_with_esc_in_column_name1005);</span>
+<span class="nc" id="L1803">			name_with_esc9=name_with_esc();</span>
+<span class="nc" id="L1804">			state._fsp--;</span>
+
+<span class="nc" id="L1806">			cn = name_with_esc9;</span>
+			}
+
+		}
+<span class="nc" id="L1810">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1811">			reportError(re);</span>
+<span class="nc" id="L1812">			recover(input,re);</span>
+		}
+<span class="nc" id="L1814">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1816">		}</span>
+<span class="nc" id="L1817">		return cn;</span>
+	}
+	// $ANTLR end &quot;column_name&quot;
+
+
+
+	// $ANTLR start &quot;table_name&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:267:1: table_name returns [String name] : name_with_esc ;
+	public final String table_name() throws RecognitionException {
+<span class="nc" id="L1826">		String name = null;</span>
+
+
+<span class="nc" id="L1829">		String name_with_esc10 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:267:34: ( name_with_esc )
+			// org/argouml/language/sql/reveng/SqlServer.g:268:5: name_with_esc
+			{
+<span class="nc" id="L1835">			pushFollow(FOLLOW_name_with_esc_in_table_name1028);</span>
+<span class="nc" id="L1836">			name_with_esc10=name_with_esc();</span>
+<span class="nc" id="L1837">			state._fsp--;</span>
+
+<span class="nc" id="L1839">			name = name_with_esc10;</span>
+			}
+
+		}
+<span class="nc" id="L1843">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1844">			reportError(re);</span>
+<span class="nc" id="L1845">			recover(input,re);</span>
+		}
+<span class="nc" id="L1847">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1849">		}</span>
+<span class="nc" id="L1850">		return name;</span>
+	}
+	// $ANTLR end &quot;table_name&quot;
+
+
+
+	// $ANTLR start &quot;data_type_def&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:271:1: data_type_def[ColumnDefinition col] : data_type ( data_length )? ( 'NOT' 'NULL' | 'NULL' )? ( 'DEFAULT' default_statement[col] )? ;
+	public final void data_type_def(ColumnDefinition col) throws RecognitionException {
+<span class="nc" id="L1859">		String data_type11 =null;</span>
+<span class="nc" id="L1860">		ParserRuleReturnScope data_length12 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:271:38: ( data_type ( data_length )? ( 'NOT' 'NULL' | 'NULL' )? ( 'DEFAULT' default_statement[col] )? )
+			// org/argouml/language/sql/reveng/SqlServer.g:272:5: data_type ( data_length )? ( 'NOT' 'NULL' | 'NULL' )? ( 'DEFAULT' default_statement[col] )?
+			{
+<span class="nc" id="L1866">			pushFollow(FOLLOW_data_type_in_data_type_def1045);</span>
+<span class="nc" id="L1867">			data_type11=data_type();</span>
+<span class="nc" id="L1868">			state._fsp--;</span>
+
+<span class="nc" id="L1870">			col.setDatatype(data_type11);</span>
+			// org/argouml/language/sql/reveng/SqlServer.g:273:6: ( data_length )?
+<span class="nc" id="L1872">			int alt29=2;</span>
+<span class="nc" id="L1873">			int LA29_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1874" title="All 2 branches missed.">			if ( (LA29_0==LEFT_PAREN) ) {</span>
+<span class="nc" id="L1875">				alt29=1;</span>
+			}
+<span class="nc bnc" id="L1877" title="All 2 branches missed.">			switch (alt29) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:273:7: data_length
+					{
+<span class="nc" id="L1881">					pushFollow(FOLLOW_data_length_in_data_type_def1056);</span>
+<span class="nc" id="L1882">					data_length12=data_length();</span>
+<span class="nc" id="L1883">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+
+<span class="nc bnc" id="L1891" title="All 2 branches missed.">			    		col.setLength((data_length12!=null?((SqlServerParser.data_length_return)data_length12).len:null));</span>
+<span class="nc bnc" id="L1892" title="All 2 branches missed.">			    		col.setNbDecimal((data_length12!=null?((SqlServerParser.data_length_return)data_length12).decimal:null));//can be null</span>
+			    	
+			// org/argouml/language/sql/reveng/SqlServer.g:277:6: ( 'NOT' 'NULL' | 'NULL' )?
+<span class="nc" id="L1895">			int alt30=3;</span>
+<span class="nc" id="L1896">			int LA30_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1897" title="All 2 branches missed.">			if ( (LA30_0==49) ) {</span>
+<span class="nc" id="L1898">				alt30=1;</span>
+			}
+<span class="nc bnc" id="L1900" title="All 2 branches missed.">			else if ( (LA30_0==50) ) {</span>
+<span class="nc" id="L1901">				alt30=2;</span>
+			}
+<span class="nc bnc" id="L1903" title="All 3 branches missed.">			switch (alt30) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:277:8: 'NOT' 'NULL'
+					{
+<span class="nc" id="L1907">					match(input,49,FOLLOW_49_in_data_type_def1069); </span>
+<span class="nc" id="L1908">					match(input,50,FOLLOW_50_in_data_type_def1071); </span>
+
+<span class="nc" id="L1910">					   	 	col.setNullable(false);</span>
+					   	 	
+					}
+<span class="nc" id="L1913">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/SqlServer.g:280:9: 'NULL'
+					{
+<span class="nc" id="L1917">					match(input,50,FOLLOW_50_in_data_type_def1084); </span>
+
+<span class="nc" id="L1919">					   	 	col.setNullable(true);</span>
+					   	 	
+					}
+					break;
+
+			}
+
+			// org/argouml/language/sql/reveng/SqlServer.g:284:6: ( 'DEFAULT' default_statement[col] )?
+<span class="nc" id="L1927">			int alt31=2;</span>
+<span class="nc" id="L1928">			int LA31_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1929" title="All 2 branches missed.">			if ( (LA31_0==33) ) {</span>
+<span class="nc" id="L1930">				alt31=1;</span>
+			}
+<span class="nc bnc" id="L1932" title="All 2 branches missed.">			switch (alt31) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:284:8: 'DEFAULT' default_statement[col]
+					{
+<span class="nc" id="L1936">					match(input,33,FOLLOW_33_in_data_type_def1103); </span>
+<span class="nc" id="L1937">					pushFollow(FOLLOW_default_statement_in_data_type_def1105);</span>
+<span class="nc" id="L1938">					default_statement(col);</span>
+<span class="nc" id="L1939">					state._fsp--;</span>
+
+					}
+					break;
+
+			}
+
+			}
+
+		}
+<span class="nc" id="L1949">		catch (RecognitionException re) {</span>
+<span class="nc" id="L1950">			reportError(re);</span>
+<span class="nc" id="L1951">			recover(input,re);</span>
+		}
+<span class="nc" id="L1953">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L1955">		}</span>
+<span class="nc" id="L1956">	}</span>
+	// $ANTLR end &quot;data_type_def&quot;
+
+
+
+	// $ANTLR start &quot;default_statement&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:288:1: default_statement[ColumnDefinition col] : ( 'NULL' | '(' defaultValue[col] ')' );
+	public final void default_statement(ColumnDefinition col) throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:288:41: ( 'NULL' | '(' defaultValue[col] ')' )
+<span class="nc" id="L1966">			int alt32=2;</span>
+<span class="nc" id="L1967">			int LA32_0 = input.LA(1);</span>
+<span class="nc bnc" id="L1968" title="All 2 branches missed.">			if ( (LA32_0==50) ) {</span>
+<span class="nc" id="L1969">				alt32=1;</span>
+			}
+<span class="nc bnc" id="L1971" title="All 2 branches missed.">			else if ( (LA32_0==LEFT_PAREN) ) {</span>
+<span class="nc" id="L1972">				alt32=2;</span>
+			}
+
+			else {
+<span class="nc" id="L1976">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 32, 0, input);
+<span class="nc" id="L1978">				throw nvae;</span>
+			}
+
+<span class="nc bnc" id="L1981" title="All 3 branches missed.">			switch (alt32) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:289:2: 'NULL'
+					{
+<span class="nc" id="L1985">					match(input,50,FOLLOW_50_in_default_statement1125); </span>
+
+<span class="nc" id="L1987">							col.setDefaultValue(&quot;NULL&quot;);</span>
+						
+					}
+<span class="nc" id="L1990">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/SqlServer.g:293:4: '(' defaultValue[col] ')'
+					{
+<span class="nc" id="L1994">					match(input,LEFT_PAREN,FOLLOW_LEFT_PAREN_in_default_statement1134); </span>
+<span class="nc" id="L1995">					pushFollow(FOLLOW_defaultValue_in_default_statement1136);</span>
+<span class="nc" id="L1996">					defaultValue(col);</span>
+<span class="nc" id="L1997">					state._fsp--;</span>
+
+<span class="nc" id="L1999">					match(input,RIGHT_PAREN,FOLLOW_RIGHT_PAREN_in_default_statement1139); </span>
+					}
+					break;
+
+			}
+		}
+<span class="nc" id="L2005">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2006">			reportError(re);</span>
+<span class="nc" id="L2007">			recover(input,re);</span>
+		}
+<span class="nc" id="L2009">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2011">		}</span>
+<span class="nc" id="L2012">	}</span>
+	// $ANTLR end &quot;default_statement&quot;
+
+
+
+	// $ANTLR start &quot;defaultValue&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:297:1: defaultValue[ColumnDefinition col] : ( text_quoted_keep | '(' NUMBER ')' );
+	public final void defaultValue(ColumnDefinition col) throws RecognitionException {
+<span class="nc" id="L2020">		Token NUMBER14=null;</span>
+<span class="nc" id="L2021">		String text_quoted_keep13 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:297:36: ( text_quoted_keep | '(' NUMBER ')' )
+<span class="nc" id="L2025">			int alt33=2;</span>
+<span class="nc" id="L2026">			int LA33_0 = input.LA(1);</span>
+<span class="nc bnc" id="L2027" title="All 2 branches missed.">			if ( (LA33_0==QUOTED_TEXT) ) {</span>
+<span class="nc" id="L2028">				alt33=1;</span>
+			}
+<span class="nc bnc" id="L2030" title="All 2 branches missed.">			else if ( (LA33_0==LEFT_PAREN) ) {</span>
+<span class="nc" id="L2031">				alt33=2;</span>
+			}
+
+			else {
+<span class="nc" id="L2035">				NoViableAltException nvae =</span>
+					new NoViableAltException(&quot;&quot;, 33, 0, input);
+<span class="nc" id="L2037">				throw nvae;</span>
+			}
+
+<span class="nc bnc" id="L2040" title="All 3 branches missed.">			switch (alt33) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:298:2: text_quoted_keep
+					{
+<span class="nc" id="L2044">					pushFollow(FOLLOW_text_quoted_keep_in_defaultValue1152);</span>
+<span class="nc" id="L2045">					text_quoted_keep13=text_quoted_keep();</span>
+<span class="nc" id="L2046">					state._fsp--;</span>
+
+
+<span class="nc" id="L2049">							col.setDefaultValue(text_quoted_keep13);</span>
+						
+					}
+<span class="nc" id="L2052">					break;</span>
+				case 2 :
+					// org/argouml/language/sql/reveng/SqlServer.g:302:2: '(' NUMBER ')'
+					{
+<span class="nc" id="L2056">					match(input,LEFT_PAREN,FOLLOW_LEFT_PAREN_in_defaultValue1160); </span>
+<span class="nc" id="L2057">					NUMBER14=(Token)match(input,NUMBER,FOLLOW_NUMBER_in_defaultValue1162); </span>
+<span class="nc" id="L2058">					match(input,RIGHT_PAREN,FOLLOW_RIGHT_PAREN_in_defaultValue1164); </span>
+					 
+<span class="nc bnc" id="L2060" title="All 2 branches missed.">							col.setDefaultValue((NUMBER14!=null?NUMBER14.getText():null));</span>
+						
+					}
+					break;
+
+			}
+		}
+<span class="nc" id="L2067">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2068">			reportError(re);</span>
+<span class="nc" id="L2069">			recover(input,re);</span>
+		}
+<span class="nc" id="L2071">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2073">		}</span>
+<span class="nc" id="L2074">	}</span>
+	// $ANTLR end &quot;defaultValue&quot;
+
+
+<span class="nc" id="L2078">	public static class data_length_return extends ParserRuleReturnScope {</span>
+		public Integer len;
+		public Integer decimal;
+	};
+
+
+	// $ANTLR start &quot;data_length&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:307:1: data_length returns [Integer len, Integer decimal] : LEFT_PAREN i1= NUMBER ( COMMA i2= NUMBER )? RIGHT_PAREN ;
+	public final SqlServerParser.data_length_return data_length() throws RecognitionException {
+<span class="nc" id="L2087">		SqlServerParser.data_length_return retval = new SqlServerParser.data_length_return();</span>
+<span class="nc" id="L2088">		retval.start = input.LT(1);</span>
+
+<span class="nc" id="L2090">		Token i1=null;</span>
+<span class="nc" id="L2091">		Token i2=null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:307:52: ( LEFT_PAREN i1= NUMBER ( COMMA i2= NUMBER )? RIGHT_PAREN )
+			// org/argouml/language/sql/reveng/SqlServer.g:308:6: LEFT_PAREN i1= NUMBER ( COMMA i2= NUMBER )? RIGHT_PAREN
+			{
+<span class="nc" id="L2097">			match(input,LEFT_PAREN,FOLLOW_LEFT_PAREN_in_data_length1184); </span>
+<span class="nc" id="L2098">			i1=(Token)match(input,NUMBER,FOLLOW_NUMBER_in_data_length1188); </span>
+			// org/argouml/language/sql/reveng/SqlServer.g:308:27: ( COMMA i2= NUMBER )?
+<span class="nc" id="L2100">			int alt34=2;</span>
+<span class="nc" id="L2101">			int LA34_0 = input.LA(1);</span>
+<span class="nc bnc" id="L2102" title="All 2 branches missed.">			if ( (LA34_0==COMMA) ) {</span>
+<span class="nc" id="L2103">				alt34=1;</span>
+			}
+<span class="nc bnc" id="L2105" title="All 2 branches missed.">			switch (alt34) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:308:28: COMMA i2= NUMBER
+					{
+<span class="nc" id="L2109">					match(input,COMMA,FOLLOW_COMMA_in_data_length1191); </span>
+<span class="nc" id="L2110">					i2=(Token)match(input,NUMBER,FOLLOW_NUMBER_in_data_length1195); </span>
+<span class="nc bnc" id="L2111" title="All 2 branches missed.">					retval.decimal = Integer.valueOf((i2!=null?i2.getText():null));</span>
+					}
+					break;
+
+			}
+
+<span class="nc" id="L2117">			match(input,RIGHT_PAREN,FOLLOW_RIGHT_PAREN_in_data_length1202); </span>
+<span class="nc bnc" id="L2118" title="All 2 branches missed.">			retval.len = Integer.valueOf((i1!=null?i1.getText():null));</span>
+			}
+
+<span class="nc" id="L2121">			retval.stop = input.LT(-1);</span>
+
+		}
+<span class="nc" id="L2124">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2125">			reportError(re);</span>
+<span class="nc" id="L2126">			recover(input,re);</span>
+		}
+<span class="nc" id="L2128">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2130">		}</span>
+<span class="nc" id="L2131">		return retval;</span>
+	}
+	// $ANTLR end &quot;data_length&quot;
+
+
+
+	// $ANTLR start &quot;text_quoted&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:311:1: text_quoted returns [String value] : QUOTED_TEXT ;
+	public final String text_quoted() throws RecognitionException {
+<span class="nc" id="L2140">		String value = null;</span>
+
+
+<span class="nc" id="L2143">		Token QUOTED_TEXT15=null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:311:36: ( QUOTED_TEXT )
+			// org/argouml/language/sql/reveng/SqlServer.g:312:2: QUOTED_TEXT
+			{
+
+<span class="nc" id="L2150">					int iStartToken = input.LT(1).getTokenIndex();</span>
+				
+<span class="nc" id="L2152">			QUOTED_TEXT15=(Token)match(input,QUOTED_TEXT,FOLLOW_QUOTED_TEXT_in_text_quoted1223); </span>
+
+<span class="nc bnc" id="L2154" title="All 2 branches missed.">					value = (QUOTED_TEXT15!=null?QUOTED_TEXT15.getText():null);</span>
+<span class="nc" id="L2155">					value = value.substring(1);</span>
+<span class="nc" id="L2156">					value = value.substring(0, value.length() -1 );</span>
+<span class="nc" id="L2157">					value = value.replaceAll(&quot;''&quot;,&quot;'&quot;);</span>
+				
+			}
+
+		}
+<span class="nc" id="L2162">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2163">			reportError(re);</span>
+<span class="nc" id="L2164">			recover(input,re);</span>
+		}
+<span class="nc" id="L2166">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2168">		}</span>
+<span class="nc" id="L2169">		return value;</span>
+	}
+	// $ANTLR end &quot;text_quoted&quot;
+
+
+
+	// $ANTLR start &quot;text_quoted_keep&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:324:1: text_quoted_keep returns [String value] : QUOTED_TEXT ;
+	public final String text_quoted_keep() throws RecognitionException {
+<span class="nc" id="L2178">		String value = null;</span>
+
+
+<span class="nc" id="L2181">		Token QUOTED_TEXT16=null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:324:41: ( QUOTED_TEXT )
+			// org/argouml/language/sql/reveng/SqlServer.g:325:2: QUOTED_TEXT
+			{
+
+<span class="nc" id="L2188">					int iStartToken = input.LT(1).getTokenIndex();</span>
+				
+<span class="nc" id="L2190">			QUOTED_TEXT16=(Token)match(input,QUOTED_TEXT,FOLLOW_QUOTED_TEXT_in_text_quoted_keep1246); </span>
+
+<span class="nc bnc" id="L2192" title="All 2 branches missed.">					value = (QUOTED_TEXT16!=null?QUOTED_TEXT16.getText():null);</span>
+				
+			}
+
+		}
+<span class="nc" id="L2197">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2198">			reportError(re);</span>
+<span class="nc" id="L2199">			recover(input,re);</span>
+		}
+<span class="nc" id="L2201">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2203">		}</span>
+<span class="nc" id="L2204">		return value;</span>
+	}
+	// $ANTLR end &quot;text_quoted_keep&quot;
+
+
+
+	// $ANTLR start &quot;schema&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:334:1: schema : ID ;
+	public final void schema() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:334:8: ( ID )
+			// org/argouml/language/sql/reveng/SqlServer.g:334:10: ID
+			{
+<span class="nc" id="L2217">			match(input,ID,FOLLOW_ID_in_schema1258); </span>
+			}
+
+		}
+<span class="nc" id="L2221">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2222">			reportError(re);</span>
+<span class="nc" id="L2223">			recover(input,re);</span>
+		}
+<span class="nc" id="L2225">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2227">		}</span>
+<span class="nc" id="L2228">	}</span>
+	// $ANTLR end &quot;schema&quot;
+
+
+
+	// $ANTLR start &quot;table&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:335:1: table : ID ;
+	public final void table() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:335:7: ( ID )
+			// org/argouml/language/sql/reveng/SqlServer.g:335:9: ID
+			{
+<span class="nc" id="L2240">			match(input,ID,FOLLOW_ID_in_table1265); </span>
+			}
+
+		}
+<span class="nc" id="L2244">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2245">			reportError(re);</span>
+<span class="nc" id="L2246">			recover(input,re);</span>
+		}
+<span class="nc" id="L2248">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2250">		}</span>
+<span class="nc" id="L2251">	}</span>
+	// $ANTLR end &quot;table&quot;
+
+
+
+	// $ANTLR start &quot;data_type&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:337:1: data_type returns [String name] : name_with_esc ;
+	public final String data_type() throws RecognitionException {
+<span class="nc" id="L2259">		String name = null;</span>
+
+
+<span class="nc" id="L2262">		String name_with_esc17 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:337:33: ( name_with_esc )
+			// org/argouml/language/sql/reveng/SqlServer.g:338:2: name_with_esc
+			{
+<span class="nc" id="L2268">			pushFollow(FOLLOW_name_with_esc_in_data_type1279);</span>
+<span class="nc" id="L2269">			name_with_esc17=name_with_esc();</span>
+<span class="nc" id="L2270">			state._fsp--;</span>
+
+
+<span class="nc" id="L2273">			 	name = name_with_esc17; </span>
+			 
+			}
+
+		}
+<span class="nc" id="L2278">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2279">			reportError(re);</span>
+<span class="nc" id="L2280">			recover(input,re);</span>
+		}
+<span class="nc" id="L2282">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2284">		}</span>
+<span class="nc" id="L2285">		return name;</span>
+	}
+	// $ANTLR end &quot;data_type&quot;
+
+
+
+	// $ANTLR start &quot;index_name&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:342:1: index_name returns [String name] : ( LEFT_PAREN )? name_with_esc ( RIGHT_PAREN )? ;
+	public final String index_name() throws RecognitionException {
+<span class="nc" id="L2294">		String name = null;</span>
+
+
+<span class="nc" id="L2297">		String name_with_esc18 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:342:34: ( ( LEFT_PAREN )? name_with_esc ( RIGHT_PAREN )? )
+			// org/argouml/language/sql/reveng/SqlServer.g:343:2: ( LEFT_PAREN )? name_with_esc ( RIGHT_PAREN )?
+			{
+			// org/argouml/language/sql/reveng/SqlServer.g:343:2: ( LEFT_PAREN )?
+<span class="nc" id="L2304">			int alt35=2;</span>
+<span class="nc" id="L2305">			int LA35_0 = input.LA(1);</span>
+<span class="nc bnc" id="L2306" title="All 2 branches missed.">			if ( (LA35_0==LEFT_PAREN) ) {</span>
+<span class="nc" id="L2307">				alt35=1;</span>
+			}
+<span class="nc bnc" id="L2309" title="All 2 branches missed.">			switch (alt35) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:343:3: LEFT_PAREN
+					{
+<span class="nc" id="L2313">					match(input,LEFT_PAREN,FOLLOW_LEFT_PAREN_in_index_name1295); </span>
+					}
+					break;
+
+			}
+
+<span class="nc" id="L2319">			pushFollow(FOLLOW_name_with_esc_in_index_name1299);</span>
+<span class="nc" id="L2320">			name_with_esc18=name_with_esc();</span>
+<span class="nc" id="L2321">			state._fsp--;</span>
+
+<span class="nc" id="L2323">			name = name_with_esc18; </span>
+			// org/argouml/language/sql/reveng/SqlServer.g:343:62: ( RIGHT_PAREN )?
+<span class="nc" id="L2325">			int alt36=2;</span>
+<span class="nc" id="L2326">			int LA36_0 = input.LA(1);</span>
+<span class="nc bnc" id="L2327" title="All 2 branches missed.">			if ( (LA36_0==RIGHT_PAREN) ) {</span>
+<span class="nc" id="L2328">				alt36=1;</span>
+			}
+<span class="nc bnc" id="L2330" title="All 2 branches missed.">			switch (alt36) {</span>
+				case 1 :
+					// org/argouml/language/sql/reveng/SqlServer.g:343:63: RIGHT_PAREN
+					{
+<span class="nc" id="L2334">					match(input,RIGHT_PAREN,FOLLOW_RIGHT_PAREN_in_index_name1304); </span>
+					}
+					break;
+
+			}
+
+			}
+
+		}
+<span class="nc" id="L2343">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2344">			reportError(re);</span>
+<span class="nc" id="L2345">			recover(input,re);</span>
+		}
+<span class="nc" id="L2347">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2349">		}</span>
+<span class="nc" id="L2350">		return name;</span>
+	}
+	// $ANTLR end &quot;index_name&quot;
+
+
+
+	// $ANTLR start &quot;index_type&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:345:1: index_type : ( 'BTREE' | 'HASH' );
+	public final void index_type() throws RecognitionException {
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:345:12: ( 'BTREE' | 'HASH' )
+			// org/argouml/language/sql/reveng/SqlServer.g:
+			{
+<span class="nc bnc" id="L2363" title="All 4 branches missed.">			if ( input.LA(1)==26||input.LA(1)==41 ) {</span>
+<span class="nc" id="L2364">				input.consume();</span>
+<span class="nc" id="L2365">				state.errorRecovery=false;</span>
+			}
+			else {
+<span class="nc" id="L2368">				MismatchedSetException mse = new MismatchedSetException(null,input);</span>
+<span class="nc" id="L2369">				throw mse;</span>
+			}
+			}
+
+		}
+<span class="nc" id="L2374">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2375">			reportError(re);</span>
+<span class="nc" id="L2376">			recover(input,re);</span>
+		}
+<span class="nc" id="L2378">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2380">		}</span>
+<span class="nc" id="L2381">	}</span>
+	// $ANTLR end &quot;index_type&quot;
+
+
+
+	// $ANTLR start &quot;symbol&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:347:1: symbol returns [String name] : name_with_esc ;
+	public final String symbol() throws RecognitionException {
+<span class="nc" id="L2389">		String name = null;</span>
+
+
+<span class="nc" id="L2392">		String name_with_esc19 =null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:347:30: ( name_with_esc )
+			// org/argouml/language/sql/reveng/SqlServer.g:348:2: name_with_esc
+			{
+<span class="nc" id="L2398">			pushFollow(FOLLOW_name_with_esc_in_symbol1333);</span>
+<span class="nc" id="L2399">			name_with_esc19=name_with_esc();</span>
+<span class="nc" id="L2400">			state._fsp--;</span>
+
+<span class="nc" id="L2402">			name = name_with_esc19; </span>
+			}
+
+		}
+<span class="nc" id="L2406">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2407">			reportError(re);</span>
+<span class="nc" id="L2408">			recover(input,re);</span>
+		}
+<span class="nc" id="L2410">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2412">		}</span>
+<span class="nc" id="L2413">		return name;</span>
+	}
+	// $ANTLR end &quot;symbol&quot;
+
+
+
+	// $ANTLR start &quot;name_with_esc&quot;
+	// org/argouml/language/sql/reveng/SqlServer.g:351:1: name_with_esc returns [String name] : '[' ID ']' ;
+	public final String name_with_esc() throws RecognitionException {
+<span class="nc" id="L2422">		String name = null;</span>
+
+
+<span class="nc" id="L2425">		Token ID20=null;</span>
+
+		try {
+			// org/argouml/language/sql/reveng/SqlServer.g:351:37: ( '[' ID ']' )
+			// org/argouml/language/sql/reveng/SqlServer.g:352:2: '[' ID ']'
+			{
+<span class="nc" id="L2431">			match(input,68,FOLLOW_68_in_name_with_esc1351); </span>
+<span class="nc" id="L2432">			ID20=(Token)match(input,ID,FOLLOW_ID_in_name_with_esc1353); </span>
+<span class="nc" id="L2433">			match(input,69,FOLLOW_69_in_name_with_esc1355); </span>
+<span class="nc bnc" id="L2434" title="All 2 branches missed.">			name = (ID20!=null?ID20.getText():null); </span>
+			}
+
+		}
+<span class="nc" id="L2438">		catch (RecognitionException re) {</span>
+<span class="nc" id="L2439">			reportError(re);</span>
+<span class="nc" id="L2440">			recover(input,re);</span>
+		}
+<span class="nc" id="L2442">		finally {</span>
+			// do for sure before leaving
+<span class="nc" id="L2444">		}</span>
+<span class="nc" id="L2445">		return name;</span>
+	}
+	// $ANTLR end &quot;name_with_esc&quot;
+
+	// Delegated rules
+
+
+
+<span class="nc" id="L2453">	public static final BitSet FOLLOW_66_in_dump_read55 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2454">	public static final BitSet FOLLOW_name_with_esc_in_dump_read57 = new BitSet(new long[]{0x2000010080404402L});</span>
+<span class="nc" id="L2455">	public static final BitSet FOLLOW_instr_in_dump_read64 = new BitSet(new long[]{0x2000010080404402L});</span>
+<span class="nc" id="L2456">	public static final BitSet FOLLOW_dumpComment_in_instr84 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2457">	public static final BitSet FOLLOW_40_in_instr90 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2458">	public static final BitSet FOLLOW_set_instr_in_instr96 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2459">	public static final BitSet FOLLOW_create_table_statement_in_instr101 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2460">	public static final BitSet FOLLOW_alter_table_statement_in_instr106 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2461">	public static final BitSet FOLLOW_61_in_set_instr118 = new BitSet(new long[]{0x0200000001800000L});</span>
+<span class="nc" id="L2462">	public static final BitSet FOLLOW_set_in_set_instr121 = new BitSet(new long[]{0x0018000000000000L});</span>
+<span class="nc" id="L2463">	public static final BitSet FOLLOW_set_in_set_instr143 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2464">	public static final BitSet FOLLOW_SL_COMMENT_in_dumpComment164 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2465">	public static final BitSet FOLLOW_ML_COMMENT_in_dumpComment169 = new BitSet(new long[]{0x0000000000010002L});</span>
+<span class="nc" id="L2466">	public static final BitSet FOLLOW_16_in_dumpComment172 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2467">	public static final BitSet FOLLOW_31_in_create_table_statement186 = new BitSet(new long[]{0x8000000000000000L});</span>
+<span class="nc" id="L2468">	public static final BitSet FOLLOW_63_in_create_table_statement188 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2469">	public static final BitSet FOLLOW_name_with_esc_in_create_table_statement193 = new BitSet(new long[]{0x0000000000000040L});</span>
+<span class="nc" id="L2470">	public static final BitSet FOLLOW_DOT_in_create_table_statement195 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2471">	public static final BitSet FOLLOW_table_name_in_create_table_statement197 = new BitSet(new long[]{0x0000000000000100L});</span>
+<span class="nc" id="L2472">	public static final BitSet FOLLOW_create_definition_list_in_create_table_statement221 = new BitSet(new long[]{0x0010000000000000L});</span>
+<span class="nc" id="L2473">	public static final BitSet FOLLOW_table_store_in_create_table_statement237 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2474">	public static final BitSet FOLLOW_22_in_alter_table_statement248 = new BitSet(new long[]{0x8000000000000000L});</span>
+<span class="nc" id="L2475">	public static final BitSet FOLLOW_63_in_alter_table_statement250 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2476">	public static final BitSet FOLLOW_name_with_esc_in_alter_table_statement254 = new BitSet(new long[]{0x0000000000000040L});</span>
+<span class="nc" id="L2477">	public static final BitSet FOLLOW_DOT_in_alter_table_statement256 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2478">	public static final BitSet FOLLOW_table_name_in_alter_table_statement258 = new BitSet(new long[]{0x0000000010080000L,0x0000000000000008L});</span>
+<span class="nc" id="L2479">	public static final BitSet FOLLOW_67_in_alter_table_statement265 = new BitSet(new long[]{0x0000000010000000L});</span>
+<span class="nc" id="L2480">	public static final BitSet FOLLOW_28_in_alter_table_statement267 = new BitSet(new long[]{0x0000000010080000L});</span>
+<span class="nc" id="L2481">	public static final BitSet FOLLOW_19_in_alter_table_statement280 = new BitSet(new long[]{0x0100004240000000L,0x0000000000000001L});</span>
+<span class="nc" id="L2482">	public static final BitSet FOLLOW_constraint_def_in_alter_table_statement282 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2483">	public static final BitSet FOLLOW_28_in_alter_table_statement289 = new BitSet(new long[]{0x0000000040000000L});</span>
+<span class="nc" id="L2484">	public static final BitSet FOLLOW_30_in_alter_table_statement291 = new BitSet(new long[]{0x0000000000000002L,0x0000000000000010L});</span>
+<span class="nc" id="L2485">	public static final BitSet FOLLOW_symbol_in_alter_table_statement294 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2486">	public static final BitSet FOLLOW_LEFT_PAREN_in_create_definition_list317 = new BitSet(new long[]{0x0100004240000000L,0x0000000000000011L});</span>
+<span class="nc" id="L2487">	public static final BitSet FOLLOW_create_definition_in_create_definition_list319 = new BitSet(new long[]{0x0000000000002010L});</span>
+<span class="nc" id="L2488">	public static final BitSet FOLLOW_COMMA_in_create_definition_list323 = new BitSet(new long[]{0x0100004240000000L,0x0000000000000011L});</span>
+<span class="nc" id="L2489">	public static final BitSet FOLLOW_create_definition_in_create_definition_list325 = new BitSet(new long[]{0x0000000000002010L});</span>
+<span class="nc" id="L2490">	public static final BitSet FOLLOW_RIGHT_PAREN_in_create_definition_list332 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2491">	public static final BitSet FOLLOW_misc_store_in_table_store344 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2492">	public static final BitSet FOLLOW_52_in_misc_store356 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2493">	public static final BitSet FOLLOW_68_in_misc_store364 = new BitSet(new long[]{0x0100000000000000L});</span>
+<span class="nc" id="L2494">	public static final BitSet FOLLOW_56_in_misc_store366 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000020L});</span>
+<span class="nc" id="L2495">	public static final BitSet FOLLOW_69_in_misc_store368 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2496">	public static final BitSet FOLLOW_constraint_def_in_create_definition389 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2497">	public static final BitSet FOLLOW_column_name_in_create_definition411 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2498">	public static final BitSet FOLLOW_data_type_def_in_create_definition415 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2499">	public static final BitSet FOLLOW_30_in_constraint_def445 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2500">	public static final BitSet FOLLOW_symbol_in_constraint_def447 = new BitSet(new long[]{0x0100004200000000L,0x0000000000000001L});</span>
+<span class="nc" id="L2501">	public static final BitSet FOLLOW_constraint_unique_in_constraint_def470 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2502">	public static final BitSet FOLLOW_constraint_fk_in_constraint_def477 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2503">	public static final BitSet FOLLOW_constraint_pk_in_constraint_def484 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2504">	public static final BitSet FOLLOW_constraint_df_in_constraint_def491 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2505">	public static final BitSet FOLLOW_33_in_constraint_df518 = new BitSet(new long[]{0x0004000000000100L});</span>
+<span class="nc" id="L2506">	public static final BitSet FOLLOW_default_statement_in_constraint_df520 = new BitSet(new long[]{0x0000002000000000L});</span>
+<span class="nc" id="L2507">	public static final BitSet FOLLOW_37_in_constraint_df524 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2508">	public static final BitSet FOLLOW_column_name_in_constraint_df526 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2509">	public static final BitSet FOLLOW_64_in_constraint_unique543 = new BitSet(new long[]{0x00001A0004000100L,0x0000000000000010L});</span>
+<span class="nc" id="L2510">	public static final BitSet FOLLOW_index_name_in_constraint_unique555 = new BitSet(new long[]{0x0000020004000100L});</span>
+<span class="nc" id="L2511">	public static final BitSet FOLLOW_index_type_in_constraint_unique560 = new BitSet(new long[]{0x0000000000000100L});</span>
+<span class="nc" id="L2512">	public static final BitSet FOLLOW_columns_list_name_in_constraint_unique565 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2513">	public static final BitSet FOLLOW_38_in_constraint_fk576 = new BitSet(new long[]{0x0000100000000000L});</span>
+<span class="nc" id="L2514">	public static final BitSet FOLLOW_44_in_constraint_fk578 = new BitSet(new long[]{0x0000000000000100L,0x0000000000000010L});</span>
+<span class="nc" id="L2515">	public static final BitSet FOLLOW_symbol_in_constraint_fk581 = new BitSet(new long[]{0x0000000000000100L});</span>
+<span class="nc" id="L2516">	public static final BitSet FOLLOW_columns_list_name_in_constraint_fk589 = new BitSet(new long[]{0x0400000000000000L});</span>
+<span class="nc" id="L2517">	public static final BitSet FOLLOW_reference_definition_in_constraint_fk595 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2518">	public static final BitSet FOLLOW_56_in_constraint_pk606 = new BitSet(new long[]{0x0000100000000000L});</span>
+<span class="nc" id="L2519">	public static final BitSet FOLLOW_44_in_constraint_pk608 = new BitSet(new long[]{0x0000800020000100L});</span>
+<span class="nc" id="L2520">	public static final BitSet FOLLOW_columns_list_name_order_in_constraint_pk625 = new BitSet(new long[]{0x0010000000000002L,0x0000000000000008L});</span>
+<span class="nc" id="L2521">	public static final BitSet FOLLOW_pk_with_option_in_constraint_pk629 = new BitSet(new long[]{0x0010000000000002L});</span>
+<span class="nc" id="L2522">	public static final BitSet FOLLOW_misc_store_in_constraint_pk635 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2523">	public static final BitSet FOLLOW_67_in_pk_with_option647 = new BitSet(new long[]{0x0000000000000100L});</span>
+<span class="nc" id="L2524">	public static final BitSet FOLLOW_LEFT_PAREN_in_pk_with_option649 = new BitSet(new long[]{0x4020041100300000L});</span>
+<span class="nc" id="L2525">	public static final BitSet FOLLOW_index_option_in_pk_with_option651 = new BitSet(new long[]{0x0000000000002010L});</span>
+<span class="nc" id="L2526">	public static final BitSet FOLLOW_COMMA_in_pk_with_option654 = new BitSet(new long[]{0x4020041100300000L});</span>
+<span class="nc" id="L2527">	public static final BitSet FOLLOW_index_option_in_pk_with_option656 = new BitSet(new long[]{0x0000000000002010L});</span>
+<span class="nc" id="L2528">	public static final BitSet FOLLOW_RIGHT_PAREN_in_pk_with_option660 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2529">	public static final BitSet FOLLOW_53_in_index_option670 = new BitSet(new long[]{0x0000000000020000L});</span>
+<span class="nc" id="L2530">	public static final BitSet FOLLOW_17_in_index_option672 = new BitSet(new long[]{0x0018000000000000L});</span>
+<span class="nc" id="L2531">	public static final BitSet FOLLOW_set_in_index_option674 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2532">	public static final BitSet FOLLOW_36_in_index_option687 = new BitSet(new long[]{0x0000000000020000L});</span>
+<span class="nc" id="L2533">	public static final BitSet FOLLOW_17_in_index_option690 = new BitSet(new long[]{0x0000000000001880L});</span>
+<span class="nc" id="L2534">	public static final BitSet FOLLOW_ID_in_index_option694 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2535">	public static final BitSet FOLLOW_NUMBER_in_index_option698 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2536">	public static final BitSet FOLLOW_text_quoted_in_index_option702 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2537">	public static final BitSet FOLLOW_42_in_index_option710 = new BitSet(new long[]{0x0000000000020000L});</span>
+<span class="nc" id="L2538">	public static final BitSet FOLLOW_17_in_index_option712 = new BitSet(new long[]{0x0018000000000000L});</span>
+<span class="nc" id="L2539">	public static final BitSet FOLLOW_set_in_index_option714 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2540">	public static final BitSet FOLLOW_62_in_index_option727 = new BitSet(new long[]{0x0000000000020000L});</span>
+<span class="nc" id="L2541">	public static final BitSet FOLLOW_17_in_index_option729 = new BitSet(new long[]{0x0018000000000000L});</span>
+<span class="nc" id="L2542">	public static final BitSet FOLLOW_set_in_index_option731 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2543">	public static final BitSet FOLLOW_21_in_index_option744 = new BitSet(new long[]{0x0000000000020000L});</span>
+<span class="nc" id="L2544">	public static final BitSet FOLLOW_17_in_index_option746 = new BitSet(new long[]{0x0018000000000000L});</span>
+<span class="nc" id="L2545">	public static final BitSet FOLLOW_set_in_index_option748 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2546">	public static final BitSet FOLLOW_20_in_index_option761 = new BitSet(new long[]{0x0000000000020000L});</span>
+<span class="nc" id="L2547">	public static final BitSet FOLLOW_17_in_index_option763 = new BitSet(new long[]{0x0018000000000000L});</span>
+<span class="nc" id="L2548">	public static final BitSet FOLLOW_set_in_index_option765 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2549">	public static final BitSet FOLLOW_32_in_index_option778 = new BitSet(new long[]{0x0000000000020000L});</span>
+<span class="nc" id="L2550">	public static final BitSet FOLLOW_17_in_index_option780 = new BitSet(new long[]{0x1041000000000000L});</span>
+<span class="nc" id="L2551">	public static final BitSet FOLLOW_set_in_index_option782 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2552">	public static final BitSet FOLLOW_58_in_reference_definition806 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2553">	public static final BitSet FOLLOW_name_with_esc_in_reference_definition810 = new BitSet(new long[]{0x0000000000000040L});</span>
+<span class="nc" id="L2554">	public static final BitSet FOLLOW_DOT_in_reference_definition812 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2555">	public static final BitSet FOLLOW_table_name_in_reference_definition814 = new BitSet(new long[]{0x0000000000000100L});</span>
+<span class="nc" id="L2556">	public static final BitSet FOLLOW_columns_list_name_in_reference_definition820 = new BitSet(new long[]{0x0010200000000002L});</span>
+<span class="nc" id="L2557">	public static final BitSet FOLLOW_45_in_reference_definition829 = new BitSet(new long[]{0x0080008000000000L});</span>
+<span class="nc" id="L2558">	public static final BitSet FOLLOW_set_in_reference_definition831 = new BitSet(new long[]{0x0010000000000002L});</span>
+<span class="nc" id="L2559">	public static final BitSet FOLLOW_52_in_reference_definition843 = new BitSet(new long[]{0x0000000400000000L,0x0000000000000002L});</span>
+<span class="nc" id="L2560">	public static final BitSet FOLLOW_set_in_reference_definition845 = new BitSet(new long[]{0x2800400008000000L});</span>
+<span class="nc" id="L2561">	public static final BitSet FOLLOW_reference_option_in_reference_definition853 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2562">	public static final BitSet FOLLOW_59_in_reference_option866 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2563">	public static final BitSet FOLLOW_27_in_reference_option870 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2564">	public static final BitSet FOLLOW_61_in_reference_option874 = new BitSet(new long[]{0x0004000000000000L});</span>
+<span class="nc" id="L2565">	public static final BitSet FOLLOW_50_in_reference_option876 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2566">	public static final BitSet FOLLOW_46_in_reference_option880 = new BitSet(new long[]{0x0000000000040000L});</span>
+<span class="nc" id="L2567">	public static final BitSet FOLLOW_18_in_reference_option882 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2568">	public static final BitSet FOLLOW_61_in_reference_option886 = new BitSet(new long[]{0x0000000200000000L});</span>
+<span class="nc" id="L2569">	public static final BitSet FOLLOW_33_in_reference_option888 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2570">	public static final BitSet FOLLOW_LEFT_PAREN_in_columns_list_name_order902 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2571">	public static final BitSet FOLLOW_column_name_in_columns_list_name_order906 = new BitSet(new long[]{0x0000000802002010L});</span>
+<span class="nc" id="L2572">	public static final BitSet FOLLOW_COMMA_in_columns_list_name_order925 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2573">	public static final BitSet FOLLOW_column_name_in_columns_list_name_order929 = new BitSet(new long[]{0x0000000802002010L});</span>
+<span class="nc" id="L2574">	public static final BitSet FOLLOW_RIGHT_PAREN_in_columns_list_name_order945 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2575">	public static final BitSet FOLLOW_LEFT_PAREN_in_columns_list_name962 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2576">	public static final BitSet FOLLOW_column_name_in_columns_list_name966 = new BitSet(new long[]{0x0000000000002010L});</span>
+<span class="nc" id="L2577">	public static final BitSet FOLLOW_COMMA_in_columns_list_name978 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2578">	public static final BitSet FOLLOW_column_name_in_columns_list_name982 = new BitSet(new long[]{0x0000000000002010L});</span>
+<span class="nc" id="L2579">	public static final BitSet FOLLOW_RIGHT_PAREN_in_columns_list_name990 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2580">	public static final BitSet FOLLOW_name_with_esc_in_column_name1005 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2581">	public static final BitSet FOLLOW_name_with_esc_in_table_name1028 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2582">	public static final BitSet FOLLOW_data_type_in_data_type_def1045 = new BitSet(new long[]{0x0006000200000102L});</span>
+<span class="nc" id="L2583">	public static final BitSet FOLLOW_data_length_in_data_type_def1056 = new BitSet(new long[]{0x0006000200000002L});</span>
+<span class="nc" id="L2584">	public static final BitSet FOLLOW_49_in_data_type_def1069 = new BitSet(new long[]{0x0004000000000000L});</span>
+<span class="nc" id="L2585">	public static final BitSet FOLLOW_50_in_data_type_def1071 = new BitSet(new long[]{0x0000000200000002L});</span>
+<span class="nc" id="L2586">	public static final BitSet FOLLOW_50_in_data_type_def1084 = new BitSet(new long[]{0x0000000200000002L});</span>
+<span class="nc" id="L2587">	public static final BitSet FOLLOW_33_in_data_type_def1103 = new BitSet(new long[]{0x0004000000000100L});</span>
+<span class="nc" id="L2588">	public static final BitSet FOLLOW_default_statement_in_data_type_def1105 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2589">	public static final BitSet FOLLOW_50_in_default_statement1125 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2590">	public static final BitSet FOLLOW_LEFT_PAREN_in_default_statement1134 = new BitSet(new long[]{0x0000000000001100L});</span>
+<span class="nc" id="L2591">	public static final BitSet FOLLOW_defaultValue_in_default_statement1136 = new BitSet(new long[]{0x0000000000002000L});</span>
+<span class="nc" id="L2592">	public static final BitSet FOLLOW_RIGHT_PAREN_in_default_statement1139 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2593">	public static final BitSet FOLLOW_text_quoted_keep_in_defaultValue1152 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2594">	public static final BitSet FOLLOW_LEFT_PAREN_in_defaultValue1160 = new BitSet(new long[]{0x0000000000000800L});</span>
+<span class="nc" id="L2595">	public static final BitSet FOLLOW_NUMBER_in_defaultValue1162 = new BitSet(new long[]{0x0000000000002000L});</span>
+<span class="nc" id="L2596">	public static final BitSet FOLLOW_RIGHT_PAREN_in_defaultValue1164 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2597">	public static final BitSet FOLLOW_LEFT_PAREN_in_data_length1184 = new BitSet(new long[]{0x0000000000000800L});</span>
+<span class="nc" id="L2598">	public static final BitSet FOLLOW_NUMBER_in_data_length1188 = new BitSet(new long[]{0x0000000000002010L});</span>
+<span class="nc" id="L2599">	public static final BitSet FOLLOW_COMMA_in_data_length1191 = new BitSet(new long[]{0x0000000000000800L});</span>
+<span class="nc" id="L2600">	public static final BitSet FOLLOW_NUMBER_in_data_length1195 = new BitSet(new long[]{0x0000000000002000L});</span>
+<span class="nc" id="L2601">	public static final BitSet FOLLOW_RIGHT_PAREN_in_data_length1202 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2602">	public static final BitSet FOLLOW_QUOTED_TEXT_in_text_quoted1223 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2603">	public static final BitSet FOLLOW_QUOTED_TEXT_in_text_quoted_keep1246 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2604">	public static final BitSet FOLLOW_ID_in_schema1258 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2605">	public static final BitSet FOLLOW_ID_in_table1265 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2606">	public static final BitSet FOLLOW_name_with_esc_in_data_type1279 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2607">	public static final BitSet FOLLOW_LEFT_PAREN_in_index_name1295 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000010L});</span>
+<span class="nc" id="L2608">	public static final BitSet FOLLOW_name_with_esc_in_index_name1299 = new BitSet(new long[]{0x0000000000002002L});</span>
+<span class="nc" id="L2609">	public static final BitSet FOLLOW_RIGHT_PAREN_in_index_name1304 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2610">	public static final BitSet FOLLOW_name_with_esc_in_symbol1333 = new BitSet(new long[]{0x0000000000000002L});</span>
+<span class="nc" id="L2611">	public static final BitSet FOLLOW_68_in_name_with_esc1351 = new BitSet(new long[]{0x0000000000000080L});</span>
+<span class="nc" id="L2612">	public static final BitSet FOLLOW_ID_in_name_with_esc1353 = new BitSet(new long[]{0x0000000000000000L,0x0000000000000020L});</span>
+<span class="nc" id="L2613">	public static final BitSet FOLLOW_69_in_name_with_esc1355 = new BitSet(new long[]{0x0000000000000002L});</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

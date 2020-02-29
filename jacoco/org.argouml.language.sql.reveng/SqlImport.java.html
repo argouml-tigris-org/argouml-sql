@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SqlImport.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql.reveng</a> &gt; <span class="el_source">SqlImport.java</span></div><h1>SqlImport.java</h1><pre class="source lang-java linenums">/* $Id$
+ *******************************************************************************
+ * Copyright (c) 2013 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    Laurent BRAUD
+ *******************************************************************************
+ */
+
+package org.argouml.language.sql.reveng;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+
+import org.antlr.runtime.CharStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.Lexer;
+import org.antlr.runtime.Parser;
+import org.antlr.runtime.TokenStream;
+import org.argouml.i18n.Translator;
+import org.argouml.kernel.Project;
+import org.argouml.taskmgmt.ProgressMonitor;
+import org.argouml.uml.reveng.FileImportUtils;
+import org.argouml.uml.reveng.ImportInterface;
+import org.argouml.uml.reveng.ImportSettings;
+import org.argouml.uml.reveng.ImporterManager;
+import org.argouml.uml.reveng.SettingsTypes.Setting;
+import org.argouml.util.SuffixFilter;
+
+/**
+ * 
+ *
+ * @author BRAUD
+ */
+<span class="nc" id="L49">public class SqlImport implements ImportInterface {</span>
+
+	 /**
+     * New model elements that were added
+     */
+    private Collection&lt;Object&gt; newElements;
+    
+    
+    /*
+     * Sql profile model.(not used now)
+     
+    private Profile sqlProfile = null;
+    */
+    /**
+     * 
+     * @link SqlImportSettings#getCodeLevel()
+     */
+    private String settingLevel;
+	/*
+     * @see org.argouml.uml.reveng.ImportInterface#parseFiles(org.argouml.kernel.Project,
+     *      java.util.Collection, org.argouml.uml.reveng.ImportSettings,
+     *      org.argouml.application.api.ProgressMonitor)
+     */
+	@Override
+	public Collection&lt;Object&gt; parseFiles(Project p, Collection&lt;File&gt; files,
+			ImportSettings settings, ProgressMonitor monitor)
+			throws ImportException {
+		
+<span class="nc" id="L77">		SqlImportSettings.getInstance().saveSettings();</span>
+		
+<span class="nc" id="L79">		SqlImportSettings sqlSettings = SqlImportSettings.getInstance();</span>
+<span class="nc" id="L80">		String sgbd = sqlSettings.getCodeSgbd();</span>
+<span class="nc" id="L81">		settingLevel = sqlSettings.getCodeLevel();</span>
+		
+<span class="nc" id="L83">		newElements = new HashSet&lt;Object&gt;();</span>
+<span class="nc" id="L84">		monitor.updateMainTask(Translator.localize(&quot;dialog.import.pass1&quot;));</span>
+		// sqlProfile = getSqlProfile(p);
+		
+		try {
+<span class="nc" id="L88">			monitor.setMaximumProgress(files.size());</span>
+<span class="nc" id="L89">			doImportPass(p, files, settings, monitor, 0, 0, sgbd);</span>
+			
+		} finally {
+	          
+		}
+<span class="nc" id="L94">		return newElements;</span>
+	}
+	
+	
+	private void doImportPass(Project p, Collection&lt;File&gt; files,
+            ImportSettings settings, ProgressMonitor monitor, int startCount,
+            int pass, String sgbdName) {
+
+<span class="nc" id="L102">        int count = startCount;</span>
+<span class="nc bnc" id="L103" title="All 2 branches missed.">        for (File file : files) {</span>
+<span class="nc bnc" id="L104" title="All 2 branches missed.">            if (monitor.isCanceled()) {</span>
+<span class="nc" id="L105">                monitor.updateSubTask(Translator</span>
+<span class="nc" id="L106">                        .localize(&quot;dialog.import.cancelled&quot;));</span>
+<span class="nc" id="L107">                return;</span>
+            }
+            try {
+<span class="nc" id="L110">                parseFile(p, file, settings, pass, sgbdName);</span>
+<span class="nc" id="L111">            } catch (Exception e) {</span>
+<span class="nc" id="L112">                StringWriter sw = new StringWriter();</span>
+<span class="nc" id="L113">                PrintWriter pw = new java.io.PrintWriter(sw);</span>
+<span class="nc" id="L114">                e.printStackTrace(pw);</span>
+<span class="nc" id="L115">                monitor.notifyMessage(</span>
+<span class="nc" id="L116">                    Translator.localize(</span>
+                            &quot;dialog.title.import-problems&quot;), //$NON-NLS-1$
+<span class="nc" id="L118">                    Translator.localize(&quot;label.import-problems&quot;), //$NON-NLS-1$</span>
+<span class="nc" id="L119">                    sw.toString());</span>
+<span class="nc bnc" id="L120" title="All 2 branches missed.">                if (monitor.isCanceled()) {</span>
+<span class="nc" id="L121">                    break;</span>
+                }
+<span class="nc" id="L123">            }</span>
+<span class="nc" id="L124">            monitor.updateProgress(count++);</span>
+<span class="nc" id="L125">            monitor.updateSubTask(Translator.localize(</span>
+                    &quot;dialog.import.parsingAction&quot;, 
+                    new Object[] { 
+<span class="nc" id="L128">                        file.getAbsolutePath() </span>
+                    }));
+
+<span class="nc" id="L131">        }</span>
+
+<span class="nc" id="L133">        return;</span>
+    }
+	
+	
+	 /**
+     * Do a single import pass of a single file.
+     * 
+     * @param p the project
+     * @param f the source file
+     * @param settings the user provided import settings
+     * @param pass current import pass - 0 = single pass, 1 = pass 1 of 2, 2 =
+     *                pass 2 of 2
+     */
+	private void parseFile(Project p, File f, ImportSettings settings, int pass, String sgbdName)
+        throws ImportException {
+
+        try {
+            // Create a scanner that reads from the input stream
+<span class="nc" id="L151">            String encoding = settings.getInputSourceEncoding();</span>
+<span class="nc" id="L152">            FileInputStream in = new FileInputStream(f);</span>
+            InputStreamReader isr;
+            try {
+<span class="nc" id="L155">                isr = new InputStreamReader(in, encoding);</span>
+<span class="nc" id="L156">            } catch (UnsupportedEncodingException e) {</span>
+                // fall back to default encoding
+<span class="nc" id="L158">                isr = new InputStreamReader(in);</span>
+<span class="nc" id="L159">            }</span>
+            
+            // Create a modeller for the parser
+<span class="nc" id="L162">			Modeller modeller = new Modeller(</span>
+<span class="nc" id="L163">					p.getUserDefinedModelList().get(0), null, f.getName());</span>
+<span class="nc" id="L164">			modeller.setLevel(this.settingLevel);</span>
+			
+            try {
+            	// MySqlLexer lexer = new MySqlLexer(new ANTLRNoCaseInputStreamReader(isr));
+<span class="nc" id="L168">            	Class&lt;Lexer&gt; lexerClass = (Class&lt;Lexer&gt;) Class.forName(&quot;org.argouml.language.sql.reveng.&quot; + sgbdName + &quot;Lexer&quot;);</span>
+<span class="nc" id="L169">            	Class[] argTypes = {CharStream.class};</span>
+<span class="nc" id="L170">            	Constructor&lt;Lexer&gt; constructor = lexerClass.getDeclaredConstructor(argTypes);</span>
+<span class="nc" id="L171">            	Object[] argumentsLexer = {new ANTLRNoCaseInputStreamReader(isr)};</span>
+<span class="nc" id="L172">            	Lexer instanceLexer = constructor.newInstance(argumentsLexer);</span>
+            	
+            	// Create a parser that reads from the scanner
+                //MySqlParser parser = new MySqlParser(new CommonTokenStream(lexer));
+<span class="nc" id="L176">            	Class&lt;Parser&gt; parserClass = (Class&lt;Parser&gt;) Class.forName(&quot;org.argouml.language.sql.reveng.&quot; + sgbdName  + &quot;Parser&quot;);</span>
+<span class="nc" id="L177">            	Class[] argTypesP = {TokenStream.class};</span>
+<span class="nc" id="L178">            	Constructor&lt;Parser&gt; constructorParser = parserClass.getDeclaredConstructor(argTypesP);</span>
+<span class="nc" id="L179">            	Object[] arguments = {new CommonTokenStream(instanceLexer)};</span>
+<span class="nc" id="L180">            	Parser instanceParser = constructorParser.newInstance(arguments);</span>
+            	
+            	
+            	//parser.dump_read(modeller, lexer);
+<span class="nc" id="L184">            	Class[] argTypesM = {Modeller.class, Lexer.class};</span>
+<span class="nc" id="L185">				Method printMethod = parserClass.getMethod(&quot;dump_read&quot;, argTypesM);</span>
+<span class="nc" id="L186">				Object[] argumentsM = {modeller, instanceLexer};</span>
+<span class="nc" id="L187">            	printMethod.invoke(instanceParser, argumentsM);</span>
+
+<span class="nc" id="L189">            } catch(ClassNotFoundException e) {</span>
+<span class="nc" id="L190">            	StringBuilder errorString = new StringBuilder(&quot;Parser or Lexer not found : &quot;);</span>
+<span class="nc" id="L191">            	errorString.append(sgbdName);</span>
+<span class="nc" id="L192">            	errorString.append(&quot;. &quot;); </span>
+<span class="nc" id="L193">            	errorString.append(buildErrorString(f));</span>
+<span class="nc" id="L194">            	throw new ImportException(errorString.toString(), e);</span>
+<span class="nc" id="L195">            } catch(Exception e) {</span>
+<span class="nc" id="L196">            	String errorString = buildErrorString(f);</span>
+                //LOG.error(e.getClass().getName() + errorString, e);
+<span class="nc" id="L198">                throw new ImportException(errorString, e);</span>
+            } finally {
+<span class="nc" id="L200">            	 newElements.addAll(modeller.getNewElements());</span>
+<span class="nc" id="L201">                 in.close();</span>
+            }
+            
+<span class="nc" id="L204">        } catch (IOException e) {</span>
+<span class="nc" id="L205">            throw new ImportException(buildErrorString(f), e);</span>
+<span class="nc" id="L206">        }</span>
+<span class="nc" id="L207">    }</span>
+
+	private String buildErrorString(File f) {
+<span class="nc" id="L210">		String path = &quot;&quot;;</span>
+		try {
+<span class="nc" id="L212">			path = f.getName();</span>
+<span class="nc" id="L213">			path = f.getCanonicalPath();</span>
+<span class="nc" id="L214">		} catch (IOException e) {</span>
+			// Just ignore - we'll use the simple file name
+<span class="nc" id="L216">		}</span>
+<span class="nc" id="L217">		return &quot;Exception in file: &quot; + path;</span>
+	}
+    
+	/*
+     * Get the Sql profile from project, if available.
+     * 
+     * @param p the project
+     * @return the Java profile
+     
+    private Profile getSqlProfile(Project p) {
+    	Profile ret = null;
+        for (Profile profile : p.getProfileConfiguration().getProfiles()) {
+            if (&quot;Sql&quot;.equals(profile.getDisplayName())) {
+            	ret = profile;
+            }
+        }
+        return ret;
+    }*/
+
+    /*
+     * @see org.argouml.moduleloader.ModuleInterface#getName()
+     */
+    @Override
+    public String getName() {
+<span class="nc" id="L241">    	return &quot;Sql-import&quot;;</span>
+    }
+    
+    /*
+     * @see org.argouml.moduleloader.ModuleInterface#getInfo(int)
+     * TODO : like in java module.
+     */
+    @Override
+    public String getInfo(final int type) {
+<span class="nc bnc" id="L250" title="All 5 branches missed.">    	switch (type) {</span>
+        case DESCRIPTION:
+<span class="nc" id="L252">            return &quot;SQL import from dump files.&quot;;</span>
+        case AUTHOR:
+<span class="nc" id="L254">            return &quot;Laurent BRAUD&quot;;</span>
+        case VERSION:
+<span class="nc" id="L256">            return &quot;0.35.1&quot;;</span>
+        case DOWNLOADSITE:
+<span class="nc" id="L258">            return &quot;http://argouml-sql.tigris.org/&quot;;</span>
+        default:
+<span class="nc" id="L260">            return null;</span>
+        }
+    }
+    
+
+    /*
+     * @see org.argouml.uml.reveng.ImportInterface#getSuffixFilters()
+     */
+    @Override
+    public SuffixFilter[] getSuffixFilters() {
+<span class="nc" id="L270">		SuffixFilter[] result = { new SuffixFilter(&quot;sql&quot;,</span>
+<span class="nc" id="L271">				Translator.localize(&quot;argouml-sql.filefilter.sql&quot;)), };</span>
+<span class="nc" id="L272">        return result;</span>
+    }
+    
+    /*
+     * @see org.argouml.moduleloader.ModuleInterface#disable()
+     */
+    @Override
+    public boolean disable() {
+    	// We are permanently enabled
+<span class="nc" id="L281">    	return false;</span>
+    }
+    
+    /*
+     * @see org.argouml.moduleloader.ModuleInterface#enable()
+     */
+    @Override
+    public boolean enable() {
+<span class="nc" id="L289">        ImporterManager.getInstance().addImporter(this);</span>
+<span class="nc" id="L290">        return true;</span>
+    }
+    
+    @Override
+    public List&lt;Setting&gt; getImportSettings() {
+<span class="nc" id="L295">    	return SqlImportSettings.getInstance().getImportSettings();</span>
+    }
+    
+    @Override
+    public boolean isParseable(File file) {
+<span class="nc" id="L300">    	return FileImportUtils.matchesSuffix(file, getSuffixFilters());</span>
+    }
+    
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

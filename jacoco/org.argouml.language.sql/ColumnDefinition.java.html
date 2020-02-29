@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ColumnDefinition.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql</a> &gt; <span class="el_source">ColumnDefinition.java</span></div><h1>ColumnDefinition.java</h1><pre class="source lang-java linenums">/* $Id$
+ *****************************************************************************
+ * Copyright (c) 2009-2013 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    drahmann
+ *    Laurent BRAUD
+ *****************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ */
+
+// Copyright (c) 2007 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies. This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied &quot;AS
+// IS&quot;, without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN &quot;AS IS&quot; BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+package org.argouml.language.sql;
+
+/**
+ * Represents a column definition.
+ * 
+ * @author drahmann
+ */
+public class ColumnDefinition {
+    private String datatype;
+
+    private String defaultValue;
+
+    private String name;
+
+    private Boolean nullable;
+
+    private Boolean autoinc;
+
+    private Integer length;
+    
+    private Integer nbDecimal;
+    
+    /**
+     * Comment, label,...
+     */
+    private String comment;
+    
+    /**
+     * Table where is the column.
+     */
+    private TableDefinition table;
+    
+    /**
+     * Creates a new column definition.
+     * 
+     */
+    public ColumnDefinition() {
+<span class="fc" id="L77">        super();</span>
+<span class="fc" id="L78">    }</span>
+
+    public ColumnDefinition(TableDefinition table, String name) {
+<span class="nc" id="L81">        this();</span>
+<span class="nc" id="L82">        this.name = name;</span>
+<span class="nc" id="L83">        this.table = table;</span>
+<span class="nc" id="L84">        table.addColumnDefinition(this);</span>
+<span class="nc" id="L85">    }</span>
+    
+    /**
+     * Creates a new column definition with the given attributes.
+     * 
+     * @param datatype
+     * @param name
+     * @param nullable
+     */
+    public ColumnDefinition(String datatype, String name, Boolean nullable) {
+<span class="fc" id="L95">        this();</span>
+<span class="fc" id="L96">        this.datatype = datatype;</span>
+<span class="fc" id="L97">        this.name = name;</span>
+<span class="fc" id="L98">        this.nullable = nullable;</span>
+<span class="fc" id="L99">    }</span>
+
+    /**
+     * return the column in the table.
+     * If doesn't exist, create it.
+     * 
+     * Use this because if 2 (or a third) classes references each other, we need to be able to import a FK 
+     * with a REFERENCES table which doesn't exist.(mysql: FOREIGN_KEY_CHECKS=0 )
+     *  
+     * @param table
+     * @param columnName
+     * @return
+     */
+	public static ColumnDefinition findOrCreateColumnDefinition(TableDefinition table,
+			String columnName) {
+<span class="nc" id="L114">    	ColumnDefinition ret = table.getColumnDefinition(columnName);</span>
+<span class="nc bnc" id="L115" title="All 2 branches missed.">    	if(ret == null) {</span>
+<span class="nc" id="L116">    		ret = new ColumnDefinition(table, columnName);</span>
+    	}
+    	
+<span class="nc" id="L119">    	return ret;</span>
+    }
+    
+    /**
+     * 
+     * @return The datatype of the column definition.
+     */
+    public String getDatatype() {
+<span class="fc" id="L127">        return datatype;</span>
+    }
+
+    /**
+     * 
+     * @return The default Value of the column definition.
+     */
+    public String getDefaultValue() {
+<span class="nc" id="L135">        return defaultValue;</span>
+    }
+
+    /**
+     * 
+     * @return The name of the column.
+     */
+    public String getName() {
+<span class="fc" id="L143">        return name;</span>
+    }
+
+    /**
+     * 
+     * @return Whether this column is NULLable
+     */
+    public Boolean getNullable() {
+<span class="fc" id="L151">        return nullable;</span>
+    }
+
+    /**
+     *
+     * @return Whether this column's values shall be AUTO INCREMENTed
+     */
+    public Boolean getAutoInc() {
+<span class="nc" id="L159">        return autoinc;</span>
+    }
+
+    /**
+     * Set the datatype of the column.
+     * 
+     * @param datatype
+     */
+    public void setDatatype(String datatype) {
+<span class="nc" id="L168">        this.datatype = datatype;</span>
+<span class="nc" id="L169">    }</span>
+
+    /**
+     * Set the default value of the column.
+     * 
+     * @param defaultValue
+     */
+    public void setDefaultValue(String defaultValue) {
+<span class="nc" id="L177">        this.defaultValue = defaultValue;</span>
+<span class="nc" id="L178">    }</span>
+
+    /**
+     * Set the name of the column.
+     * 
+     * @param name
+     */
+    public void setName(String name) {
+<span class="nc" id="L186">        this.name = name;</span>
+<span class="nc" id="L187">    }</span>
+
+    /**
+     * Set whether this column is NULLable.
+     * 
+     * @param nullable
+     */
+    public void setNullable(Boolean nullable) {
+<span class="nc" id="L195">        this.nullable = nullable;</span>
+<span class="nc" id="L196">    }</span>
+
+    /**
+     *
+     * Set whether this column's values shall be AUTO INCREMENTed.
+     *
+     * @param autoinc
+     */
+    public void setAutoInc(Boolean autoinc) {
+<span class="nc" id="L205">        this.autoinc = autoinc;</span>
+<span class="nc" id="L206">    }</span>
+ 
+    public Integer getLength() {
+<span class="nc" id="L209">		return length;</span>
+	}
+    
+    public void setLength(Integer length) {
+<span class="nc" id="L213">		this.length = length;</span>
+<span class="nc" id="L214">	}</span>
+    
+    public Integer getNbDecimal() {
+<span class="nc" id="L217">		return nbDecimal;</span>
+	}
+    
+    public void setNbDecimal(Integer nbDecimal) {
+<span class="nc" id="L221">		this.nbDecimal = nbDecimal;</span>
+<span class="nc" id="L222">	}</span>
+    
+    public TableDefinition getTable() {
+<span class="nc" id="L225">		return table;</span>
+	}
+    
+    public void setTable(TableDefinition table) {
+<span class="nc" id="L229">		this.table = table;</span>
+<span class="nc" id="L230">	}</span>
+
+    public String getComment() {
+<span class="nc" id="L233">		return comment;</span>
+	}
+    
+    public void setComment(String comment) {
+<span class="nc" id="L237">		this.comment = comment;</span>
+<span class="nc" id="L238">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

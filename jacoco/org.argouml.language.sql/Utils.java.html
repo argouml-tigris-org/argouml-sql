@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Utils.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">argouml-sql</a> &gt; <a href="index.source.html" class="el_package">org.argouml.language.sql</a> &gt; <span class="el_source">Utils.java</span></div><h1>Utils.java</h1><pre class="source lang-java linenums">/* $Id$
+ *****************************************************************************
+ * Copyright (c) 2009 Contributors - see below
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *    drahmann
+ *****************************************************************************
+ *
+ * Some portions of this file was previously release using the BSD License:
+ */
+
+// Copyright (c) 2007 The Regents of the University of California. All
+// Rights Reserved. Permission to use, copy, modify, and distribute this
+// software and its documentation without fee, and without a written
+// agreement is hereby granted, provided that the above copyright notice
+// and this paragraph appear in all copies. This software program and
+// documentation are copyrighted by The Regents of the University of
+// California. The software program and documentation are supplied &quot;AS
+// IS&quot;, without any accompanying services from The Regents. The Regents
+// does not warrant that the operation of the program will be
+// uninterrupted or error-free. The end-user understands that the program
+// was developed for research purposes and is advised not to rely
+// exclusively on the program for any reason. IN NO EVENT SHALL THE
+// UNIVERSITY OF CALIFORNIA BE LIABLE TO ANY PARTY FOR DIRECT, INDIRECT,
+// SPECIAL, INCIDENTAL, OR CONSEQUENTIAL DAMAGES, INCLUDING LOST PROFITS,
+// ARISING OUT OF THE USE OF THIS SOFTWARE AND ITS DOCUMENTATION, EVEN IF
+// THE UNIVERSITY OF CALIFORNIA HAS BEEN ADVISED OF THE POSSIBILITY OF
+// SUCH DAMAGE. THE UNIVERSITY OF CALIFORNIA SPECIFICALLY DISCLAIMS ANY
+// WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+// MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. THE SOFTWARE
+// PROVIDED HEREUNDER IS ON AN &quot;AS IS&quot; BASIS, AND THE UNIVERSITY OF
+// CALIFORNIA HAS NO OBLIGATIONS TO PROVIDE MAINTENANCE, SUPPORT,
+// UPDATES, ENHANCEMENTS, OR MODIFICATIONS.
+
+package org.argouml.language.sql;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.StringTokenizer;
+
+import org.argouml.model.Facade;
+import org.argouml.model.Model;
+
+final class Utils {
+    /**
+     * Return an association named &lt;code&gt;assocName&lt;/code&gt; that is connected to
+     * relation.
+     * 
+     * @param relation
+     *            The relation where to search the association.
+     * @param assocName
+     *            The name of the association to search.
+     * @return The association if found, &lt;code&gt;null&lt;/code&gt; else.
+     */
+    public static Object getAssociationForName(Object relation, String assocName) {
+<span class="fc" id="L62">        Object association = null;</span>
+
+<span class="fc" id="L64">        Collection assocEnds = Model.getFacade().getAssociationEnds(relation);</span>
+<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        for (Iterator it = assocEnds.iterator(); it.hasNext();) {</span>
+<span class="nc" id="L66">            Object assocEnd = it.next();</span>
+<span class="nc" id="L67">            Object assoc = Model.getFacade().getAssociation(assocEnd);</span>
+<span class="nc" id="L68">            String name = Model.getFacade().getName(assoc);</span>
+<span class="nc bnc" id="L69" title="All 2 branches missed.">            if (name.equals(assocName)) {</span>
+<span class="nc" id="L70">                association = assoc;</span>
+            }
+<span class="nc" id="L72">        }</span>
+
+<span class="fc" id="L74">        return association;</span>
+    }
+
+    /**
+     * Search the attribute named &lt;code&gt;attributeName&lt;/code&gt; in the given
+     * relation. If there exist more than one attribute the first one is
+     * returned.
+     * 
+     * @param relation
+     *            The relation in which to search the attribute.
+     * @param attributeName
+     *            The name of the attribute to search.
+     * @return The attribute if found, &lt;code&gt;null&lt;/code&gt; else.
+     */
+    public static Object getAttributeForName(Object relation,
+            String attributeName) {
+<span class="fc" id="L90">        Object attribute = null;</span>
+
+<span class="fc" id="L92">        Collection attributes = Model.getFacade().getAttributes(relation);</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">        for (Iterator it = attributes.iterator(); it.hasNext();) {</span>
+<span class="fc" id="L94">            Object attr = it.next();</span>
+<span class="fc bfc" id="L95" title="All 2 branches covered.">            if (Model.getFacade().getName(attr).equals(attributeName)) {</span>
+<span class="fc" id="L96">                attribute = attr;</span>
+<span class="fc" id="L97">                break;</span>
+            }
+<span class="fc" id="L99">        }</span>
+
+<span class="fc" id="L101">        return attribute;</span>
+    }
+
+    /**
+     * Build a list of all foreign key attributes that refer a specific
+     * association.
+     * 
+     * @param relation
+     *            The relation which contains the fk-attributes.
+     * @param association
+     *            The association for which to return the fk-attributes.
+     * @return A list of all attributes. If there is no attribute, an empty list
+     *         is returned.
+     */
+    public static List getFkAttributes(Object relation, Object association) {
+<span class="nc" id="L116">        String assocName = Model.getFacade().getName(association);</span>
+
+<span class="nc" id="L118">        Collection attributes = Model.getFacade().getAttributes(relation);</span>
+<span class="nc" id="L119">        Iterator it = attributes.iterator();</span>
+<span class="nc" id="L120">        List fkAttributes = new ArrayList();</span>
+<span class="nc bnc" id="L121" title="All 2 branches missed.">        while (it.hasNext()) {</span>
+<span class="nc" id="L122">            Object attribute = it.next();</span>
+<span class="nc" id="L123">            String s = Model.getFacade().getTaggedValueValue(attribute,</span>
+                    GeneratorSql.ASSOCIATION_NAME_TAGGED_VALUE);
+
+<span class="nc bnc" id="L126" title="All 2 branches missed.">            if (s.equals(assocName)) {</span>
+<span class="nc" id="L127">                fkAttributes.add(attribute);</span>
+            }
+<span class="nc" id="L129">        }</span>
+
+<span class="nc" id="L131">        return fkAttributes;</span>
+    }
+
+    /**
+     * Build a list of all primary key attributes of entity.
+     * 
+     * @param relation
+     *            The relation for which to return the pk-attributes.
+     * @return A list of all primary key attributes. If there is no
+     *         pk-attribute, the list is empty.
+     */
+    public static List getPrimaryKeyAttributes(Object relation) {
+<span class="fc" id="L143">        List result = new ArrayList();</span>
+
+<span class="fc" id="L145">        Collection attributes = Model.getFacade().getAttributes(relation);</span>
+
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        for (Iterator it = attributes.iterator(); it.hasNext();) {</span>
+<span class="fc" id="L148">            Object attribute = it.next();</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">            if (isPk(attribute)) {</span>
+<span class="fc" id="L150">                result.add(attribute);</span>
+            }
+<span class="fc" id="L152">        }</span>
+
+<span class="fc" id="L154">        return result;</span>
+    }
+
+    /**
+     * Returns if an attribute is a foreign key attribute. Effectively checks if
+     * the attribute is of stereotype
+     * {@link GeneratorSql#FOREIGN_KEY_STEREOTYPE}.
+     * 
+     * @param attribute
+     *            The attribute to check.
+     * @return &lt;code&gt;true&lt;/code&gt; if it is a fk-attribute, &lt;code&gt;false&lt;/code&gt;
+     *         else.
+     * @see Facade#isStereotype(Object, String)
+     */
+    public static boolean isFk(Object attribute) {
+<span class="fc" id="L169">        return Model.getFacade().isStereotype(attribute,</span>
+                GeneratorSql.FOREIGN_KEY_STEREOTYPE);
+    }
+
+    /**
+     * Returns if an attribute is a primary key attribute. Effectively checks if
+     * the attribute is of stereotype
+     * {@link GeneratorSql#PRIMARY_KEY_STEREOTYPE}.
+     * 
+     * @param attribute
+     *            The attribute to check.
+     * @return &lt;code&gt;true&lt;/code&gt; if it is a pk-attribute, &lt;code&gt;false&lt;/code&gt;
+     *         else.
+     * @see Facade#isStereotype(Object, String)
+     */
+    public static boolean isPk(Object attribute) {
+<span class="fc" id="L185">        return Model.getFacade().isStereotype(attribute,</span>
+                GeneratorSql.PRIMARY_KEY_STEREOTYPE);
+    }
+
+    /**
+     * Returns if an attribute is an attribute that should be auto incremented.
+     * Effectively checks if the attribute is of stereotype
+     * {@link GeneratorSql#AUTOINC_KEY_STEREOTYPE}.
+     *
+     * @param attribute
+     *            The attribute to check.
+     * @return &lt;code&gt;true&lt;/code&gt; if it is a auto increment attribute,
+     *         &lt;code&gt;false&lt;/code&gt; else.
+     * @see Facade#isStereotype(Object, String)
+     */
+    public static boolean isAutoIncrement(Object attribute) {
+<span class="nc" id="L201">            return Model.getFacade().isStereotype(attribute,</span>
+                            GeneratorSql.AUTOINC_KEY_STEREOTYPE);
+    }
+
+    /**
+     * Returns if an attribute is not nullable. Effectively checks if the
+     * attribute is of stereotype {@link GeneratorSql#NOT_NULL_STEREOTYPE}.
+     * 
+     * @param attribute
+     *            The attribute to check.
+     * @return &lt;code&gt;true&lt;/code&gt; if it is not nullable, &lt;code&gt;false&lt;/code&gt;
+     *         else.
+     * @see Facade#isStereotype(Object, String)
+     */
+    public static boolean isNotNull(Object attribute) {
+<span class="nc" id="L216">        return Model.getFacade().isStereotype(attribute,</span>
+                GeneratorSql.NOT_NULL_STEREOTYPE);
+    }
+
+    /**
+     * Returns if an attribute is nullable. Effectively checks if the attribute
+     * is of stereotype {@link GeneratorSql#NULL_STEREOTYPE}.
+     * 
+     * @param attribute
+     *            The attribute to check.
+     * @return &lt;code&gt;true&lt;/code&gt; if it is nullable, &lt;code&gt;false&lt;/code&gt; else.
+     * @see Facade#isStereotype(Object, String)
+     */
+    public static boolean isNull(Object attribute) {
+<span class="nc" id="L230">        return Model.getFacade().isStereotype(attribute,</span>
+                GeneratorSql.NULL_STEREOTYPE);
+    }
+
+    /**
+     * Get the attribute a foreign key attribute is referencing to. Returns
+     * &lt;code&gt;null&lt;/code&gt; if the source attribute cannot be determined.
+     * 
+     * @param fkAttribute
+     *            The foreign key attribute.
+     * @param srcRelation
+     *            The entity the foreign key is referencing to.
+     * @return The referenced attribute.
+     */
+    public static Object getSourceAttribute(Object fkAttribute,
+            Object srcRelation) {
+<span class="fc" id="L246">        String srcColName = Model.getFacade().getTaggedValueValue(fkAttribute,</span>
+                GeneratorSql.SOURCE_COLUMN_TAGGED_VALUE);
+<span class="fc" id="L248">        Object srcAttr = null;</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">        if (srcColName.equals(&quot;&quot;)) {</span>
+<span class="fc" id="L250">            srcColName = Model.getFacade().getName(fkAttribute);</span>
+<span class="fc" id="L251">            srcAttr = Utils.getAttributeForName(srcRelation, srcColName);</span>
+<span class="fc bfc" id="L252" title="All 2 branches covered.">            if (srcAttr == null) {</span>
+<span class="fc" id="L253">                Collection pkAttrs = Utils.getPrimaryKeyAttributes(srcRelation);</span>
+<span class="fc bfc" id="L254" title="All 2 branches covered.">                if (pkAttrs.size() == 1) {</span>
+<span class="fc" id="L255">                    srcAttr = pkAttrs.iterator().next();</span>
+                }
+<span class="fc" id="L257">            }</span>
+        } else {
+<span class="fc" id="L259">            srcAttr = Utils.getAttributeForName(srcRelation, srcColName);</span>
+        }
+<span class="fc" id="L261">        return srcAttr;</span>
+    }
+
+    /**
+     * Takes a list of strings and joins them with &lt;code&gt;separators&lt;/code&gt;.
+     * 
+     * @param strings
+     *            The list of strings to be joined.
+     * @param separators
+     *            The string that should be put between the separate strings.
+     * @return The joined string.
+     */
+    public static String stringsToString(List strings, String separators) {
+<span class="fc" id="L274">        StringBuffer sb = new StringBuffer();</span>
+<span class="fc" id="L275">        Iterator it = strings.iterator();</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">        while (it.hasNext()) {</span>
+<span class="fc" id="L277">            String s = (String) it.next();</span>
+<span class="fc bfc" id="L278" title="All 2 branches covered.">            if (sb.length() &gt; 0) {</span>
+<span class="fc" id="L279">                sb.append(separators);</span>
+            }
+<span class="fc" id="L281">            sb.append(s);</span>
+<span class="fc" id="L282">        }</span>
+<span class="fc" id="L283">        return sb.toString();</span>
+    }
+
+    /**
+     * Takes a list of strings and joins them with a comma.
+     * 
+     * @param strings
+     *            The list of strings.
+     * @return The joined string.
+     */
+    public static String stringsToCommaString(List strings) {
+<span class="fc" id="L294">        return stringsToString(strings, &quot;,&quot;);</span>
+    }
+
+    /**
+     * Private constructor so no instance can be created.
+     */
+    private Utils() {
+
+    }
+
+    /**
+     * Separates a &lt;code&gt;String&lt;/code&gt; using the given delimiters and puts the
+     * resulting tokens to a &lt;code&gt;List&lt;/code&gt;.
+     * 
+     * @param string
+     *            The string to separate.
+     * @param delimiters
+     *            The delimiters that should used to separate the string.
+     * 
+     * @return A &lt;code&gt;List&lt;/code&gt; containing all string tokens.
+     */
+    public static List stringToStringList(String string, String delimiters) {
+<span class="fc" id="L316">        StringTokenizer st = new StringTokenizer(string, delimiters);</span>
+<span class="fc" id="L317">        List result = new ArrayList();</span>
+<span class="fc bfc" id="L318" title="All 2 branches covered.">        while (st.hasMoreTokens()) {</span>
+<span class="fc" id="L319">            result.add(st.nextToken());</span>
+        }
+<span class="fc" id="L321">        return result;</span>
+    }
+
+    /**
+     * Separates a &lt;code&gt;String&lt;/code&gt; using the standard
+     * &lt;code&gt;StringTokenizer&lt;/code&gt; delimiters and puts the resulting tokens
+     * to a &lt;code&gt;List&lt;/code&gt;.
+     * 
+     * @param string
+     *            The string to separate.
+     * 
+     * @return A &lt;code&gt;List&lt;/code&gt; containing all string tokens.
+     */
+    public static List stringToStringList(String string) {
+<span class="fc" id="L335">        StringTokenizer st = new StringTokenizer(string);</span>
+<span class="fc" id="L336">        List result = new ArrayList();</span>
+<span class="fc bfc" id="L337" title="All 2 branches covered.">        while (st.hasMoreTokens()) {</span>
+<span class="fc" id="L338">            result.add(st.nextToken());</span>
+        }
+<span class="fc" id="L340">        return result;</span>
+    }
+
+    /**
+     * Get a short table name that can be used in triggers etc. Shortens the
+     * name by first removing all vowels from the left to the right. If that's
+     * not enough the resulting string is just truncated.
+     * 
+     * @param longName
+     * @param maxLength
+     * @return
+     */
+    public static String getShortName(String longName, int maxLength) {
+<span class="fc" id="L353">        char[] vowels = new char[] { 'a', 'e', 'i', 'o', 'u' };</span>
+<span class="fc" id="L354">        String shortName = longName;</span>
+<span class="pc bpc" id="L355" title="1 of 2 branches missed.">        while (shortName.length() &gt; maxLength) {</span>
+<span class="nc" id="L356">            int index = -1;</span>
+<span class="nc bnc" id="L357" title="All 2 branches missed.">            for (int i = 0; i &lt; vowels.length; i++) {</span>
+<span class="nc" id="L358">                int lastIndex = shortName.lastIndexOf(vowels[i]);</span>
+<span class="nc bnc" id="L359" title="All 2 branches missed.">                if (lastIndex &gt; index) {</span>
+<span class="nc" id="L360">                    index = lastIndex;</span>
+                }
+            }
+            
+<span class="nc bnc" id="L364" title="All 2 branches missed.">            if (index == -1) {</span>
+<span class="nc" id="L365">                break;</span>
+            }
+            
+<span class="nc" id="L368">            String firstPart = shortName.substring(0, index);</span>
+<span class="nc" id="L369">            String lastPart = shortName.substring(index + 1, shortName.length());</span>
+<span class="nc" id="L370">            shortName = firstPart + lastPart;</span>
+<span class="nc" id="L371">        }</span>
+<span class="pc bpc" id="L372" title="1 of 2 branches missed.">        if (shortName.length() &gt; maxLength) {</span>
+<span class="nc" id="L373">            shortName = shortName.substring(0, maxLength);</span>
+        }
+<span class="fc" id="L375">        return shortName;    </span>
+    }
+    
+    /**
+     * The prefix in URL:s that are files.
+     */
+    private static final String FILE_PREFIX = &quot;file:&quot;;
+
+    /**
+     * The prefix in URL:s that are jars.
+     */
+    private static final String JAR_PREFIX = &quot;jar:&quot;;
+
+    /**
+     * Class file suffix.
+     */
+    public static final String CLASS_SUFFIX = &quot;.class&quot;;
+
+    public static String getModuleRoot() {
+        // Use a little trick to find out where this module is being loaded
+        // from. (Code was &quot;stolen&quot; from ModuleLoader2 and modified)
+<span class="nc" id="L396">        String resName = Utils.class.getName();</span>
+<span class="nc" id="L397">        resName = &quot;/&quot; + resName.replace('.', '/') + CLASS_SUFFIX;</span>
+<span class="nc" id="L398">        String extForm = Utils.class.getResource(resName).toExternalForm();</span>
+
+<span class="nc" id="L400">        String moduleRoot = extForm.substring(0, extForm.length()</span>
+<span class="nc" id="L401">                - resName.length());</span>
+
+        // If it's a jar, clean it up and make it look like a file url
+<span class="nc bnc" id="L404" title="All 2 branches missed.">        if (moduleRoot.startsWith(JAR_PREFIX)) {</span>
+<span class="nc" id="L405">            moduleRoot = moduleRoot.substring(JAR_PREFIX.length());</span>
+<span class="nc bnc" id="L406" title="All 2 branches missed.">            if (moduleRoot.endsWith(&quot;!&quot;)) {</span>
+<span class="nc" id="L407">                moduleRoot = moduleRoot.substring(0, moduleRoot.length() - 1);</span>
+            }
+<span class="nc" id="L409">            int p = moduleRoot.lastIndexOf('/');</span>
+<span class="nc" id="L410">            moduleRoot = moduleRoot.substring(0, p);</span>
+        }
+
+<span class="nc bnc" id="L413" title="All 2 branches missed.">        if (moduleRoot.startsWith(FILE_PREFIX)) {</span>
+<span class="nc" id="L414">            moduleRoot = moduleRoot.substring(FILE_PREFIX.length());</span>
+        }
+
+<span class="nc" id="L417">        return moduleRoot;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
