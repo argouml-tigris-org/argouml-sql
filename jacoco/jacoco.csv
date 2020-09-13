@@ -24,9 +24,9 @@ argouml-sql,org.argouml.language.sql.reveng,MySqlLexer,2628,0,220,0,560,0,193,0,
 argouml-sql,org.argouml.language.sql.reveng,MySqlParser.data_type_return,3,0,0,0,1,0,1,0,1,0
 argouml-sql,org.argouml.language.sql.reveng,SqlServerLexer,3370,0,231,0,673,0,221,0,73,0
 argouml-sql,org.argouml.language.sql.reveng,ModellerC,296,0,52,0,69,0,28,0,2,0
-argouml-sql,org.argouml.language.sql.reveng,SqlServerParser.data_length_return,3,0,0,0,1,0,1,0,1,0
 argouml-sql,org.argouml.language.sql.reveng,SqlServerParser,5623,0,337,0,1127,0,234,0,44,0
 argouml-sql,org.argouml.language.sql.reveng,SqlImport,372,0,11,0,92,0,19,0,12,0
+argouml-sql,org.argouml.language.sql.reveng,SqlServerParser.data_length_return,3,0,0,0,1,0,1,0,1,0
 argouml-sql,org.argouml.ui,SelectCodeCreatorDialog,175,0,8,0,41,0,8,0,4,0
 argouml-sql,org.argouml.ui,SettingsTabSql,258,0,6,0,54,0,13,0,10,0
 argouml-sql,org.argouml.ui,GridBagUtils,181,0,6,0,44,0,17,0,14,0
