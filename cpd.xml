@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <pmd-cpd>
 <duplication lines="71" tokens="471">
-<file line="14" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerLexer.java"/>
-<file line="32" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerParser.java"/>
+<file line="14" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerLexer.java"/>
+<file line="32" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerParser.java"/>
 <codefragment>
 <![CDATA[
 	public static final int EOF=-1;
@@ -80,8 +80,8 @@
 </codefragment>
 </duplication>
 <duplication lines="114" tokens="384">
-<file line="905" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlLexer.java"/>
-<file line="1275" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerLexer.java"/>
+<file line="905" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlLexer.java"/>
+<file line="1275" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerLexer.java"/>
 <codefragment>
 <![CDATA[
 			match(';'); 
@@ -202,8 +202,8 @@
 </codefragment>
 </duplication>
 <duplication lines="56" tokens="366">
-<file line="14" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlLexer.java"/>
-<file line="29" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlParser.java"/>
+<file line="14" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlLexer.java"/>
+<file line="29" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlParser.java"/>
 <codefragment>
 <![CDATA[
 	public static final int EOF=-1;
@@ -266,10 +266,10 @@
 </codefragment>
 </duplication>
 <duplication lines="37" tokens="256">
-<file line="15" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlLexer.java"/>
-<file line="30" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlParser.java"/>
-<file line="18" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerLexer.java"/>
-<file line="36" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerParser.java"/>
+<file line="15" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlLexer.java"/>
+<file line="30" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlParser.java"/>
+<file line="18" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerLexer.java"/>
+<file line="36" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerParser.java"/>
 <codefragment>
 <![CDATA[
 	public static final int T__19=19;
@@ -313,8 +313,8 @@
 </codefragment>
 </duplication>
 <duplication lines="65" tokens="185">
-<file line="1393" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlLexer.java"/>
-<file line="1700" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerLexer.java"/>
+<file line="1393" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlLexer.java"/>
+<file line="1700" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerLexer.java"/>
 <codefragment>
 <![CDATA[
 				}
@@ -386,8 +386,8 @@
 </codefragment>
 </duplication>
 <duplication lines="75" tokens="140">
-<file line="824" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlLexer.java"/>
-<file line="1215" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerLexer.java"/>
+<file line="824" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlLexer.java"/>
+<file line="1215" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerLexer.java"/>
 <codefragment>
 <![CDATA[
 			match("ZEROFILL"); 
@@ -469,8 +469,8 @@
 </codefragment>
 </duplication>
 <duplication lines="20" tokens="121">
-<file line="69" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerC.java"/>
-<file line="57" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerP.java"/>
+<file line="69" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerC.java"/>
+<file line="57" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerP.java"/>
 <codefragment>
 <![CDATA[
 						Object packageOfType = modellerSource.getModel();
@@ -497,8 +497,8 @@
 </codefragment>
 </duplication>
 <duplication lines="21" tokens="105">
-<file line="141" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerC.java"/>
-<file line="125" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerP.java"/>
+<file line="141" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerC.java"/>
+<file line="125" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/src/org/argouml/language/sql/reveng/ModellerP.java"/>
 <codefragment>
 <![CDATA[
 				Object mAssociationEnd = modellerSource.getAssociationEnd(name, mClassifier, mClassifierEnd);
@@ -526,8 +526,8 @@
 </codefragment>
 </duplication>
 <duplication lines="29" tokens="105">
-<file line="1023" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlLexer.java"/>
-<file line="1390" path="/var/lib/jenkins/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerLexer.java"/>
+<file line="1023" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/MySqlLexer.java"/>
+<file line="1390" path="/var/snap/jenkins/2767/workspace/_organization_argouml-sql_master/target/generated-sources/antlr3/org/argouml/language/sql/reveng/SqlServerLexer.java"/>
 <codefragment>
 <![CDATA[
 					loop2:
